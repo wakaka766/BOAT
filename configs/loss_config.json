@@ -1,0 +1,8 @@
+{
+    "ll_loss": {
+        "function": "configs.loss_func.train_loss"
+    },
+    "ul_loss": {
+        "function": "configs.loss_func.val_loss"
+    }
+}
