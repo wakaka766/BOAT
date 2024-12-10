@@ -1,7 +1,7 @@
 import abc
 
 
-class DynamicalSystem(object):
+class Dynamical_System(object):
     def __init__(
             self,
             ll_objective,

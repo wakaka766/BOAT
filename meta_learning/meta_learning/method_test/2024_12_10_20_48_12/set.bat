@@ -1,0 +1,16 @@
+python meta_learning.py --dynamic_method NGD --hyper_method IAD 
+python meta_learning.py --dynamic_method NGD --hyper_method IAD,PTT 
+python meta_learning.py --dynamic_method NGD --hyper_method CG,IAD 
+python meta_learning.py --dynamic_method NGD --hyper_method CG,IAD,PTT 
+python meta_learning.py --dynamic_method NGD --hyper_method NS,IAD 
+python meta_learning.py --dynamic_method NGD --hyper_method NS,IAD,PTT 
+python meta_learning.py --dynamic_method NGD --hyper_method FOA,IAD 
+python meta_learning.py --dynamic_method NGD --hyper_method FOA,IAD,PTT 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method IAD 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method IAD,PTT 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method CG,IAD 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method CG,IAD,PTT 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method NS,IAD 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method NS,IAD,PTT 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method FOA,IAD 
+python meta_learning.py --dynamic_method NGD,GDA --hyper_method FOA,IAD,PTT 

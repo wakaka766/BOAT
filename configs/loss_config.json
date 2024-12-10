@@ -1,8 +1,22 @@
 {
-    "ll_loss": {
-        "function": "configs.loss_func.train_loss"
+    "lower_level_loss": {
+        "function": "configs.loss_func.ll_loss",
+            "params": {
+            "weights": 0.0
+        }
     },
-    "ul_loss": {
-        "function": "configs.loss_func.val_loss"
+    "upper_level_loss": {
+        "function": "configs.loss_func.ul_loss",
+            "params": {
+            "weights": 0.0
+        }
+
+    },
+        "GDA_loss": {
+        "function": "configs.loss_func.gda_loss",
+            "params": {
+            "weights": 0.0
+        }
+
     }
 }

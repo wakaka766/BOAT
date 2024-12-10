@@ -3,10 +3,12 @@ from abc import abstractmethod
 
 
 class HyperGradient(object):
-    def __init__(self, ul_objective, ul_model, ll_model):
+    def __init__(self, ul_objective, ul_model, ll_model,ll_var,ul_var):
         self.ul_objective = ul_objective
         self.ul_model = ul_model
         self.ll_model = ll_model
+        self.ll_var = ll_var
+        self.ul_var = ul_var
 
     # _ERROR_HYPER_DETACHED = """
     # `The outer parameter` is detached from this optimization dynamics.
@@ -35,11 +37,4 @@ class HyperGradient(object):
         #
         # :return: list of outer parameters involved in the computation
         # """
-        # assert isinstance(
-        #     boml_inner_grad, BOMLInnerGradTrad
-        # ), BOMLOuterGrad._ERROR_NOT_OPTIMIZER_DICT.format(boml_inner_grad)
-        # self._optimizer_dicts.add(boml_inner_grad)
-        #
-        # if meta_param is None:  # get default outer parameters
-        #     meta_param = boml.extension.meta_parameters(tf.get_variable_scope().name)
-        # return meta_param
+

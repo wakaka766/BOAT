@@ -4,12 +4,12 @@ from torch.autograd import grad as torch_grad
 
 from torch.nn import Module
 from torch import Tensor
-from typing import List, Callable
+from typing import List, Callable,Dict
 from higher.patch import _MonkeyPatchBase
-from boat.utils.op_utils import update_grads
+from boat.utils.op_utils import update_grads,grad_unused_zero,update_tensor_grads
 
 
-class LS(HyperGradient):
+class CG(HyperGradient):
     r"""Calculation of the gradient of the upper adapt_model variables with Implicit Gradient Based Methods.
 
     Implements the UL problem optimization procedure of two implicit gradient
@@ -78,28 +78,31 @@ class LS(HyperGradient):
 
     def __init__(
             self,
-            ul_objective: Callable[[Tensor, Tensor, Module, Module], Tensor],
-            ul_model: Module,
-            ll_objective: Callable[[Tensor, Tensor, Module, Module], Tensor],
+            ll_objective: Callable,
+            ul_objective: Callable,
             ll_model: Module,
-            lower_learning_rate: float,
-            k: int,
-            tolerance: float = 1e-10
+            ul_model: Module,
+            ll_var:List,
+            ul_var:List,
+            solver_config : Dict
     ):
-        super(LS, self).__init__(ul_objective, ul_model, ll_model)
+        super(CG, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
 
-        self.K = k
-        self.lower_learning_rate = lower_learning_rate
+        self.dynamic_initialization = "DI" in solver_config['dynamic_op']
+        self.ll_lr = solver_config['ll_opt'].defaults["lr"]
         self.ll_objective = ll_objective
-        self.tolerance = tolerance
+        self.tolerance = solver_config["CG"]["tolerance"]
+        self.K = solver_config["CG"]["k"]
+        self.alpha = solver_config['GDA']["alpha_init"]
+        self.alpha_decay = solver_config['GDA']["alpha_decay"]
+        self.gda_loss = solver_config['gda_loss']
 
     def compute_gradients(
             self,
-            validate_data: Tensor,
-            validate_target: Tensor,
+            ll_feed_dict: Dict,
+            ul_feed_dict: Dict,
             auxiliary_model: _MonkeyPatchBase,
-            train_data: Tensor,
-            train_target: Tensor
+            max_loss_iter: int = 0
     ):
         """
         Compute the grads of upper variable with validation data samples in the batch
@@ -136,24 +139,33 @@ class LS(HyperGradient):
             Returns the loss value of upper objective.
         """
 
-        hparams = list(self.ul_model.parameters())
+        hparams = list(self.ul_var)
 
         def fp_map(params, loss_f):
             lower_grads = list(torch.autograd.grad(loss_f, params, create_graph=True))
             updated_params = []
             for i in range(len(params)):
-                updated_params.append(params[i] - self.lower_learning_rate * lower_grads[i])
+                updated_params.append(params[i] - self.ll_lr * lower_grads[i])
             return updated_params
 
         lower_model_params = list(
             auxiliary_model.parameters())
 
-        lower_loss = self.ll_objective(train_data, train_target, self.ul_model, auxiliary_model)
-        upper_loss = self.ul_objective(validate_data, validate_target, self.ul_model, auxiliary_model)
-
+        if self.gda_loss is not None:
+            ll_feed_dict['alpha'] = self.alpha*self.alpha_decay**max_loss_iter
+            lower_loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model)
+        else:
+            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+        if self.dynamic_initialization:
+            grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)),retain_graph=True)
+            update_tensor_grads(self.ll_var, grads_lower)
         upper_grads = ConjugateGradient(lower_model_params, hparams, upper_loss, lower_loss, self.K, fp_map, self.tolerance)
 
-        update_grads(upper_grads, self.ul_model)
+        update_tensor_grads(self.ul_var,upper_grads)
+
+
+
 
         return upper_loss
 
@@ -239,13 +251,3 @@ def get_outer_gradients(outer_loss, params, hparams, retain_graph=True):
     grad_outer_hparams = grad_unused_zero(outer_loss, hparams, retain_graph=retain_graph)
 
     return grad_outer_w, grad_outer_hparams
-
-
-def grad_unused_zero(output, inputs, grad_outputs=None, retain_graph=False, create_graph=False):
-    grads = torch.autograd.grad(output, inputs, grad_outputs=grad_outputs, allow_unused=True,
-                                retain_graph=retain_graph, create_graph=create_graph)
-
-    def grad_or_zeros(grad, var):
-        return torch.zeros_like(var) if grad is None else grad
-
-    return tuple(grad_or_zeros(g, v) for g, v in zip(grads, list(inputs)))

@@ -1,10 +1,10 @@
 import torch
 from .hyper_gradient import HyperGradient
-from ..utils.op_utils import update_grads
+from ..utils.op_utils import update_grads,update_tensor_grads
 
 from torch.nn import Module
 from torch import Tensor
-from typing import Callable
+from typing import List, Callable,Dict
 from higher.patch import _MonkeyPatchBase
 
 
@@ -80,27 +80,28 @@ class FD(HyperGradient):
 
     def __init__(
             self,
-            ul_objective: Callable[[Tensor, Tensor, Module, Module], Tensor],
-            ul_model: Module,
-            ll_objective: Callable[[Tensor, Tensor, Module, Module], Tensor],
+            ll_objective: Callable,
+            ul_objective: Callable,
             ll_model: Module,
-            lower_learning_rate: float,
-            update_ll_model_init: bool = False,
-            r: float = 1e-2
+            ul_model: Module,
+            ll_var:List,
+            ul_var:List,
+            solver_config : Dict
     ):
-        super(FD, self).__init__(ul_objective, ul_model, ll_model)
+        super(FD, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
         self.ll_objective = ll_objective
-        self.lower_learning_rate = lower_learning_rate
-        self.update_initialization = update_ll_model_init
-        self._r = r
-
+        self.ll_lr = solver_config['ll_opt'].defaults["lr"]
+        self.dynamic_initialization = "DI" in solver_config['dynamic_op']
+        self._r = solver_config['FD']['r']
+        self.alpha = solver_config['GDA']["alpha_init"]
+        self.alpha_decay = solver_config['GDA']["alpha_decay"]
+        self.gda_loss = solver_config['gda_loss']
     def compute_gradients(
             self,
-            validate_data: Tensor,
-            validate_target: Tensor,
+            ll_feed_dict: Dict,
+            ul_feed_dict: Dict,
             auxiliary_model: _MonkeyPatchBase,
-            train_data: Tensor,
-            train_target: Tensor
+            max_loss_iter: int = 0
     ):
         """
         Compute the grads of upper variable with validation data samples in the batch
@@ -136,30 +137,30 @@ class FD(HyperGradient):
         upper_loss: Tensor
            Returns the loss value of upper objective.
         """
-        loss = self.ul_objective(validate_data, validate_target, self.ul_model, auxiliary_model)
-        grad_x = torch.autograd.grad(loss, list(self.ul_model.parameters()), retain_graph=True)
-        grad_y = torch.autograd.grad(loss, list(auxiliary_model.parameters()), retain_graph=self.update_initialization)
+        loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+        grad_x = torch.autograd.grad(loss, list(self.ul_var), retain_graph=True)
+        grad_y = torch.autograd.grad(loss, list(auxiliary_model.parameters()), retain_graph=self.dynamic_initialization)
 
         dalpha = [v.data for v in grad_x]
         vector = [v.data for v in grad_y]
-        implicit_grads = self._hessian_vector_product(vector, train_data, train_target)
+        implicit_grads = self._hessian_vector_product(vector, ll_feed_dict,ul_feed_dict)
 
         for g, ig in zip(dalpha, implicit_grads):
-            g.sub_(self.lower_learning_rate, ig.data)
+            g.sub_(ig.data,alpha= self.ll_lr)
 
-        if self.update_initialization:
+        if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(loss, list(auxiliary_model.parameters(time=0)))
-            update_grads(grads_lower, self.ll_model)
+            update_tensor_grads(self.ll_var, grads_lower)
 
-        update_grads(dalpha, self.ul_model)
+        update_tensor_grads(self.ul_var,dalpha)
 
         return loss
 
     def _hessian_vector_product(
             self,
             vector,
-            train_data,
-            train_target
+            ll_feed_dict,
+            ul_feed_dict
     ):
         """
         Built-in calculation function. Compute the first order approximation of
@@ -180,16 +181,24 @@ class FD(HyperGradient):
         """
         eta = self._r / torch.cat([x.view(-1) for x in vector]).norm()
         for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.add_(eta, v)  # w+
-        loss = self.ll_objective(train_data, train_target, self.ul_model, self.ll_model)
-        grads_p = torch.autograd.grad(loss, list(self.ul_model.parameters()))
+            p.data.add_(v, alpha=eta)  # w+
+        if self.gda_loss is not None:
+            ll_feed_dict['alpha'] = self.alpha
+            loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
+        else:
+            loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+        grads_p = torch.autograd.grad(loss, list(self.ul_var))
 
         for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.sub_(2 * eta, v)  # w-
-        loss = self.ll_objective(train_data, train_target, self.ul_model, self.ll_model)
-        grads_n = torch.autograd.grad(loss, list(self.ul_model.parameters()))
+            p.data.sub_(v, alpha= 2 * eta )  # w-
+        if self.gda_loss is not None:
+            ll_feed_dict['alpha'] = self.alpha
+            loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
+        else:
+            loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+        grads_n = torch.autograd.grad(loss, list(self.ul_var))
 
         for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.add_(eta, v)  # w
+            p.data.add_(v, alpha=eta)  # w
 
         return [(x - y).div_(2 * eta) for x, y in zip(grads_p, grads_n)]

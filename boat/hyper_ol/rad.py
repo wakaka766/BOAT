@@ -1,10 +1,9 @@
 import torch
 from .hyper_gradient import HyperGradient
-from ..utils.op_utils import update_grads
-from typing import Dict, Any, Callable
+from ..utils.op_utils import update_grads,update_tensor_grads
+from typing import List, Callable, Dict
 from torch.nn import Module
 from torch import Tensor
-from typing import Callable
 from higher.patch import _MonkeyPatchBase
 
 
@@ -56,17 +55,20 @@ class RAD(HyperGradient):
 
     def __init__(
             self,
+            ll_objective: Callable,
             ul_objective: Callable,
-            ul_model: Module,
             ll_model: Module,
+            ul_model: Module,
+            ll_var:List,
+            ul_var:List,
             solver_config : Dict
     ):
-        super(RAD, self).__init__(ul_objective, ul_model, ll_model)
-        self.truncate_max_loss_iter = solver_config['PTT']['truncate_max_loss_iter']
-        self.update_initialization = solver_config['update_ll_model_init']
+        super(RAD, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
+        self.dynamic_initialization = "DI" in solver_config['dynamic_op']
 
     def compute_gradients(
             self,
+            ll_feed_dict: Dict,
             ul_feed_dict: Dict,
             auxiliary_model: _MonkeyPatchBase,
             max_loss_iter: int = 0
@@ -104,21 +106,13 @@ class RAD(HyperGradient):
         upper_loss: Tensor
            Returns the loss value of upper objective.
         """
-        if self.truncate_max_loss_iter:
-            assert max_loss_iter > 0, "'max_loss_iter' should be greater than 0"
+        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model,params=auxiliary_model.parameters(time=max_loss_iter))
+        grads_upper = torch.autograd.grad(upper_loss, self.ul_model.parameters(),
+                                          retain_graph=self.dynamic_initialization,allow_unused=True,materialize_grads=True)
+        update_tensor_grads(self.ul_var,grads_upper)
 
-            upper_loss = self.ul_objective(ul_feed_dict, self.ul_model,
-                                           auxiliary_model, time=max_loss_iter)
-            grads_upper = torch.autograd.grad(upper_loss, list(self.ul_model.parameters()),
-                                              retain_graph=self.update_initialization)
-        else:
-            upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-            grads_upper = torch.autograd.grad(upper_loss, self.ul_model.parameters(),
-                                              retain_graph=self.update_initialization)
-        update_grads(grads_upper, self.ul_model)
-
-        if self.update_initialization:
+        if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)))
-            update_grads(grads_lower, self.ll_model)
+            update_tensor_grads(self.ll_var, grads_lower)
 
         return upper_loss

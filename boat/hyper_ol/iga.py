@@ -1,10 +1,10 @@
 import torch
 from .hyper_gradient import HyperGradient
-from ..utils.op_utils import update_grads
+from ..utils.op_utils import update_grads,update_tensor_grads
 
 from torch.nn import Module
 from torch import Tensor
-from typing import Callable
+from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 
 
@@ -74,21 +74,25 @@ class IGA(HyperGradient):
 
     def __init__(
             self,
-            ul_objective: Callable[[Tensor, Tensor, Module, Module], Tensor],
-            ul_model: Module,
-            ll_objective: Callable[[Tensor, Tensor, Module, Module], Tensor],
+            ll_objective: Callable,
+            ul_objective: Callable,
             ll_model: Module,
+            ul_model: Module,
+            ll_var:List,
+            ul_var:List,
+            solver_config : Dict
     ):
-        super(IGA, self).__init__(ul_objective, ul_model, ll_model)
+        super(IGA, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
         self.ll_objective = ll_objective
-
+        self.alpha = solver_config['GDA']["alpha_init"]
+        self.alpha_decay = solver_config['GDA']["alpha_decay"]
+        self.gda_loss = solver_config['gda_loss']
     def compute_gradients(
             self,
-            validate_data: Tensor,
-            validate_target: Tensor,
+            ll_feed_dict: Dict,
+            ul_feed_dict: Dict,
             auxiliary_model: _MonkeyPatchBase,
-            train_data: Tensor,
-            train_target: Tensor
+            max_loss_iter: int = 0
     ):
         """
         Compute the grads of upper variable with validation data samples in the batch
@@ -124,10 +128,14 @@ class IGA(HyperGradient):
         upper_loss: Tensor
             Returns the loss value of upper objective.
         """
-        lower_loss = self.ll_objective(train_data, train_target, self.ul_model, auxiliary_model)
+        if self.gda_loss is not None:
+            ll_feed_dict['alpha'] = self.alpha*self.alpha_decay**max_loss_iter
+            lower_loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model)
+        else:
+            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
         dfy = torch.autograd.grad(lower_loss, list(auxiliary_model.parameters()), retain_graph=True)
 
-        upper_loss = self.ul_objective(validate_data, validate_target, self.ul_model, auxiliary_model)
+        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         dFy = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters()), retain_graph=True)
 
         # calculate GN loss
@@ -138,7 +146,7 @@ class IGA(HyperGradient):
             gfyfy = gfyfy + torch.sum(fy * fy)
         GN_loss = -gFyfy.detach() / gfyfy.detach() * lower_loss
 
-        grads_upper = torch.autograd.grad(GN_loss + upper_loss, list(self.ul_model.parameters()))
-        update_grads(grads_upper, self.ul_model)
+        grads_upper = torch.autograd.grad(GN_loss + upper_loss, list(self.ul_var))
+        update_tensor_grads( self.ul_var,grads_upper)
 
         return upper_loss
