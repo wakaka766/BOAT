@@ -11,11 +11,11 @@ jobs:
     - name: Install requirements
       run: pip install -r requirements.txt
 
-    - name: List files in BOAT/data_hyper_cleaning
-      run: ls -al BOAT/data_hyper_cleaning
-
     - name: List the contents of the repository
       run: ls -al /home/runner/work/BOAT/BOAT
+
+    - name: List files in BOAT/data_hyper_cleaning
+      run: ls -al BOAT/data_hyper_cleaning
 
     - name: List files in BOAT/meta_learning
       run: ls -al BOAT/meta_learning
