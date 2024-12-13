@@ -94,7 +94,9 @@ def main():
     b_optimizer.build_ul_solver(x_opt)
     ul_feed_dict = {"data": val.data.to(device), "target":val.clean_target.to(device)}
     ll_feed_dict = {"data": tr.data.to(device), "target":tr.dirty_target.to(device)}
-    for x_itr in range(2):
+    for x_itr in range(3):
+        if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
+            b_optimizer.boat_configs["DM"]["strategy"] = "s"+str(x_itr+1)
         loss, run_time = b_optimizer.run_iter(ll_feed_dict,ul_feed_dict, current_iter=x_itr)
 
         if x_itr % 1 == 0:
