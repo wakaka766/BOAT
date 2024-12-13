@@ -4,7 +4,7 @@
     "hyper_op":  ["IAD","CG","PTT"],
     "return_grad": false,
     "lower_iters": 5,
-    "device": "cuda",
+    "device": "cpu",
     "accumulate_grad": true,
     "DI":{"lr": 0.1},
     "GDA":{"alpha_init": 0.5,"alpha_decay": 0.9},
