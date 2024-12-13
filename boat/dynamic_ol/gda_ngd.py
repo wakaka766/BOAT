@@ -57,6 +57,7 @@ class GDA_NGD(DynamicalSystem):
         self.truncate_iters = solver_config['RGT']["truncate_iter"]
         self.ll_opt = solver_config['ll_opt']
         self.gda_loss = solver_config['gda_loss']
+        self.foa = 'FOA' in solver_config['hyper_op']
 
     def optimize(
         self,
