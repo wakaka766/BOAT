@@ -15,10 +15,10 @@ jobs:
       run: ls -al /home/runner/work/BOAT/BOAT
 
     - name: List files in BOAT/data_hyper_cleaning
-      run: ls -al BOAT/data_hyper_cleaning
+      run: ls -al /home/runner/work/BOAT/BOAT/data_hyper_cleaning
 
     - name: List files in BOAT/meta_learning
-      run: ls -al BOAT/meta_learning
+      run: ls -al /home/runner/work/BOAT/BOAT/meta_learning
 
     - name: Generate coverage report
       run: |
