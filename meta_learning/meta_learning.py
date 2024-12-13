@@ -75,11 +75,14 @@ inner_opt = torch.optim.SGD(lr=0.1, params=meta_model.parameters())
 outer_opt = torch.optim.Adam(meta_model.parameters(),lr=0.01)
 y_lr_schedular = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=outer_opt, T_max=80000,
                                                             eta_min=0.001)
+import os
 import json
-with open("C:/Users/ASUS/Documents/GitHub/BOAT/configs/boat_config_ml.json", "r") as f:
+base_folder = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(base_folder,"configs/boat_config_ml.json"), "r") as f:
     boat_config = json.load(f)
 
-with open("C:/Users/ASUS/Documents/GitHub/BOAT/configs/loss_config_ml.json", "r") as f:
+with open(os.path.join(base_folder,"configs/loss_config_ml.json"), "r") as f:
     loss_config = json.load(f)
 
 def main():
