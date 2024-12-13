@@ -113,8 +113,6 @@ class DM_GDA_NGD(DynamicalSystem):
             self.alpha = self.mu0 * 1 / (current_iter + 1) ** (1 / self.p)
             self.eta = (current_iter + 1) ** (-0.5 * self.tau)  * self.ll_opt.defaults['lr']
             x_lr = (current_iter + 1) ** (-1.5 * self.tau) * self.alpha ** 3 * self.ll_opt.defaults['lr']
-        else:
-            x_lr = self.ul_lr
         for params in self.ul_opt.param_groups:
             params['lr'] = x_lr
         #############
