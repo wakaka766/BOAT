@@ -69,7 +69,7 @@ fogm_method = (["VSM"], ["VFM"], ["MESM"], ["PGDM"])
 
 # 获取当前脚本所在的目录（相对路径）
 base_folder = os.path.dirname(os.path.abspath(__file__))  # 获取当前脚本的绝对路径
-folder = os.path.join(base_folder, 'data_hyper_cleaning', args, t0)  # 构建相对路径
+folder = os.path.join(base_folder, args, t0)  # 构建相对路径
 
 print(folder)
 if not os.path.exists(folder):
@@ -81,9 +81,9 @@ script_file = os.path.join(folder, 'set' + script_extension)
 
 # 将 Python 文件复制到目标文件夹
 ganfolder = os.path.join(folder, 'data_hyper_cleaning.py')
-shutil.copyfile('data_hyper_cleaning.py', ganfolder)
+shutil.copyfile(os.path.join(base_folder,'data_hyper_cleaning.py'), ganfolder)
 utilfolder = os.path.join(folder, 'util_file.py')
-shutil.copyfile('util_file.py', utilfolder)
+shutil.copyfile(os.path.join(base_folder,'util_file.py'), utilfolder)
 
 # 创建批处理或 shell 脚本
 with open(script_file, 'w') as f:

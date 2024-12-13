@@ -60,7 +60,8 @@ script_file = os.path.join(folder, 'set' + script_extension)
 
 # 将 Python 文件复制到目标文件夹
 ganfolder = os.path.join(folder, 'meta_learning.py')
-shutil.copyfile('meta_learning.py', ganfolder)
+shutil.copyfile(os.path.join(base_folder,'meta_learning.py'), ganfolder)
+
 
 # 创建批处理或 shell 脚本
 with open(script_file, 'w') as f:
