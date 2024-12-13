@@ -25,11 +25,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install pytest-cov
-        pytest --cov=/home/runner/work/BOAT/BOAT/boat --cov-report=xml:/tmp/coverage_data1.xml -v /home/runner/work/BOAT/BOAT/data_hyper_cleaning/test_data_hyper_cleaning.py
-        pytest --cov=/home/runner/work/BOAT/BOAT/boat --cov-report=xml:/tmp/coverage_data2.xml -v /home/runner/work/BOAT/BOAT/meta_learning/test_meta_learning.py
+        pytest --cov=/home/runner/work/BOAT/BOAT/boat --cov-report=term-missing -v /home/runner/work/BOAT/BOAT/data_hyper_cleaning/test_data_hyper_cleaning.py
+        pytest --cov=/home/runner/work/BOAT/BOAT/boat --cov-report=term-missing -v /home/runner/work/BOAT/BOAT/meta_learning/test_meta_learning.py
     - name: Merge coverage reports
       run: |
-        coverage combine /tmp/coverage_data1.xml /tmp/coverage_data2.xml
+        coverage combine 
 
     - name: Statistics
       if: success()
