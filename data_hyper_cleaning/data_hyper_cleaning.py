@@ -31,7 +31,7 @@ def Binarization(x):
 
 
 print(torch.cuda.is_available())
-device=torch.device("cuda")
+device=torch.device("cpu")
 class Net_x(torch.nn.Module):
     def __init__(self, tr):
         super(Net_x, self).__init__()
