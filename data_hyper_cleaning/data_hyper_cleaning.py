@@ -96,12 +96,12 @@ def main():
     ll_feed_dict = {"data": tr.data.to(device), "target":tr.dirty_target.to(device)}
 
     if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
-        iterations = 4
+        iterations = 3
     else:
         iterations = 1
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
-            b_optimizer._ll_solver.strategy = "s"+str(x_itr)
+            b_optimizer._ll_solver.strategy = "s"+str(x_itr+1)
         loss, run_time = b_optimizer.run_iter(ll_feed_dict,ul_feed_dict, current_iter=x_itr)
 
         if x_itr % 1 == 0:
