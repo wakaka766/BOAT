@@ -56,7 +56,7 @@ def update_tensor_grads(hparams, grads):
 
 
 def stop_grads(grads):
-    return [grad.detach().requires_grad_(False) for grad in grads]
+    return [(grad.detach().requires_grad_(False) if grad is not None else grad) for grad in grads]
 
 
 def average_grad(model, batch_size):
