@@ -3,14 +3,10 @@ import numpy as np
 import torch.nn.functional as F
 import boat
 from torch import nn
-from torch.nn import functional as F
-from torchmeta.datasets.helpers import omniglot
 from torchmeta.toy.helpers import sinusoid
 from torchmeta.utils.data import BatchMetaDataLoader
 import math
-import higher
 from tqdm import tqdm
-# print(torch.cuda.is_available())
 def get_cnn_omniglot(hidden_size, n_classes):
     def conv_layer(ic, oc, ):
         return nn.Sequential(
