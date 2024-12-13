@@ -34,6 +34,4 @@ coverage:
 
 ignore:
     # ignore the base classes which will be automatically inherited.
-  - "boat/dynamic_ol/__init__.py"
-  - "boat/hyper_ol/__init__.py"
   - "boat/utils/op_utils.py"
