@@ -32,6 +32,3 @@ coverage:
         flags: null
         paths: null
 
-ignore:
-    # ignore the base classes which will be automatically inherited.
-  - "boat/utils/op_utils.py"
