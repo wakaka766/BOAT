@@ -230,9 +230,6 @@ class Problem:
                                                               auxiliary_model, max_loss_iter))
                         backward_time = time.perf_counter() - backward_time
                     run_time += forward_time + backward_time
-                if "DI" in self.boat_configs['dynamic_op']:
-                    self._lower_init_opt.step()
-                    self._lower_init_opt.zero_grad()
                 average_grad(self._ul_model, len(ll_feed_dict))
             else:
                 with higher.innerloop_ctx(self._ll_model, self._lower_opt,
@@ -271,7 +268,7 @@ class Problem:
         if "DM" in self.boat_configs["dynamic_op"]:
             assert (self.boat_configs["hyper_op"] == ["RAD"]) or (self.boat_configs["hyper_op"] == ["CG"]), \
                 "When 'DM' is chosen, set the 'truncate_iter' properly."
-        if "RGT" in self.boat_configs["dynamic_op"]:
+        if "RGT" in self.boat_configs["hyper_op"]:
             assert self.boat_configs['RGT']["truncate_iter"] > 0, \
                 "When 'RGT' is chosen, set the 'truncate_iter' properly ."
         if self.boat_configs['accumulate_grad']:
@@ -286,11 +283,7 @@ class Problem:
 
         def check_model_structure(base_model, meta_model):
             for param1, param2 in zip(base_model.parameters(), meta_model.parameters()):
-                if param1.shape != param2.shape:
-                    return False
-                if param1.dtype != param2.dtype:
-                    return False
-                if param1.device != param2.device:
+                if (param1.shape != param2.shape) or (param1.dtype != param2.dtype) or (param1.device != param2.device):
                     return False
             return True
 
