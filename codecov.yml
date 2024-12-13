@@ -1,3 +1,6 @@
+codecov:
+ token: 9dd0aac2-35f6-4de6-a371-3304886540c5
+
 coverage:
   status:
     project:
@@ -28,10 +31,10 @@ coverage:
         only_pulls: false
         flags: null
         paths: null
-        
+
 ignore:
     # ignore the base classes which will be automatically inherited.
-  - "boat/ll_optimize/ll_optimizer.py"
-  - "boat/ul_optimize/ul_optimizer.py"
-  - "boat/utils/op_utils.py.py"
+  - "boat/dynamic_ol/__init__.py"
+  - "boat/hyper_ol/__init__.py"
+  - "boat/utils/op_utils.py"
   - "test_script/op_utils.py"
