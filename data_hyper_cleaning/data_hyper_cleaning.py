@@ -8,7 +8,8 @@ import boat
 from util_file import data_splitting,initialize
 from torchvision.datasets import MNIST
 base_folder = os.path.dirname(os.path.abspath(__file__))
-dataset = MNIST(root=os.path.join(base_folder,"data/"), train=True, download=True)
+parent_folder = os.path.dirname(base_folder)
+dataset = MNIST(root=os.path.join(parent_folder,"data/"), train=True, download=True)
 tr, val, test = data_splitting(dataset, 5000, 5000, 10000)
 tr.data_polluting(0.5)
 tr.data_flatten()
@@ -52,11 +53,13 @@ initialize(y)
 
 import os
 import json
-base_folder = os.path.dirname(os.path.abspath(__file__))
-with open(os.path.join(base_folder,"configs/boat_config_dhl.json"), "r") as f:
+# base_folder = os.path.dirname(os.path.abspath(__file__))
+# 获取上一级路径
+
+with open(os.path.join(parent_folder,"configs/boat_config_dhl.json"), "r") as f:
     boat_config = json.load(f)
 
-with open(os.path.join(base_folder,"configs/loss_config_dhl.json"), "r") as f:
+with open(os.path.join(parent_folder,"configs/loss_config_dhl.json"), "r") as f:
     loss_config = json.load(f)
 def main():
     import argparse
