@@ -148,7 +148,7 @@ fogm_method = (["VSM"], ["VFM"], ["MESM"], ["PGDM"])
 def test_combination_dynamic_hyper_method(dynamic_method, hyper_method):
     # 这里将实际调用你的 Python 脚本进行测试
     command = [
-        "python", "data_hyper_cleaning.py",
+        "python", "/home/runner/work/BOAT/BOAT/data_hyper_cleaning/data_hyper_cleaning.py",
         "--dynamic_method", ",".join(dynamic_method),
         "--hyper_method", ",".join(hyper_method)
     ]
@@ -167,7 +167,7 @@ def test_combination_dynamic_hyper_method(dynamic_method, hyper_method):
 def test_combination_dynamic_hyper_method_dm(dynamic_method, hyper_method):
     # 运行与测试
     command = [
-        "python", "data_hyper_cleaning.py",
+        "python", "/home/runner/work/BOAT/BOAT/data_hyper_cleaning/data_hyper_cleaning.py",
         "--dynamic_method", ",".join(dynamic_method),
         "--hyper_method", ",".join(hyper_method)
     ]
@@ -184,7 +184,7 @@ def test_combination_dynamic_hyper_method_dm(dynamic_method, hyper_method):
 def test_fogm_method(fogm_method):
     # 运行 Fogm 测试
     command = [
-        "python", "data_hyper_cleaning.py",
+        "python", "/home/runner/work/BOAT/BOAT/data_hyper_cleaning/data_hyper_cleaning.py",
         "--fo_gm", fogm_method[0]
     ]
     print(f"Running test with fo_gm={fogm_method}")
