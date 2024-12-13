@@ -92,8 +92,15 @@ def main():
 
     parser.add_argument('--dynamic_method', type=str, default='',help='omniglot or miniimagenet or tieredImagenet')
     parser.add_argument('--hyper_method', type=str, default='',help='convnet for 4 convs or resnet for Residual blocks')
-    parser.add_argument('--fo_', type=str, default='',help='convnet for 4 convs or resnet for Residual blocks')
+    parser.add_argument('--fo_gm', type=str, default='',help='convnet for 4 convs or resnet for Residual blocks')
     args = parser.parse_args()
+
+    dynamic_method = args.dynamic_method.split(',') if args.dynamic_method else []
+    hyper_method = args.hyper_method.split(',') if args.hyper_method else []
+    print(args.dynamic_method)
+    print(args.hyper_method)
+    boat_config["dynamic_op"] =dynamic_method
+    boat_config["hyper_op"] = hyper_method
     boat_config['lower_level_model'] = meta_model
     boat_config['upper_level_model'] = meta_model
     boat_config['lower_level_var'] = meta_model.parameters()
