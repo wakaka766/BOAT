@@ -280,7 +280,7 @@ class Problem:
             assert (0.0 < self.boat_configs['GDA']["alpha_decay"] <= 1.0), \
                 "Parameter 'alpha_decay' used in method BDA should be in the interval (0,1)."
         if 'FD' in self._hyper_op:
-            assert self.boat_configs['RGT']["truncate_iter"] == 0 and not ("PTT" in self.boat_configs["hyper_op"]), \
+            assert self.boat_configs['RGT']["truncate_iter"] == 0, \
                 "One-stage method doesn't need trajectory truncation."
 
         def check_model_structure(base_model, meta_model):

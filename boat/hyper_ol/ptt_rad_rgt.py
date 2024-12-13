@@ -84,7 +84,7 @@ class PTT_RAD_RGT(HyperGradient):
         lower_model_params = list(auxiliary_model.parameters(time = max_loss_iter))
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model,
                                        auxiliary_model, params=lower_model_params)
-        grads_upper = torch.autograd.grad(upper_loss, list(self.ul_var),
+        grads_upper = torch.autograd.grad(upper_loss, self.ul_var,
                                           retain_graph=self.dynamic_initialization,allow_unused=True)
         update_tensor_grads(self.ul_var,grads_upper)
 

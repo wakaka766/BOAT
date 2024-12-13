@@ -80,7 +80,7 @@ class RAD_RGT(HyperGradient):
 
         assert self.truncate_iter > 0, "With RGT operation, 'truncate_iter' should be greater than 0"
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        grads_upper = torch.autograd.grad(upper_loss, self.ul_model.parameters(),
+        grads_upper = torch.autograd.grad(upper_loss, self.ul_var,
                                           retain_graph=self.dynamic_initialization, allow_unused=True,
                                           materialize_grads=True)
         update_tensor_grads(self.ul_var, grads_upper)
