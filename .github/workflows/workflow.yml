@@ -10,13 +10,20 @@ jobs:
         python-version: '3.8'
     - name: Install requirements
       run: pip install -r requirements.txt
+
+    - name: List files in BOAT/data_hyper_cleaning
+      run: ls -al BOAT/data_hyper_cleaning
+
+    - name: List files in BOAT/meta_learning
+      run: ls -al BOAT/meta_learning
+    
     - name: Generate coverage report
       run: |
         python -m pip install --upgrade pip
         pip install pytest
         pip install pytest-cov
-        pytest --cov=boat --cov-report=xml data_hyper_cleaning/test_data_hyper_cleaning.py
-        pytest --cov=boat --cov-report=xml meta_learning/test_meta_cleaning.py
+        pytest --cov=boat --cov-report=xml BOAT/data_hyper_cleaning/test_data_hyper_cleaning.py
+        pytest --cov=boat --cov-report=xml BOAT/meta_learning/test_meta_cleaning.py
     - name: Statistics
       if: success()
       run: |
