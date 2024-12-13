@@ -37,4 +37,3 @@ ignore:
   - "boat/dynamic_ol/__init__.py"
   - "boat/hyper_ol/__init__.py"
   - "boat/utils/op_utils.py"
-  - "test_script/op_utils.py"

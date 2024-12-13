@@ -130,7 +130,7 @@ import subprocess
 # 假设 data_hyper_cleaning.py 和 util_file.py 已经被复制到正确的位置
 
 # 动态方法与超参数方法的组合列表
-dynamic_methodlist = (["NGD"], ["DI", "NGD"], ["GDA", "NGD", "DI"], ["DI", "NGD", "GDA"])
+dynamic_methodlist = (["NGD"], ["DI", "NGD"], ["GDA", "NGD"],["GDA", "NGD", "DI"], ["DI", "NGD", "GDA"])
 dynamic_method_dm = (["NGD", "DM"], ["NGD", "DM", "GDA"])
 hyper_methodlist = (
     ["CG"], ["CG", "PTT"], ["RAD"], ["RAD", "PTT"], ["RAD", "RGT"], ["PTT", "RAD", "RGT"], ["FD"], ["FD", "PTT"],
