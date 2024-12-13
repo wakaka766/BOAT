@@ -75,7 +75,7 @@ class RAD(HyperGradient):
 
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model,params=auxiliary_model.parameters(time=max_loss_iter))
         grads_upper = torch.autograd.grad(upper_loss, self.ul_var,
-                                          retain_graph=self.dynamic_initialization,allow_unused=True,materialize_grads=True)
+                                          retain_graph=self.dynamic_initialization,allow_unused=True)
         update_tensor_grads(self.ul_var,grads_upper)
 
         if self.dynamic_initialization:
