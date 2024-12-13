@@ -1,15 +1,7 @@
 import torch
-from torch.nn import functional as F
-
-
-
-
-def final_accuary(out, target):
-    pred = out.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
-    acc = pred.eq(target.view_as(pred)).sum().item() / len(target)
-    return acc
-
-
+from torch import Tensor
+from typing import List, Callable
+from torch.autograd import grad as torch_grad
 def l2_reg(parameters):
     loss = 0
     for w in parameters:
@@ -17,41 +9,27 @@ def l2_reg(parameters):
     return loss
 
 
-def p_norm_reg(parameters, exp, epi):
-    loss = 0
-    for w in parameters:
-        loss += (torch.norm(w, 2)+torch.norm(epi*torch.ones_like(w), 2))**(exp/2)
-    return loss
-
-
-def bias_reg_f(bias, params):
-    # l2 biased regularization
-    return sum([((b - p) ** 2).sum() for b, p in zip(bias, params)])
-
-
-def distance_reg(output, label, params, hparams, reg_param):
-    # biased regularized cross-entropy loss where the bias are the meta-parameters in hparams
-    return F.cross_entropy(output, label) + reg_param * bias_reg_f(hparams, params)
-
 def grad_unused_zero(output, inputs, grad_outputs=None, retain_graph=False, create_graph=False):
     grads = torch.autograd.grad(output, inputs, grad_outputs=grad_outputs, allow_unused=True,
                                 retain_graph=retain_graph, create_graph=create_graph)
+
     def grad_or_zeros(grad, var):
         return torch.zeros_like(var) if grad is None or (torch.isnan(grad).any()) else grad
 
     return tuple(grad_or_zeros(g, v) for g, v in zip(grads, inputs))
 
-def list_tensor_matmul(list1,list2,trans=0):
-    out=0
-    for t1,t2 in zip(list1,list2):
-        out=out+torch.sum(t1*t2)
+
+def list_tensor_matmul(list1, list2):
+    out = 0
+    for t1, t2 in zip(list1, list2):
+        out = out + torch.sum(t1 * t2)
     return out
 
 
-def list_tensor_norm(list,p=2):
-    norm=0
-    for t in list:
-        norm=norm+torch.norm(t,p)
+def list_tensor_norm(list_tensor, p=2):
+    norm = 0
+    for t in list_tensor:
+        norm = norm + torch.norm(t, p)
     return norm
 
 
@@ -60,13 +38,6 @@ def require_model_grad(model=None):
     for param in model.parameters():
         param.requires_grad_(True)
 
-def classification_acc(output, target):
-    pred = output.argmax(dim=1, keepdim=True)
-    return pred.eq(target.view_as(pred)).sum().item() / len(target)
-
-def stop_grad_fn(all_grads):
-    for grad in all_grads:
-        grad.requires_grad_(False)
 
 def update_grads(grads, model):
     for p, x in zip(grads, model.parameters()):
@@ -75,6 +46,7 @@ def update_grads(grads, model):
         else:
             x.grad += p
 
+
 def update_tensor_grads(hparams, grads):
     for l, g in zip(hparams, grads):
         if l.grad is None:
@@ -82,17 +54,14 @@ def update_tensor_grads(hparams, grads):
         else:
             l.grad += g
 
-# def stop_grads(grads):
-#     for grad in grads:
-#         grad = grad.detach()
-#         grad.requires_grad = False
-#     return grads
 
 def stop_grads(grads):
     return [grad.detach().requires_grad_(False) for grad in grads]
-def average_grad(model,batch_size):
+
+
+def average_grad(model, batch_size):
     for param in model.parameters():
-        param.grad.data= param.grad.data/batch_size
+        param.grad.data = param.grad.data / batch_size
 
 
 def stop_model_grad(model=None):
@@ -101,124 +70,109 @@ def stop_model_grad(model=None):
         param.requires_grad_(False)
 
 
-
 def copy_parameter_from_list(y, z):
-    # print(loss_L1(y.parameters()))
-    # print(loss_L1(z.parameters()))
     for p, q in zip(y.parameters(), z):
         p.data = q.clone().detach().requires_grad_()
-    # print(loss_L1(y.parameters()))
-    # print('-'*80)
     return y
 
 
-class DifferentiableOptimizer:
-    def __init__(self, loss_f, dim_mult, data_or_iter=None):
-        """
-        Args:
-            loss_f: callable with signature (params, hparams, [data optional]) -> loss tensor
-            data_or_iter: (x, y) or iterator over the data needed for loss_f
-        """
-        self.data_iterator = None
-        if data_or_iter:
-            self.data_iterator = data_or_iter if hasattr(data_or_iter, '__next__') else repeat(data_or_iter)
+def get_outer_gradients(outer_loss, params, hparams, retain_graph=True):
+    grad_outer_w = grad_unused_zero(outer_loss, params, retain_graph=retain_graph)
+    grad_outer_hparams = grad_unused_zero(outer_loss, hparams, retain_graph=retain_graph)
 
-        self.loss_f = loss_f
-        self.dim_mult = dim_mult
-        self.curr_loss = None
+    return grad_outer_w, grad_outer_hparams
 
-    def get_opt_params(self, params):
-        opt_params = [p for p in params]
-        opt_params.extend([torch.zeros_like(p) for p in params for _ in range(self.dim_mult-1) ])
-        return opt_params
 
-    def step(self, params, hparams, create_graph,only_grad=False):
-        raise NotImplementedError
+def cat_list_to_tensor(list_tx):
+    return torch.cat([xx.view([-1]) for xx in list_tx])
 
-    def __call__(self, params, hparams, create_graph=True,only_grad=False):
-        with torch.enable_grad():
-            return self.step(params, hparams, create_graph,only_grad=only_grad)
 
-    def get_loss(self, params, hparams):
-        if self.data_iterator:
-            data = next(self.data_iterator)
-            self.curr_loss = self.loss_f(params, hparams, data)
+def neumann(params: List[Tensor],
+            hparams: List[Tensor],
+            upper_loss,
+            lower_loss,
+            k: int,
+            fp_map: Callable[[List[Tensor], List[Tensor]], List[Tensor]],
+            tol=1e-10) -> List[Tensor]:
+
+    grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
+
+    w_mapped = fp_map(params, lower_loss)
+    vs, gs = grad_outer_w, grad_outer_w
+    gs_vec = cat_list_to_tensor(gs)
+    for i in range(k):
+        gs_prev_vec = gs_vec
+        vs = torch_grad(w_mapped, params, grad_outputs=vs, retain_graph=True)
+        gs = [g + v for g, v in zip(gs, vs)]
+        gs_vec = cat_list_to_tensor(gs)
+        if float(torch.norm(gs_vec - gs_prev_vec)) < tol:
+            break
+
+    grads = torch_grad(w_mapped, hparams, grad_outputs=gs)
+    grads = [g + v for g, v in zip(grads, grad_outer_hparams)]
+    return grads
+
+
+def conjugate_gradient(params: List[Tensor],
+                       hparams: List[Tensor],
+                       upper_loss,
+                       lower_loss,
+                       K: int,
+                       fp_map: Callable[[List[Tensor], List[Tensor]], List[Tensor]],
+                       tol=1e-10,
+                       stochastic=False) -> List[Tensor]:
+    grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
+
+    if not stochastic:
+        w_mapped = fp_map(params, lower_loss)
+
+    def dfp_map_dw(xs):
+        if stochastic:
+            w_mapped_in = fp_map(params, lower_loss)
+            Jfp_mapTv = torch_grad(w_mapped_in, params, grad_outputs=xs, retain_graph=False)
         else:
-            self.curr_loss = self.loss_f(params, hparams)
-        return self.curr_loss
+            Jfp_mapTv = torch_grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
+        return [v - j for v, j in zip(xs, Jfp_mapTv)]
+
+    vs = cg_step(dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol)  # K steps of conjugate gradient
+
+    if stochastic:
+        w_mapped = fp_map(params, lower_loss)
+
+    grads = torch_grad(w_mapped, hparams, grad_outputs=vs)
+    grads = [g + v for g, v in zip(grads, grad_outer_hparams)]
+
+    return grads
 
 
-class HeavyBall(DifferentiableOptimizer):
-    def __init__(self, loss_f, step_size, momentum, data_or_iter=None):
-        super(HeavyBall, self).__init__(loss_f, dim_mult=2, data_or_iter=data_or_iter)
-        self.loss_f = loss_f
-        self.step_size_f = step_size if callable(step_size) else lambda x: step_size
-        self.momentum_f = momentum if callable(momentum) else lambda x: momentum
+def cg_step(Ax, b, max_iter=100, epsilon=1.0e-5):
 
-    def step(self, params, hparams, create_graph):
-        n = len(params) // 2
-        p, p_aux = params[:n], params[n:]
-        loss = self.get_loss(p, hparams)
-        sz, mu = self.step_size_f(hparams), self.momentum_f(hparams)
-        p_new, p_new_aux = heavy_ball_step(p, p_aux, loss, sz,  mu, create_graph=create_graph)
-        return [*p_new, *p_new_aux]
+    x_last = [torch.zeros_like(bb) for bb in b]
+    r_last = [torch.zeros_like(bb).copy_(bb) for bb in b]
+    p_last = [torch.zeros_like(rr).copy_(rr) for rr in r_last]
 
+    for ii in range(max_iter):
+        Ap = Ax(p_last)
+        Ap_vec = cat_list_to_tensor(Ap)
+        p_last_vec = cat_list_to_tensor(p_last)
+        r_last_vec = cat_list_to_tensor(r_last)
+        rTr = torch.sum(r_last_vec * r_last_vec)
+        pAp = torch.sum(p_last_vec * Ap_vec)
+        alpha = rTr / pAp
 
-class Momentum(DifferentiableOptimizer):
-    """
-    GD with momentum step as implemented in torch.optim.SGD
-    .. math::
-              v_{t+1} = \mu * v_{t} + g_{t+1} \\
-              p_{t+1} = p_{t} - lr * v_{t+1}
-    """
-    def __init__(self, loss_f, step_size, momentum, data_or_iter=None):
-        super(Momentum, self).__init__(loss_f, dim_mult=2, data_or_iter=data_or_iter)
-        self.loss_f = loss_f
-        self.step_size_f = step_size if callable(step_size) else lambda x: step_size
-        self.momentum_f = momentum if callable(momentum) else lambda x: momentum
+        x = [xx + alpha * pp for xx, pp in zip(x_last, p_last)]
+        r = [rr - alpha * pp for rr, pp in zip(r_last, Ap)]
+        r_vec = cat_list_to_tensor(r)
 
-    def step(self, params, hparams, create_graph):
-        n = len(params) // 2
-        p, p_aux = params[:n], params[n:]
-        loss = self.get_loss(p, hparams)
-        sz, mu = self.step_size_f(hparams), self.momentum_f(hparams)
-        p_new, p_new_aux = torch_momentum_step(p, p_aux, loss, sz,  mu, create_graph=create_graph)
-        return [*p_new, *p_new_aux]
+        if float(torch.norm(r_vec)) < epsilon:
+            break
 
+        beta = torch.sum(r_vec * r_vec) / rTr
+        p = [rr + beta * pp for rr, pp in zip(r, p_last)]
 
-class GradientDescent(DifferentiableOptimizer):
-    def __init__(self, loss_f, step_size, data_or_iter=None):
-        super(GradientDescent, self).__init__(loss_f, dim_mult=1, data_or_iter=data_or_iter)
-        self.step_size_f = step_size if callable(step_size) else lambda x: step_size
+        x_last = x
+        p_last = p
+        r_last = r
 
-    def step(self, params, hparams, create_graph,only_grad=False):
-        loss = self.get_loss(params, hparams)
-        sz = self.step_size_f(hparams)
-        if only_grad:
-            grad0=torch.autograd.grad(loss, params, create_graph=create_graph,allow_unused=True)
-            return [(g if g is not None else 0*grad0[0]) for g in grad0]
-        else:
-            return gd_step(params, loss, sz, create_graph=create_graph)
+    return x_last
 
-
-def gd_step(params, loss, step_size, create_graph=True):
-    grads = torch.autograd.grad(loss, params, create_graph=create_graph,allow_unused=True)
-
-    return [w - step_size * (g if g is not None else 0) for w, g in zip(params, grads)]
-
-
-def heavy_ball_step(params, aux_params, loss, step_size, momentum, create_graph=True):
-    grads = torch.autograd.grad(loss, params, create_graph=create_graph)
-    return [w - step_size * g + momentum * (w - v) for g, w, v in zip(grads, params, aux_params)], params
-
-
-def torch_momentum_step(params, aux_params, loss, step_size, momentum, create_graph=True):
-    """
-    GD with momentum step as implemented in torch.optim.SGD
-    .. math::
-              v_{t+1} = \mu * v_{t} + g_{t+1} \\
-              p_{t+1} = p_{t} - lr * v_{t+1}
-    """
-    grads = torch.autograd.grad(loss, params, create_graph=create_graph)
-    new_aux_params = [momentum*v + g for v, g in zip(aux_params, grads)]
-    return [w - step_size * nv for w, nv in zip(params, new_aux_params)], new_aux_params

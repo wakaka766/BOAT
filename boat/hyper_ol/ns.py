@@ -1,81 +1,38 @@
 import torch
 from .hyper_gradient import HyperGradient
-from torch.autograd import grad as torch_grad
-
 from torch.nn import Module
-from torch import Tensor
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
-
-from boat.utils.op_utils import update_grads,update_tensor_grads
+from boat.utils.op_utils import update_tensor_grads, neumann
 
 
 class NS(HyperGradient):
-    r"""Calculation of the gradient of the upper adapt_model variables with Implicit Gradient Based Methods.
-
-    Implements the UL problem optimization procedure of two implicit gradient
-    based methods (IGBMs), neumann series based method (NS) `[1]`_.
-
-    A wrapper of lower adapt_model that has been optimized in the LL optimization will
-    be used in this procedure.
+    """
+    Calculation of the hyper gradient of the upper-level variables with Neumann Series (NS) _`[1]`.
 
     Parameters
     ----------
-        ul_objective: callable
-            The main optimization problem in a hierarchical optimization problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ul_model: Module
-            Upper adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with upper objective and trained lower adapt_model.
-
-        ll_objective: callable
-            An optimization problem which is considered as the constraint of upper
-            level problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ll_model: Module
-            Lower adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with lower objective during lower-level optimization.
-
-        lower_learning_rate: float
-            Step size for lower loop optimization.
-
-        k: int
-            The maximum number of conjugate gradient iterations.
-
-        tolerance: float, default=1e-10
-            End the method earlier when the norm of the residual is less than tolerance.
+        :param ll_objective: The lower-level objective of the BLO problem.
+        :type ll_objective: callable
+        :param ul_objective: The upper-level objective of the BLO problem.
+        :type ul_objective: callable
+        :param ll_model: The lower-level model of the BLO problem.
+        :type ll_model: torch.nn.Module
+        :param ul_model: The upper-level model of the BLO problem.
+        :type ul_model: torch.nn.Module
+        :param ll_var: List of variables optimized with the lower-level objective.
+        :type ll_var: List
+        :param ul_var:  of variables optimized with the upper-level objective.
+        :type ul_var: List
+        :param solver_config: Dictionary containing solver configurations.
+        :type solver_config: dict
 
     References
     ----------
-    _`[1]`  J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
+    _`[1]` J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
      hyperparameters by implicit differentiation", in AISTATS, 2020.
     """
+
 
     def __init__(
             self,
@@ -83,11 +40,11 @@ class NS(HyperGradient):
             ul_objective: Callable,
             ll_model: Module,
             ul_model: Module,
-            ll_var:List,
-            ul_var:List,
-            solver_config : Dict
+            ll_var: List,
+            ul_var: List,
+            solver_config: Dict
     ):
-        super(NS, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
+        super(NS, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
         self.dynamic_initialization = "DI" in solver_config['dynamic_op']
 
         self.ll_lr = solver_config['ll_opt'].defaults["lr"]
@@ -108,38 +65,24 @@ class NS(HyperGradient):
             max_loss_iter: int = 0
     ):
         """
-        Compute the grads of upper variable with validation data samples in the batch
-        using upper objective. The grads will be saved in the passed in upper adapt_model.
+        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
 
-        Note that the implemented UL optimization procedure will only compute
-        the grads of upper variables。 If the validation data passed in is only single data
-        of the batch (such as few-shot learning experiment), then compute_gradients()
-        function should be called repeatedly to accumulate the grads of upper variables
-        for the whole batch. After that the update operation of upper variables needs
-        to be done outside this module.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+            It typically includes training data, targets, and other information required to compute the LL objective.
+        :type ll_feed_dict: Dict
 
-        Parameters
-        ----------
-            validate_data: Tensor
-                The validation data used for UL problem optimization.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :type ul_feed_dict: Dict
 
-            validate_target: Tensor
-                The labels of the samples in the validation data.
+        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+            It serves as the lower-level model for optimization.
+        :type auxiliary_model: _MonkeyPatchBase
 
-            auxiliary_model: _MonkeyPatchBase
-                Wrapper of lower adapt_model encapsulated by module higher, has been optimized in LL
-                optimization phase.
+        :param max_loss_iter: The number of iteration used for backpropagation.
+        :type max_loss_iter: int
 
-            train_data: Tensor
-                The training data used for LL problem optimization.
-
-            train_target: Tensor
-                The labels of the samples in the train data.
-
-        Returns
-        -------
-        upper_loss: Tensor
-            Returns the loss value of upper objective.
+        :returns: the current upper-level objective
         """
 
         hparams = list(self.ul_var)
@@ -154,66 +97,19 @@ class NS(HyperGradient):
         lower_model_params = list(auxiliary_model.parameters())
 
         if self.gda_loss is not None:
-            ll_feed_dict['alpha'] = self.alpha*self.alpha_decay**max_loss_iter
+            ll_feed_dict['alpha'] = self.alpha * self.alpha_decay ** max_loss_iter
             lower_loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model)
         else:
             lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
 
         if self.dynamic_initialization:
-            grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)),retain_graph=True)
+            grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)), retain_graph=True)
             update_tensor_grads(self.ll_var, grads_lower)
 
         grads_upper = neumann(lower_model_params, hparams, upper_loss, lower_loss, self.K, fp_map, self.tolerance)
 
-        update_tensor_grads(self.ul_var,grads_upper)
+        update_tensor_grads(self.ul_var, grads_upper)
 
         return upper_loss
 
-
-def cat_list_to_tensor(list_tx):
-    return torch.cat([xx.view([-1]) for xx in list_tx])
-
-
-def neumann(params: List[Tensor],
-            hparams: List[Tensor],
-            upper_loss,
-            lower_loss,
-            k: int,
-            fp_map: Callable[[List[Tensor], List[Tensor]], List[Tensor]],
-            tol=1e-10) -> List[Tensor]:
-    """ Saves one iteration from the fixed point method"""
-
-    grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
-
-    w_mapped = fp_map(params, lower_loss)
-    vs, gs = grad_outer_w, grad_outer_w
-    gs_vec = cat_list_to_tensor(gs)
-    for i in range(k):
-        gs_prev_vec = gs_vec
-        vs = torch_grad(w_mapped, params, grad_outputs=vs, retain_graph=True)
-        gs = [g + v for g, v in zip(gs, vs)]
-        gs_vec = cat_list_to_tensor(gs)
-        if float(torch.norm(gs_vec - gs_prev_vec)) < tol:
-            break
-
-    grads = torch_grad(w_mapped, hparams, grad_outputs=gs)
-    grads = [g + v for g, v in zip(grads, grad_outer_hparams)]
-    return grads
-
-
-def get_outer_gradients(outer_loss, params, hparams, retain_graph=True):
-    grad_outer_w = grad_unused_zero(outer_loss, params, retain_graph=retain_graph)
-    grad_outer_hparams = grad_unused_zero(outer_loss, hparams, retain_graph=retain_graph)
-
-    return grad_outer_w, grad_outer_hparams
-
-
-def grad_unused_zero(output, inputs, grad_outputs=None, retain_graph=False, create_graph=False):
-    grads = torch.autograd.grad(output, inputs, grad_outputs=grad_outputs, allow_unused=True,
-                                retain_graph=retain_graph, create_graph=create_graph)
-
-    def grad_or_zeros(grad, var):
-        return torch.zeros_like(var) if grad is None else grad
-
-    return tuple(grad_or_zeros(g, v) for g, v in zip(grads, list(inputs)))

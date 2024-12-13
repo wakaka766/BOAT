@@ -1,57 +1,40 @@
 import torch
 from .hyper_gradient import HyperGradient
-from ..utils.op_utils import update_grads,update_tensor_grads
-from typing import List, Callable, Dict
 from torch.nn import Module
-from torch import Tensor
+from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
+from boat.utils.op_utils import update_tensor_grads
+
 
 
 class RAD_RGT(HyperGradient):
-    r"""UL Variable Gradients Calculation with Reverse-mode AD
-
-    Implements the UL optimization procedure with Reverse-mode Auto Diff method_`[1]`_.
-
-    A wrapper of lower adapt_model that has been optimized in the lower optimization will
-    be used in this procedure.
+    """
+    Calculation of the hyper gradient of the upper-level variables with Reverse Auto Differentiation (RAD) _`[1]` and
+    Reverse Gradient Truncation (RGT) _`[2]`.
 
     Parameters
     ----------
-        ul_objective: callable
-            The main optimization problem in a hierarchical optimization problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ul_model: Module
-            Upper adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with upper objective.
-
-        truncate_max_loss_iter: bool, default=False
-            Optional argument, if set True then during ul optimization IAPTT-GM method will be used to
-            truncate the trajectory.
-
-        update_ll_model_init: bool, default=False
-            If set True, the initial value of ll model will be updated after this iteration.
+        :param ll_objective: The lower-level objective of the BLO problem.
+        :type ll_objective: callable
+        :param ul_objective: The upper-level objective of the BLO problem.
+        :type ul_objective: callable
+        :param ll_model: The lower-level model of the BLO problem.
+        :type ll_model: torch.nn.Module
+        :param ul_model: The upper-level model of the BLO problem.
+        :type ul_model: torch.nn.Module
+        :param ll_var: List of variables optimized with the lower-level objective.
+        :type ll_var: List
+        :param ul_var:  of variables optimized with the upper-level objective.
+        :type ul_var: List
+        :param solver_config: Dictionary containing solver configurations.
+        :type solver_config: dict
 
     References
     ----------
-    _`[1]` L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
-     programming for hyperparameter optimization and meta-learning", in ICML, 2018.
-
-    _`[2]` R. Liu, Y. Liu, S. Zeng, J. Zhang, "Towards Gradient-based Bilevel
-     Optimization with Non-convex Followers and Beyond", in NeurIPS, 2021.
+    _`[1]` Franceschi, Luca, et al. Forward and reverse gradient-based hyperparameter optimization. in ICML, 2017.
+    _`[2]` Shaban A, Cheng C A, Hatch N, et al. Truncated back-propagation for bilevel optimization[C]. In AISTATS,2019.
     """
+
 
     def __init__(
             self,
@@ -59,13 +42,14 @@ class RAD_RGT(HyperGradient):
             ul_objective: Callable,
             ll_model: Module,
             ul_model: Module,
-            ll_var:List,
-            ul_var:List,
-            solver_config : Dict
+            ll_var: List,
+            ul_var: List,
+            solver_config: Dict
     ):
-        super(RAD_RGT, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
+        super(RAD_RGT, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
         self.dynamic_initialization = "DI" in solver_config['dynamic_op']
         self.truncate_iter = solver_config["RGT"]['truncate_iter']
+
     def compute_gradients(
             self,
             ll_feed_dict: Dict,
@@ -74,43 +58,32 @@ class RAD_RGT(HyperGradient):
             max_loss_iter: int = 0
     ):
         """
-        Compute the grads of upper variable with validation data samples in the batch
-        using upper objective. The grads will be saved in the passed in upper adapt_model.
+        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
 
-        Note that the implemented UL optimization procedure will only compute
-        the grads of upper variables。 If the validation data passed in is only single data
-        of the batch (such as few-shot learning experiment), then compute_gradients()
-        function should be called repeatedly to accumulate the grads of upper variables
-        for the whole batch. After that the update operation of upper variables needs
-        to be done outside this module.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+            It typically includes training data, targets, and other information required to compute the LL objective.
+        :type ll_feed_dict: Dict
 
-        Parameters
-        ----------
-            validate_data: Tensor
-               The validation data used for upper level problem optimization.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :type ul_feed_dict: Dict
 
-            validate_target: Tensor
-               The labels of the samples in the validation data.
+        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+            It serves as the lower-level model for optimization.
+        :type auxiliary_model: _MonkeyPatchBase
 
-            auxiliary_model: _MonkeyPatchBase
-                Wrapper of lower adapt_model encapsulated by module higher, has been optimized in lower
-                optimization phase.
+        :param max_loss_iter: The number of iteration used for backpropagation.
+        :type max_loss_iter: int
 
-            max_loss_iter: int = 0
-                The step of lower optimization loop which has the maximum loss value. The
-                backpropagation trajectory shall be truncated here rather than the whole
-                lower-loop.
-
-        Returns
-        -------
-        upper_loss: Tensor
-           Returns the loss value of upper objective.
+        :returns: the current upper-level objective
         """
+
         assert self.truncate_iter > 0, "With RGT operation, 'truncate_iter' should be greater than 0"
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         grads_upper = torch.autograd.grad(upper_loss, self.ul_model.parameters(),
-                                          retain_graph=self.dynamic_initialization,allow_unused=True,materialize_grads=True)
-        update_tensor_grads(self.ul_var,grads_upper)
+                                          retain_graph=self.dynamic_initialization, allow_unused=True,
+                                          materialize_grads=True)
+        update_tensor_grads(self.ul_var, grads_upper)
 
         if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)))

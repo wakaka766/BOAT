@@ -1,5 +1,4 @@
 import time
-import importlib
 from typing import Dict, Any, Callable
 import torch
 import copy
@@ -7,93 +6,111 @@ from torch import Tensor
 from torch.optim import Optimizer
 import higher
 
+from boat.utils.op_utils import copy_parameter_from_list, average_grad
 
-from boat.utils.op_utils import copy_parameter_from_list,average_grad
 importlib = __import__("importlib")
 ll_grads = importlib.import_module("boat.dynamic_ol")
 ul_grads = importlib.import_module("boat.hyper_ol")
 fo_gms = importlib.import_module("boat.fogm")
+
+
+def _load_loss_function(loss_config: Dict[str, Any]) -> Callable:
+    """
+    Dynamically load a loss function from the provided configuration.
+
+    :param loss_config: Dictionary with keys:
+        - "function": Path to the loss function (e.g., "module.path.to_function").
+        - "params": Parameters to be passed to the loss function.
+    :type loss_config: Dict[str, Any]
+
+    :returns: Loaded loss function ready for use.
+    :rtype: Callable
+    """
+
+    module_name, func_name = loss_config["function"].rsplit(".", 1)
+    module = importlib.import_module(module_name)
+    func = getattr(module, func_name)
+
+    # Return a wrapper function that can accept both positional and keyword arguments
+    return lambda *args, **kwargs: func(*args, **{**loss_config.get("params", {}), **kwargs})
+
+
 class Problem:
     """
-    Enhanced bi-level optimization problem class supporting flexible loss functions and retaining original logic.
+    Enhanced bi-level optimization problem class supporting flexible loss functions and operation configurations.
     """
 
     def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any]):
         """
         Initialize the Problem instance.
 
-        Args:
-            config (Dict[str, Any]): Configuration dictionary including:
-                - "method": Optimization method ("Feature" or "Initial").
-                - "ll_method": Lower-level optimization method.
-                - "ul_method": Upper-level optimization method.
-                - "ll_loss": Lower-level loss configuration (function path and params).
-                - "ul_loss": Upper-level loss configuration (function path and params).
-                - "ll_model": Lower-level model.
-                - "ul_model": Upper-level model.
-                - "total_iters": Total iterations.
-                - Additional configurations for solvers and optimizers.
+        :param config: Configuration dictionary for the optimization setup.
+            - "fo_gm": First Order Gradient based Method (optional), e.g., ["VSM"], ["VFM"], ["MESM"].
+            - "dynamic_op": List of dynamic operations (optional), e.g., ["NGD"], ["NGD", "GDA"], ["NGD", "GDA", "DI"].
+            - "hyper_op": Hyper-optimization method (optional), e.g., ["RAD"], ["RAD", "PTT"], ["IAD", "NS", "PTT"].
+            - "lower_level_loss": Configuration for the lower-level loss function based on the json file configuration.
+            - "upper_level_loss": Configuration for the upper-level loss function based on the json file configuration.
+            - "lower_level_model": The lower-level model to be optimized.
+            - "upper_level_model": The upper-level model to be optimized.
+            - "lower_level_var": Variables in the lower-level model.
+            - "upper_level_var": Variables in the upper-level model.
+            - "device": Device configuration (e.g., "cpu", "cuda").
+        :type config: Dict[str, Any]
+
+        :param loss_config: Loss function configuration dictionary.
+            - "lower_level_loss": Configuration for the lower-level loss function.
+            - "upper_level_loss": Configuration for the upper-level loss function.
+            - "GDA_loss": Configuration for GDA loss function (optional).
+        :type loss_config: Dict[str, Any]
+
+        :returns: None
         """
         self._fo_gm = config["fo_gm"]
         self._dynamic_op = config["dynamic_op"]
         self._hyper_op = config["hyper_op"]
-        self._ll_loss = self._load_loss_function(loss_config["lower_level_loss"])
-        self._ul_loss = self._load_loss_function(loss_config["upper_level_loss"])
         self._ll_model = config["lower_level_model"]
         self._ul_model = config["upper_level_model"]
         self._ll_var = list(config["lower_level_var"])
         self._ul_var = list(config["upper_level_var"])
         self.boat_configs = config
-        self.boat_configs["gda_loss"] = self._load_loss_function(loss_config["GDA_loss"]) if 'GDA' in config["dynamic_op"] else None
+        self.boat_configs["gda_loss"] = _load_loss_function(loss_config["gda_loss"]) \
+            if 'GDA' in config["dynamic_op"] else None
+        self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
+        self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
         self._ll_solver = None
         self._ul_solver = None
         self._lower_opt = None
         self._upper_opt = None
+        self._lower_init_opt = None
+        self._fo_gm_solver = None
+        self._lower_loop = None
+        self._log_results_dict = {}
         self._device = torch.device(config["device"])
-
-    def _load_loss_function(self, loss_config: Dict[str, Any]) -> Callable:
-        """
-        Dynamically load a loss function from the provided configuration.
-
-        Args:
-            loss_config (Dict[str, Any]): Dictionary with keys:
-                - "function": Path to the loss function (e.g., "module.path.to_function").
-                - "params": Parameters to be passed to the loss function.
-
-        Returns:
-            Callable: Loaded loss function ready for use.
-        """
-        module_name, func_name = loss_config["function"].rsplit(".", 1)
-        module = importlib.import_module(module_name)
-        func = getattr(module, func_name)
-
-        # Return a wrapper function that can accept both positional and keyword arguments
-        return lambda *args, **kwargs: func(*args, **{**loss_config.get("params", {}), **kwargs})
 
     def build_ll_solver(self, lower_opt: Optimizer):
         """
         Configure the lower-level solver.
 
-        Args:
-            lower_opt (Optimizer): Optimizer for the lower-level model.
-            solver_config (Dict[str, Any]): Configuration for the lower-level solver.
+        :param lower_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
+        :type lower_opt: Optimizer
+
+        :returns: None
         """
         if self.boat_configs['fo_gm'] is None:
             assert (self.boat_configs[
-                       'dynamic_op'] is not None) and (self.boat_configs['hyper_op'] is not None), "Set 'dynamic_op' and 'hyper_op' properly."
+                        'dynamic_op'] is not None) and (
+                           self.boat_configs['hyper_op'] is not None), "Set 'dynamic_op' and 'hyper_op' properly."
             sorted_ops = sorted([op.upper() for op in self._dynamic_op])
             dynamic_ol = "_".join(sorted_ops)
             self._lower_opt = lower_opt
-            self.boat_configs['ll_opt'] =self._lower_opt
+            self.boat_configs['ll_opt'] = self._lower_opt
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
             if 'DM' in self._dynamic_op:
                 self.boat_configs["DM"]['auxiliary_v'] = [torch.zeros_like(param) for param in self._ll_var]
-                self.boat_configs["DM"]['auxiliary_v_opt'] = torch.optim.SGD(self.boat_configs["DM"]['auxiliary_v'], lr=self.boat_configs["DM"]['auxiliary_v_lr'])
-            if self._hyper_op == 'FD':
-                assert self.boat_configs['lower_iters'] == 1, "Finite Differentiation method requires one gradient step to optimize task parameters."
-                assert self.boat_configs['RGT']["truncate_iter"] == 0 and not ("PTT" in self.boat_configs["hyper_op"]), \
-                    "One-stage method doesn't need trajectory truncation."
+                self.boat_configs["DM"]['auxiliary_v_opt'] = torch.optim.SGD(self.boat_configs["DM"]['auxiliary_v'],
+                                                                             lr=self.boat_configs["DM"][
+                                                                                 'auxiliary_v_lr'])
             self._ll_solver = getattr(
                 ll_grads, "%s" % dynamic_ol
             )(ll_objective=self._ll_loss,
@@ -104,9 +121,9 @@ class Problem:
               solver_config=self.boat_configs)
         else:
             self._lower_opt = lower_opt
-            self.boat_configs['ll_opt'] =self._lower_opt
+            self.boat_configs['ll_opt'] = self._lower_opt
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
-            self.fogm_solver = getattr(
+            self._fo_gm_solver = getattr(
                 fo_gms, "%s" % self.boat_configs['fo_gm']
             )(ll_objective=self._ll_loss,
               ul_objective=self._ul_loss,
@@ -119,119 +136,123 @@ class Problem:
               solver_config=self.boat_configs)
         return self
 
-    def build_ul_solver(self,upper_opt: Optimizer):
+    def build_ul_solver(self, upper_opt: Optimizer):
         """
-        Configure the upper-level solver.
+        Configure the lower-level solver.
 
-        Args:
-            upper_opt (Optimizer): Optimizer for the upper-level model.
-            solver_config (Dict[str, Any]): Configuration for the upper-level solver.
+        :param upper_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
+        :type upper_opt: Optimizer
+
+        :returns: None
         """
         self._upper_opt = upper_opt
         if self.boat_configs['fo_gm'] is None:
-            assert self.boat_configs['hyper_op'] is not None, "Choose FOGM based methods from ['VSM','VFM','MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
+            assert self.boat_configs['hyper_op'] is not None, \
+                "Choose FOGM based methods from ['VSM'],['VFM'],['MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
             sorted_ops = sorted([op.upper() for op in self._hyper_op])
             hyper_op = "_".join(sorted_ops)
             if 'DM' in self._dynamic_op:
-                # if not hasattr(self._ll_solver, 'ul_opt'):
-                    # 如果没有，则为 _ll_solver 添加该属性
                 setattr(self._ll_solver, 'ul_opt', upper_opt)  # 设置 new_attribute 属性
                 setattr(self._ll_solver, 'ul_lr', upper_opt.defaults['lr'])
-            # self._total_iters = self.boat_configs.get("total_iters", 60000)
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
                 self._lower_init_opt.param_groups[0]['params'] = self._lower_opt.param_groups[0]['params']
                 self._lower_init_opt.param_groups[0]['lr'] = self.boat_configs["DI"]["lr"]
-            # if self._hyper_op == "RAD":
-            #     # Placeholder for specific solver initialization
-            #     pass
-            # elif self._hyper_op == "LS":
-            #     # Placeholder for specific solver initialization
-            #     pass
-            # else:
-            #     raise ValueError(f"Unsupported upper-level method: {self._hyper_op}")
-
             self._ul_solver = getattr(
                 ul_grads, "%s" % hyper_op
             )(ul_objective=self._ul_loss,
               ll_objective=self._ll_loss,
               ll_model=self._ll_model,
               ul_model=self._ul_model,
-              ll_var = self._ll_var,
-              ul_var = self._ul_var,
+              ll_var=self._ll_var,
+              ul_var=self._ul_var,
               solver_config=self.boat_configs)
         else:
-            assert self.boat_configs['fo_gm'] is not None, "Choose FOGM based methods from ['VSM','VFM','MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
+            assert self.boat_configs['fo_gm'] is not None, \
+                "Choose FOGM based methods from ['VSM','VFM','MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
 
         return self
 
-    def run_iter(self, ll_feed_dict: Dict[str, Tensor], ul_feed_dict: Dict[str, Tensor],
-                 current_iter: int) -> tuple:
+    def run_iter(self, ll_feed_dict: Dict[str, Tensor], ul_feed_dict: Dict[str, Tensor], current_iter: int) -> tuple:
         """
-        Run a single iteration of the optimization process with flexible multi-modality input.
+           Run a single iteration of the bi-level optimization process.
 
-        Args:
-            ll_feed_dict (Dict[str, Tensor]): Dictionary containing all training data.
-                Example:
-                    {
-                        "image": train_images,
-                        "text": train_texts,
-                        "target": train_labels  # Optional
-                    }
-            val_data (Dict[str, Tensor]): Dictionary containing all validation data.
-                Example:
-                    {
-                        "image": val_images,
-                        "text": val_texts,
-                        "target": val_labels  # Optional
-                    }
-            current_iter (int): Current iteration number.
+           :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the lower-level (LL) objective.
+               Example:
+                   {
+                       "image": train_images,
+                       "text": train_texts,
+                       "target": train_labels  # Optional
+                   }
+           :type ll_feed_dict: Dict[str, Tensor]
 
-        Returns:
-            Tuple[float, float, float]: Tuple containing loss, forward time, and backward time.
-        """
+           :param ul_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the upper-level (UL) objective.
+               Example:
+                   {
+                       "image": val_images,
+                       "text": val_texts,
+                       "target": val_labels  # Optional
+                   }
+           :type ul_feed_dict: Dict[str, Tensor]
 
+           :param current_iter: The current iteration number.
+           :type current_iter: int
+
+           :notes:
+               - When `accumulate_grad` is set to True, you need to pack the data of each batch based on the format above.
+               - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of dictionaries, i.e., `[Dict[str, Tensor]]`.
+
+           :returns: A tuple containing:
+               - loss (float): The loss value for the current iteration.
+               - run_time (float): The total time taken for the iteration.
+           :rtype: tuple
+           """
+        self._log_results_dict['upper_loss'] = []
         if self.boat_configs['fo_gm'] is not None:
-
-            start_time = time.time()
-            loss = self.fogm_solver.optimize(ll_feed_dict, ul_feed_dict, current_iter)
-            run_time = time.time() - start_time
+            start_time = time.perf_counter()
+            self._log_results_dict['upper_loss'].append(
+                self._fo_gm_solver.optimize(ll_feed_dict, ul_feed_dict, current_iter))
+            run_time = time.perf_counter() - start_time
         else:
             run_time = 0
             if self.boat_configs['accumulate_grad']:
-                assert "IAD" in self.boat_configs['hyper_op'], "When using 'accumulate_grad', only 'IAD' based methods are supported."
-                for batch_ll_feed_dict,batch_ul_feed_dict in zip(ll_feed_dict,ul_feed_dict):
+                for batch_ll_feed_dict, batch_ul_feed_dict in zip(ll_feed_dict, ul_feed_dict):
                     with higher.innerloop_ctx(self._ll_model, self._lower_opt,
                                               copy_initial_weights=False) as (auxiliary_model, auxiliary_opt):
-                        forward_time = time.time()
-                        max_loss_iter = self._ll_solver.optimize(batch_ll_feed_dict, batch_ul_feed_dict, auxiliary_model, auxiliary_opt,current_iter)
-                        forward_time = time.time() - forward_time
-                        backward_time = time.time()
-                        loss = self._ul_solver.compute_gradients(batch_ll_feed_dict, batch_ul_feed_dict, auxiliary_model, max_loss_iter)
-                        backward_time = time.time() - backward_time
+                        forward_time = time.perf_counter()
+                        max_loss_iter = self._ll_solver.optimize(batch_ll_feed_dict, batch_ul_feed_dict,
+                                                                 auxiliary_model, auxiliary_opt, current_iter)
+                        forward_time = time.perf_counter() - forward_time
+                        backward_time = time.perf_counter()
+                        self._log_results_dict['upper_loss'].append(
+                            self._ul_solver.compute_gradients(batch_ll_feed_dict, batch_ul_feed_dict,
+                                                              auxiliary_model, max_loss_iter))
+                        backward_time = time.perf_counter() - backward_time
                     run_time += forward_time + backward_time
                 if "DI" in self.boat_configs['dynamic_op']:
                     self._lower_init_opt.step()
                     self._lower_init_opt.zero_grad()
-                average_grad(self._ul_model,len(ll_feed_dict))
-
-
+                average_grad(self._ul_model, len(ll_feed_dict))
             else:
                 with higher.innerloop_ctx(self._ll_model, self._lower_opt,
                                           copy_initial_weights=True) as (auxiliary_model, auxiliary_opt):
-                    forward_time = time.time()
-                    max_loss_iter = self._ll_solver.optimize(ll_feed_dict, ul_feed_dict, auxiliary_model, auxiliary_opt, current_iter)
-                    forward_time = time.time() - forward_time
+                    forward_time = time.perf_counter()
+                    max_loss_iter = self._ll_solver.optimize(ll_feed_dict, ul_feed_dict, auxiliary_model, auxiliary_opt,
+                                                             current_iter)
+                    forward_time = time.perf_counter() - forward_time
                     backward_time = time.time()
                     if "DM" not in self._dynamic_op:
-                        loss = self._ul_solver.compute_gradients(ll_feed_dict, ul_feed_dict, auxiliary_model, max_loss_iter)
+                        self._log_results_dict['upper_loss'].append(
+                            self._ul_solver.compute_gradients(ll_feed_dict, ul_feed_dict, auxiliary_model,
+                                                              max_loss_iter))
                     else:
-                        loss = self._ul_loss(ul_feed_dict,self._ul_model, auxiliary_model)
-                    backward_time = time.time() - backward_time
-                    if ("DM" not in self._dynamic_op) and ("DI" not in self._dynamic_op) and ("IAD" not in self._hyper_op):
+                        self._log_results_dict['upper_loss'].append(
+                            self._ul_loss(ul_feed_dict, self._ul_model, auxiliary_model))
+                    backward_time = time.perf_counter() - backward_time
+                    if ("DM" not in self._dynamic_op) and ("DI" not in self._dynamic_op) and (
+                            "IAD" not in self._hyper_op):
                         copy_parameter_from_list(self._ll_model, list(auxiliary_model.parameters(time=max_loss_iter)))
-
-                # update adapt_model parameters
+                # update the dynamic initialization of lower-level variables
                 if "DI" in self.boat_configs['dynamic_op']:
                     self._lower_init_opt.step()
                     self._lower_init_opt.zero_grad()
@@ -242,21 +263,47 @@ class Problem:
             else:
                 return [var.grad for var in list(self._ul_var)], run_time
 
-        return loss, run_time
+        return self._log_results_dict['upper_loss'], run_time
 
     def check_status(self):
-        # assert self.boat_configs['RGT']["truncate_iter"] == 0 or not ("PTT" in self.boat_configs["hyper_op"]), \
-        #     "Only one of the PTT and RGT methods could be chosen."
+
+        if "DM" in self.boat_configs["dynamic_op"]:
+            assert (self.boat_configs["hyper_op"] == ["RAD"]) or (self.boat_configs["hyper_op"] == ["CG"]), \
+                "When 'DM' is chosen, set the 'truncate_iter' properly."
         if "RGT" in self.boat_configs["dynamic_op"]:
             assert self.boat_configs['RGT']["truncate_iter"] > 0, \
-                "When RGT is chosen, set the 'truncate_iter' properly ."
-        assert (("DI" in self._dynamic_op )^ ("IAD" in self._hyper_op)) or (("DI" not in self._dynamic_op) and ("IAD" not in self._hyper_op)), \
-            "Only one of the PTT and RGT methods could be chosen."
-        assert (
-                0.0 <= self.boat_configs['GDA']["alpha_init"] <= 1.0
-        ), "Parameter 'alpha' used in method BDA should be in the interval (0,1)."
+                "When 'RGT' is chosen, set the 'truncate_iter' properly ."
+        if self.boat_configs['accumulate_grad']:
+            assert "IAD" in self.boat_configs[
+                'hyper_op'], "When using 'accumulate_grad', only 'IAD' based methods are supported."
         if self.boat_configs['GDA']["alpha_init"] > 0.0:
             assert (0.0 < self.boat_configs['GDA']["alpha_decay"] <= 1.0), \
                 "Parameter 'alpha_decay' used in method BDA should be in the interval (0,1)."
+        if 'FD' in self._hyper_op:
+            assert self.boat_configs['RGT']["truncate_iter"] == 0 and not ("PTT" in self.boat_configs["hyper_op"]), \
+                "One-stage method doesn't need trajectory truncation."
+
+        def check_model_structure(base_model, meta_model):
+            for param1, param2 in zip(base_model.parameters(), meta_model.parameters()):
+                if param1.shape != param2.shape:
+                    return False
+                if param1.dtype != param2.dtype:
+                    return False
+                if param1.device != param2.device:
+                    return False
+            return True
+
+        if "IAD" in self._hyper_op:
+            assert (check_model_structure(self._ll_model, self._ul_model)), \
+                ("With IAD or FOA operation, 'upper_level_model' and 'lower_level_model' have the same structure, "
+                 "and 'lower_level_var' and 'upper_level_var' are the same group of variables.")
+        assert (("DI" in self._dynamic_op) ^ ("IAD" in self._hyper_op)) or (
+                ("DI" not in self._dynamic_op) and ("IAD" not in self._hyper_op)), \
+            "Only one of the 'PTT' and 'RGT' methods could be chosen."
+        assert (
+                0.0 <= self.boat_configs['GDA']["alpha_init"] <= 1.0
+        ), "Parameter 'alpha' used in method BDA should be in the interval (0,1)."
         assert (self.boat_configs['RGT']["truncate_iter"] < self.boat_configs[
             'lower_iters']), "The value of 'truncate_iter' shouldn't be greater than 'lower_loop'."
+
+

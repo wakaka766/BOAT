@@ -1,83 +1,37 @@
 import torch
 from .hyper_gradient import HyperGradient
-from ..utils.op_utils import update_grads,update_tensor_grads
-
 from torch.nn import Module
-from torch import Tensor
-from typing import List, Callable,Dict
+from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
+from boat.utils.op_utils import update_tensor_grads
 
 
 class FD(HyperGradient):
-    r"""Calculation of the gradient of the upper adapt_model variables with DARTS method
-
-    Implements the UL optimization procedure of DARTS _`[1]`_, a first order approximation
-    method which is free of boat second-order derivatives and matrix-vector products.
-
-    A wrapper of lower adapt_model that has been optimized in the lower optimization will
-    be used in this procedure.
+    """
+    Calculation of the hyper gradient of the upper-level variables with Finite Differentiation (FD) _`[1]`.
 
     Parameters
     ----------
-        ul_objective: callable
-            The main optimization problem in a hierarchical optimization problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ul_model: Module
-            Upper adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with upper objective.
-
-        ll_objective: callable
-            An optimization problem which is considered as the constraint of upper
-            level problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ll_model: Module
-            Lower adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with lower objective during lower-level optimization.
-
-        lower_learning_rate: float
-            Step size for lower loop optimization.
-
-        update_ll_model_init: bool, default=False
-            If set True, the initial value of ll model will be updated after this iteration.
-
-        r: float, default=1e-2
-           Parameter to adjust scalar $\epsilon$ as: $\epsilon = 0.01/\|
-           \nabla_{w'}\mathcal L_{val}(w',\alpha)\|_2$, and $\epsilon$ is used as:
-           $w^\pm = w \pm \epsilon\nabla_{w'}\mathcal L_{val}(w',\alpha)$. Value 0.01 of r is
-           recommended for sufficiently accurate in the paper.
+        :param ll_objective: The lower-level objective of the BLO problem.
+        :type ll_objective: callable
+        :param ul_objective: The upper-level objective of the BLO problem.
+        :type ul_objective: callable
+        :param ll_model: The lower-level model of the BLO problem.
+        :type ll_model: torch.nn.Module
+        :param ul_model: The upper-level model of the BLO problem.
+        :type ul_model: torch.nn.Module
+        :param ll_var: List of variables optimized with the lower-level objective.
+        :type ll_var: List
+        :param ul_var:  of variables optimized with the upper-level objective.
+        :type ul_var: List
+        :param solver_config: Dictionary containing solver configurations.
+        :type solver_config: dict
 
     References
     ----------
     _`[1]` H. Liu, K. Simonyan, Y. Yang, "DARTS: Differentiable Architecture Search",
      in ICLR, 2019.
-    """
-
+     """
     def __init__(
             self,
             ll_objective: Callable,
@@ -96,6 +50,7 @@ class FD(HyperGradient):
         self.alpha = solver_config['GDA']["alpha_init"]
         self.alpha_decay = solver_config['GDA']["alpha_decay"]
         self.gda_loss = solver_config['gda_loss']
+
     def compute_gradients(
             self,
             ll_feed_dict: Dict,
@@ -104,39 +59,26 @@ class FD(HyperGradient):
             max_loss_iter: int = 0
     ):
         """
-        Compute the grads of upper variable with validation data samples in the batch
-        using upper objective. The grads will be saved in the passed in upper adapt_model.
+        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
 
-        Note that the implemented UL optimization procedure will only compute
-        the grads of upper variables。 If the validation data passed in is only single data
-        of the batch (such as few-shot learning experiment), then compute_gradients()
-        function should be called repeatedly to accumulate the grads of upper variables
-        for the whole batch. After that the update operation of upper variables needs
-        to be done outside this module.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+            It typically includes training data, targets, and other information required to compute the LL objective.
+        :type ll_feed_dict: Dict
 
-        Parameters
-        ----------
-            validate_data: Tensor
-               The validation data used for upper level problem optimization.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :type ul_feed_dict: Dict
 
-            validate_target: Tensor
-               The labels of the samples in the validation data.
+        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+            It serves as the lower-level model for optimization.
+        :type auxiliary_model: _MonkeyPatchBase
 
-            auxiliary_model: _MonkeyPatchBase
-                Wrapper of lower adapt_model encapsulated by module higher, has been optimized in lower
-                optimization phase.
+        :param max_loss_iter: The number of iteration used for backpropagation.
+        :type max_loss_iter: int
 
-            train_data: Tensor
-                The training data used for upper level problem optimization.
-
-            train_target: Tensor
-                The labels of the samples in the train data.
-
-        Returns
-        -------
-        upper_loss: Tensor
-           Returns the loss value of upper objective.
+        :returns: the current upper-level objective
         """
+
         loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         grad_x = torch.autograd.grad(loss, list(self.ul_var), retain_graph=True)
         grad_y = torch.autograd.grad(loss, list(auxiliary_model.parameters()), retain_graph=self.dynamic_initialization)

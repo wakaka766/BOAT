@@ -1,51 +1,38 @@
-from .dynamical_system import Dynamical_System
-
+from .dynamical_system import DynamicalSystem
 from torch.nn import Module
-from torch import Tensor
-from typing import Callable
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 
-class DI_NGD(Dynamical_System):
-    r"""Lower level model optimization procedure
-
-    Implement the LL model update process.
-
-    The implemented lower level optimization procedure will optimize a wrapper of lower
-     level model for further using in the following upper level optimization.
+class DI_NGD(DynamicalSystem):
+    """
+    Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) _`[1]`
+    and Dynamic Initialization (DI) _`[3]`.
 
     Parameters
     ----------
-        ll_objective: callable
-            An optimization problem which is considered as the constraint of upper
-            level problem.
+        :param ll_objective: The lower-level objective of the BLO problem.
+        :type ll_objective: callable
+        :param ul_objective: The upper-level objective of the BLO problem.
+        :type ul_objective: callable
+        :param ll_model: The lower-level model of the BLO problem.
+        :type ll_model: torch.nn.Module
+        :param ul_model: The upper-level model of the BLO problem.
+        :type ul_model: torch.nn.Module
+        :param lower_loop: Number of iterations for lower-level optimization.
+        :type lower_loop: int
+        :param solver_config: Dictionary containing solver configurations.
+        :type solver_config: dict
 
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of LL
-            problem. The state object contains the following:
 
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
+    References
+    ----------
+    _`[1]` L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
+     programming for hyperparameter optimization and meta-learning", in ICML, 2018.
 
-        lower_loop: int
-            Updating iterations over lower level optimization.
-
-        ul_model: Module
-            Upper adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with upper objective.
-
-        ll_model: Module
-            Lower adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with lower objective during lower-level optimization.
+    _`[2]` R. Liu, Y. Liu, S. Zeng, and J. Zhang, "Towards Gradient-based Bilevel
+     Optimization with Non-convex Followers and Beyond", in NeurIPS, 2021.
     """
-
     def __init__(
             self,
             ll_objective: Callable,
@@ -59,6 +46,7 @@ class DI_NGD(Dynamical_System):
         super(DI_NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.ul_objective = ul_objective
+
     def optimize(
         self,
         ll_feed_dict: Dict,
@@ -68,28 +56,28 @@ class DI_NGD(Dynamical_System):
         current_iter: int
     ):
         """
-        Execute the lower optimization procedure with training data samples using lower
-        objective. The passed in wrapper of lower adapt_model will be updated.
+        Execute the lower-level optimization procedure with the data from feed_dict and patched models.
 
-        Parameters
-        ----------
-            train_data: Tensor
-                The training data used for LL problem optimization.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+            It typically includes training data, targets, and other information required to compute the LL objective.
+        :type ll_feed_dict: Dict
 
-            train_target: Tensor
-                The labels of the samples in the train data.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :type ul_feed_dict: Dict
 
-            auxiliary_model: _MonkeyPatchBase
-                Wrapper of lower adapt_model encapsulated by module higher, will be optimized in lower
-                optimization procedure.
+        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+            It serves as the lower-level model for optimization.
+        :type auxiliary_model: _MonkeyPatchBase
 
-            auxiliary_opt: DifferentiableOptimizer
-                Wrapper of lower optimizer encapsulated by module higher, will be used in lower
-                optimization procedure.
+        :param auxiliary_opt: A patched optimizer for the lower-level model,
+            wrapped by the `higher` library. This optimizer allows for differentiable optimization.
+        :type auxiliary_opt: DifferentiableOptimizer
 
-        Returns
-        -------
-        None
+        :param current_iter: The current iteration number of the optimization process.
+        :type current_iter: int
+
+        :returns: None
         """
 
         # truncate with PTT method

@@ -12,7 +12,7 @@
         }
 
     },
-        "GDA_loss": {
+        "gda_loss": {
         "function": "configs.loss_func_betak.gda_loss",
             "params": {
             "weights": 0.0

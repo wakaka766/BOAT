@@ -1,80 +1,39 @@
 import torch
 from .hyper_gradient import HyperGradient
-from torch.autograd import grad as torch_grad
-
 from torch.nn import Module
-from torch import Tensor
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
-
-from boat.utils.op_utils import update_grads,update_tensor_grads
+from boat.utils.op_utils import update_tensor_grads, neumann
 
 
 class NS_PTT(HyperGradient):
-    r"""Calculation of the gradient of the upper adapt_model variables with Implicit Gradient Based Methods.
-
-    Implements the UL problem optimization procedure of two implicit gradient
-    based methods (IGBMs), neumann series based method (NS) `[1]`_.
-
-    A wrapper of lower adapt_model that has been optimized in the LL optimization will
-    be used in this procedure.
+    """
+    Calculation of the hyper gradient of the upper-level variables with Nerumann Series (NS) _`[1]` and
+    Pessimistic Trajectory Truncation (PTT) _`[2]`.
 
     Parameters
     ----------
-        ul_objective: callable
-            The main optimization problem in a hierarchical optimization problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ul_model: Module
-            Upper adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with upper objective and trained lower adapt_model.
-
-        ll_objective: callable
-            An optimization problem which is considered as the constraint of upper
-            level problem.
-
-            Callable with signature callable(state). Defined based on modeling of
-            the specific problem that need to be solved. Computing the loss of upper
-            problem. The state object contains the following:
-
-            - "data"
-                Data used in the upper optimization phase.
-            - "target"
-                Target used in the upper optimization phase.
-            - "ul_model"
-                Upper adapt_model of the bi-level adapt_model structure.
-            - "ll_model"
-                Lower adapt_model of the bi-level adapt_model structure.
-
-        ll_model: Module
-            Lower adapt_model in a hierarchical adapt_model structure whose parameters will be
-            updated with lower objective during lower-level optimization.
-
-        lower_learning_rate: float
-            Step size for lower loop optimization.
-
-        k: int
-            The maximum number of conjugate gradient iterations.
-
-        tolerance: float, default=1e-10
-            End the method earlier when the norm of the residual is less than tolerance.
+        :param ll_objective: The lower-level objective of the BLO problem.
+        :type ll_objective: callable
+        :param ul_objective: The upper-level objective of the BLO problem.
+        :type ul_objective: callable
+        :param ll_model: The lower-level model of the BLO problem.
+        :type ll_model: torch.nn.Module
+        :param ul_model: The upper-level model of the BLO problem.
+        :type ul_model: torch.nn.Module
+        :param ll_var: List of variables optimized with the lower-level objective.
+        :type ll_var: List
+        :param ul_var:  of variables optimized with the upper-level objective.
+        :type ul_var: List
+        :param solver_config: Dictionary containing solver configurations.
+        :type solver_config: dict
 
     References
     ----------
-    _`[1]`  J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
+    _`[1]` J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
      hyperparameters by implicit differentiation", in AISTATS, 2020.
+    _`[2]` Liu R, Liu Y, Zeng S, et al. Towards gradient-based bilevel optimization
+     with non-convex followers and beyond[C]. In NeurIPS, 2021.
     """
 
     def __init__(
@@ -98,6 +57,7 @@ class NS_PTT(HyperGradient):
         self.alpha = solver_config['GDA']["alpha_init"]
         self.alpha_decay = solver_config['GDA']["alpha_decay"]
         self.gda_loss = solver_config['gda_loss']
+
     def compute_gradients(
             self,
             ll_feed_dict: Dict,
@@ -106,38 +66,24 @@ class NS_PTT(HyperGradient):
             max_loss_iter: int = 0
     ):
         """
-        Compute the grads of upper variable with validation data samples in the batch
-        using upper objective. The grads will be saved in the passed in upper adapt_model.
+        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
 
-        Note that the implemented UL optimization procedure will only compute
-        the grads of upper variables。 If the validation data passed in is only single data
-        of the batch (such as few-shot learning experiment), then compute_gradients()
-        function should be called repeatedly to accumulate the grads of upper variables
-        for the whole batch. After that the update operation of upper variables needs
-        to be done outside this module.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+            It typically includes training data, targets, and other information required to compute the LL objective.
+        :type ll_feed_dict: Dict
 
-        Parameters
-        ----------
-            validate_data: Tensor
-                The validation data used for UL problem optimization.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :type ul_feed_dict: Dict
 
-            validate_target: Tensor
-                The labels of the samples in the validation data.
+        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+            It serves as the lower-level model for optimization.
+        :type auxiliary_model: _MonkeyPatchBase
 
-            auxiliary_model: _MonkeyPatchBase
-                Wrapper of lower adapt_model encapsulated by module higher, has been optimized in LL
-                optimization phase.
+        :param max_loss_iter: The number of iteration used for backpropagation.
+        :type max_loss_iter: int
 
-            train_data: Tensor
-                The training data used for LL problem optimization.
-
-            train_target: Tensor
-                The labels of the samples in the train data.
-
-        Returns
-        -------
-        upper_loss: Tensor
-            Returns the loss value of upper objective.
+        :returns: the current upper-level objective
         """
 
         hparams = list(self.ul_var)
@@ -167,51 +113,3 @@ class NS_PTT(HyperGradient):
         update_tensor_grads(self.ul_var,grads_upper)
 
         return upper_loss
-
-
-def cat_list_to_tensor(list_tx):
-    return torch.cat([xx.view([-1]) for xx in list_tx])
-
-
-def neumann(params: List[Tensor],
-            hparams: List[Tensor],
-            upper_loss,
-            lower_loss,
-            k: int,
-            fp_map: Callable[[List[Tensor], List[Tensor]], List[Tensor]],
-            tol=1e-10) -> List[Tensor]:
-    """ Saves one iteration from the fixed point method"""
-
-    grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
-
-    w_mapped = fp_map(params, lower_loss)
-    vs, gs = grad_outer_w, grad_outer_w
-    gs_vec = cat_list_to_tensor(gs)
-    for i in range(k):
-        gs_prev_vec = gs_vec
-        vs = torch_grad(w_mapped, params, grad_outputs=vs, retain_graph=True)
-        gs = [g + v for g, v in zip(gs, vs)]
-        gs_vec = cat_list_to_tensor(gs)
-        if float(torch.norm(gs_vec - gs_prev_vec)) < tol:
-            break
-
-    grads = torch_grad(w_mapped, hparams, grad_outputs=gs)
-    grads = [g + v for g, v in zip(grads, grad_outer_hparams)]
-    return grads
-
-
-def get_outer_gradients(outer_loss, params, hparams, retain_graph=True):
-    grad_outer_w = grad_unused_zero(outer_loss, params, retain_graph=retain_graph)
-    grad_outer_hparams = grad_unused_zero(outer_loss, hparams, retain_graph=retain_graph)
-
-    return grad_outer_w, grad_outer_hparams
-
-
-def grad_unused_zero(output, inputs, grad_outputs=None, retain_graph=False, create_graph=False):
-    grads = torch.autograd.grad(output, inputs, grad_outputs=grad_outputs, allow_unused=True,
-                                retain_graph=retain_graph, create_graph=create_graph)
-
-    def grad_or_zeros(grad, var):
-        return torch.zeros_like(var) if grad is None else grad
-
-    return tuple(grad_or_zeros(g, v) for g, v in zip(grads, list(inputs)))

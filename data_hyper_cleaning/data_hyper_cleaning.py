@@ -85,10 +85,10 @@ def main():
     b_optimizer.build_ul_solver(x_opt)
     ul_feed_dict = {"data": val.data.to(device), "target":val.clean_target.to(device)}
     ll_feed_dict = {"data": tr.data.to(device), "target":tr.dirty_target.to(device)}
-    for x_itr in range(5):
+    for x_itr in range(2):
         loss, run_time = b_optimizer.run_iter(ll_feed_dict,ul_feed_dict, current_iter=x_itr)
 
-        if x_itr % 2 == 0:
+        if x_itr % 1 == 0:
             with torch.no_grad():
                 out = y(test.data.to(device))
                 acc = accuary(out, test.clean_target.to(device))

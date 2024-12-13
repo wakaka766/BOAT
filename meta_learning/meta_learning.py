@@ -102,15 +102,15 @@ def main():
     b_optimizer.build_ll_solver(inner_opt)
     b_optimizer.build_ul_solver(outer_opt)
 
-    with tqdm(dataloader, total=10, desc="Meta Training Phase") as pbar:
+    with tqdm(dataloader, total=1, desc="Meta Training Phase") as pbar:
         for meta_iter, batch in enumerate(pbar):
             ul_feed_dict = [{"data": batch["test"][0][k].float().to(device), "target": batch["test"][1][k].float().to(device)} for k in range(batch_size)]
             ll_feed_dict = [{"data": batch["train"][0][k].float().to(device), "target": batch["train"][1][k].float().to(device)} for k in range(batch_size)]
-            print(ll_feed_dict[0]['data'].shape,ll_feed_dict[0]['target'].shape)
+            # print(ll_feed_dict[0]['data'].shape,ll_feed_dict[0]['target'].shape)
             loss, run_time = b_optimizer.run_iter(ll_feed_dict, ul_feed_dict, current_iter=meta_iter)
             y_lr_schedular.step()
             print('validation loss:', loss)
-            if meta_iter>=5:
+            if meta_iter>=1:
                 break
 if __name__ == '__main__':
     main()
