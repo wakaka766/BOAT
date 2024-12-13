@@ -107,6 +107,7 @@ class Problem:
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
             if 'DM' in self._dynamic_op:
+                print("right!")
                 self.boat_configs["DM"]['auxiliary_v'] = [torch.zeros_like(param) for param in self._ll_var]
                 self.boat_configs["DM"]['auxiliary_v_opt'] = torch.optim.SGD(self.boat_configs["DM"]['auxiliary_v'],
                                                                              lr=self.boat_configs["DM"][
@@ -151,7 +152,7 @@ class Problem:
                 "Choose FOGM based methods from ['VSM'],['VFM'],['MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
             sorted_ops = sorted([op.upper() for op in self._hyper_op])
             hyper_op = "_".join(sorted_ops)
-            if 'DM' in self._dynamic_op:
+            if "DM" in self._dynamic_op:
                 setattr(self._ll_solver, 'ul_opt', upper_opt)  # 设置 new_attribute 属性
                 setattr(self._ll_solver, 'ul_lr', upper_opt.defaults['lr'])
             if "DI" in self.boat_configs["dynamic_op"]:
