@@ -15,8 +15,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install pytest-cov
-        pytest --cov=boat --cov-report=xml data_hyper_cleaning
-        pytest --cov=boat --cov-report=xml meta_learning
+        pytest --cov=boat --cov-report=xml data_hyper_cleaning.test_data_hyper_cleaning.py
+        pytest --cov=boat --cov-report=xml meta_learning.test_meta_cleaning.py
     - name: Statistics
       if: success()
       run: |
