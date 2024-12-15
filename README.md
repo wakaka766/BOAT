@@ -1,10 +1,12 @@
 
 # BOHML - A Refactored Bilevel Optimization Toolbox for Hierarchical Machine Learning
 [![PyPI version](https://badge.fury.io/py/boml.svg)](https://badge.fury.io/py/boml)
-[![tests](https://github.com/JiaoXianghao/BOHML/actions/workflows/test.yml/badge.svg)](https://github.com/JiaoXianghao/BOHML/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/JiaoXianghao/BOHML/branch/main/graph/badge.svg?token=8Y3OK2WPDE)](https://codecov.io/gh/JiaoXianghao/BOHML)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/callous-youth/BOAT/workflow.yml)
+[![codecov](https://codecov.io/github/callous-youth/BOAT/graph/badge.svg?token=0MKAOQ9KL3)](https://codecov.io/github/callous-youth/BOAT)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/callous-youth/BOAT)
 [![pages-build-deployment](https://github.com/JiaoXianghao/bolv.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/JiaoXianghao/bolv.github.io/actions/workflows/pages/pages-build-deployment)
-![Language](https://img.shields.io/github/languages/top/dut-media-lab/boml?logoColor=green)
+![GitHub top language](https://img.shields.io/github/languages/top/callous-youth/BOAT)
+![GitHub language count](https://img.shields.io/github/languages/count/callous-youth/BOAT)
 ![Python version](https://img.shields.io/pypi/pyversions/boml)
 ![license](https://img.shields.io/badge/license-MIT-000000.svg)
 ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
