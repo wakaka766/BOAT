@@ -43,8 +43,8 @@ BOAT enables efficient implementation and adaptation of advanced BLO techniques 
 ##  🔨 **Installation**
 To install BOAT, use the following command:
 ```bash
-pip install boat-opt
-
+pip install boat
+```
 
 
 [comment]: <> (BOML is a modularized optimization library that unifies several ML algorithms into a common bilevel optimization framework. It provides interfaces to implement popular bilevel optimization algorithms, so that you could quickly build your own meta learning neural network and test its performance.)
