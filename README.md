@@ -1,15 +1,51 @@
 
-# BOHML - A Refactored Bilevel Optimization Toolbox for Hierarchical Machine Learning
+# BOAT - Problem Adaptive Operation Toolbox for Gradient-based Bilevel Optimization
 [![PyPI version](https://badge.fury.io/py/boml.svg)](https://badge.fury.io/py/boml)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/callous-youth/BOAT/workflow.yml)
 [![codecov](https://codecov.io/github/callous-youth/BOAT/graph/badge.svg?token=0MKAOQ9KL3)](https://codecov.io/github/callous-youth/BOAT)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/callous-youth/BOAT)
-[![pages-build-deployment](https://github.com/JiaoXianghao/bolv.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/JiaoXianghao/bolv.github.io/actions/workflows/pages/pages-build-deployment)
+[![pages-build-deployment](https://github.com/callous-youth/BOAT/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/callous-youth/BOAT/actions/workflows/pages/pages-build-deployment)
 ![GitHub top language](https://img.shields.io/github/languages/top/callous-youth/BOAT)
 ![GitHub language count](https://img.shields.io/github/languages/count/callous-youth/BOAT)
 ![Python version](https://img.shields.io/pypi/pyversions/boml)
 ![license](https://img.shields.io/badge/license-MIT-000000.svg)
 ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
+
+
+**BOAT** (Bi-level Optimization Adaptive Toolbox) is a sophisticated, open-source Python library crafted to support flexible, efficient, and highly customizable gradient-based bi-level optimization (BLO). Designed with a modular structure, BOAT empowers researchers and developers to tackle a broad spectrum of BLO applications in machine learning and computer vision.
+
+## 🔑  **Key Features**
+- **Dynamic Operation Library (D-OL)**: Incorporates four advanced dynamic system construction operations, enabling users to flexibly tailor optimization trajectories for BLO tasks.
+- **Hyper-Gradient Operation Library (H-OL)**: Provides nine refined operations for hyper-gradient computation, significantly enhancing the precision and efficiency of gradient-based BLO methods.
+- **First-Order Gradient Methods (FOGMs)**: Integrates three state-of-the-art first-order methods, enabling fast prototyping and validation of new BLO algorithms.
+- **Modularized Design for Customization**: Empowers users to flexibly combine and configure dynamic and hyper-gradient operations, facilitating the design of novel optimization algorithms.
+- **Comprehensive Testing & Continuous Integration**: Ensures software reliability with 96% code coverage, functional tests with pytest, and continuous integration through GitHub Actions.
+- **Detailed Documentation & Community Support**: Offers thorough documentation with practical examples and API references via MkDocs, ensuring accessibility and ease of use for both novice and advanced users.
+
+##  🚀 **Why BOAT?**
+Unlike conventional automatic differentiation (AD) tools that focus on specific optimization schemes (e.g., explicit or implicit methods), **BOAT** extends the landscape of BLO applications by supporting a broader range of problem-adaptive operations. It bridges the gap between theoretical research and practical deployment, offering extensive flexibility to design, customize, and accelerate BLO techniques.
+
+##  🏭 **Applications**
+BOAT enables efficient implementation and adaptation of advanced BLO techniques for key applications, including but not limited to:
+- **Hyperparameter Optimization (HO)**
+- **Neural Architecture Search (NAS)**
+- **Adversarial Training (AT)**
+- **Low-Light Image Enhancement (LLE)**
+- **Multi-Modality Image Fusion (MIF)**
+- **Medical Image Analysis (MIA)**
+
+##  ⚡ **Technical Highlights**
+- **Extensible Operation Library**: 4 dynamic system operations (D-OL) and 9 hyper-gradient operations (H-OL) for enhanced configurability.
+- **Advanced First-Order Methods**: Supports Value-function Sequential Method (VSM), Value-function First-order Method (VFM), and Moreau Envelope Single-loop Method (MESM).
+- **Unified Computational Analysis**: Offers a comprehensive complexity analysis of gradient-based BLO techniques to guide users in selecting optimal configurations for efficiency and accuracy.
+- **Fast Prototyping & Algorithm Validation**: Streamlined support for defining, testing, and benchmarking new BLO algorithms.
+
+##  🔨 **Installation**
+To install BOAT, use the following command:
+```bash
+pip install boat-opt
+
+
 
 [comment]: <> (BOML is a modularized optimization library that unifies several ML algorithms into a common bilevel optimization framework. It provides interfaces to implement popular bilevel optimization algorithms, so that you could quickly build your own meta learning neural network and test its performance.)
 
@@ -199,7 +235,7 @@
 
 MIT License
 
-Copyright (c) 2022 Xianghao Jiao
+Copyright (c) 2024 Yaohua Liu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
