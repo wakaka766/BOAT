@@ -96,7 +96,6 @@ class NGD(DynamicalSystem):
             for x, y in zip(ll_backup, self.ll_model.parameters()):
                 y.data = x.data.clone().detach().requires_grad_()
 
-
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []

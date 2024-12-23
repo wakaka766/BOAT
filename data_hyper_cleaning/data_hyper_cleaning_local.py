@@ -4,7 +4,7 @@ import shutil
 
 t0 = time.strftime("%Y_%m_%d_%H_%M_%S")
 args = 'hyper_cleaning\method_test'
-dynamic_methodlist = (["NGD"], ["DI", "NGD"], ["GDA", "NGD", "DI"], ["DI", "NGD", "GDA"])
+dynamic_methodlist = (["NGD"], ["DI", "NGD"], ["GDA", "NGD"], ["GDA", "NGD", "DI"], ["DI", "NGD", "GDA"])
 dynamic_method_dm = (["NGD", "DM"], ["NGD", "DM", "GDA"])
 hyper_methodlist = (
 ["CG"], ["CG", "PTT"], ["RAD"], ["RAD", "PTT"], ["RAD", "RGT"], ["PTT", "RAD", "RGT"], ["FD"], ["FD", "PTT"], ["NS"],

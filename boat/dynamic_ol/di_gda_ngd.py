@@ -110,7 +110,6 @@ class DI_GDA_NGD(DynamicalSystem):
             for x, y in zip(ll_backup, self.ll_model.parameters()):
                 y.data = x.data.clone().detach().requires_grad_()
 
-
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []
@@ -127,8 +126,6 @@ class DI_GDA_NGD(DynamicalSystem):
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
             return ll_step_with_max_ul_loss+1
 
-
-
         for lower_iter in range(self.lower_loop - self.truncate_iters):
             assert (self.alpha > 0) and (self.alpha < 1), \
                 "Set the coefficient alpha properly in (0,1)."
@@ -137,4 +134,5 @@ class DI_GDA_NGD(DynamicalSystem):
             loss_f = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model)
             auxiliary_opt.step(loss_f)
             alpha = alpha * self.alpha_decay
+
         return self.lower_loop

@@ -131,15 +131,10 @@ import subprocess
 
 # 动态方法与超参数方法的组合列表
 dynamic_methodlist = (["NGD"], ["DI", "NGD"], ["GDA", "NGD"],["GDA", "NGD", "DI"], ["DI", "NGD", "GDA"])
+hyper_methodlist = ( ["CG"], ["CG", "PTT"], ["RAD"], ["RAD", "PTT"], ["RAD", "RGT"], ["PTT", "RAD", "RGT"], ["FD"], ["FD", "PTT"], ["NS"],["NS", "PTT"], ["IGA"])
 dynamic_method_dm = (["NGD", "DM"], ["NGD", "DM", "GDA"])
-hyper_methodlist = (
-    ["CG"], ["CG", "PTT"], ["RAD"], ["RAD", "PTT"], ["RAD", "RGT"], ["PTT", "RAD", "RGT"], ["FD"], ["FD", "PTT"],
-    ["NS"],
-    ["NS", "PTT"], ["IGA"]
-)
 hyper_method_dm = (["RAD"], ["CG"])
 fogm_method = (["VSM"], ["VFM"], ["MESM"], ["PGDM"])
-
 
 # 测试动态方法与超参数方法的组合
 @pytest.mark.parametrize("dynamic_method, hyper_method", [

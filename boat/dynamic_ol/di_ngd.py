@@ -46,6 +46,8 @@ class DI_NGD(DynamicalSystem):
         super(DI_NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.ul_objective = ul_objective
+        self.truncate_iters = solver_config['RGT']["truncate_iter"]
+        self.ll_opt = solver_config['ll_opt']
 
     def optimize(
         self,
@@ -80,6 +82,18 @@ class DI_NGD(DynamicalSystem):
         :returns: None
         """
 
+        if self.truncate_iters > 0:
+            ll_backup = [x.data.clone().detach().requires_grad_() for x in self.ll_model.parameters()]
+            for lower_iter in range(self.truncate_iters):
+                lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+                lower_loss.backward()
+                self.ll_opt.step()
+                self.ll_opt.zero_grad()
+            for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
+                y.data = x.data.clone().detach().requires_grad_()
+            for x, y in zip(ll_backup, self.ll_model.parameters()):
+                y.data = x.data.clone().detach().requires_grad_()
+
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []
@@ -90,7 +104,8 @@ class DI_NGD(DynamicalSystem):
                 ul_loss_list.append(upper_loss.item())
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
             return ll_step_with_max_ul_loss+1
-        for lower_iter in range(self.lower_loop):
+
+        for lower_iter in range(self.lower_loop - self.truncate_iters):
             lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
             auxiliary_opt.step(lower_loss)
         return self.lower_loop

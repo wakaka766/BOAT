@@ -48,6 +48,7 @@ class IGA(HyperGradient):
         self.alpha = solver_config['GDA']["alpha_init"]
         self.alpha_decay = solver_config['GDA']["alpha_decay"]
         self.gda_loss = solver_config['gda_loss']
+        self.dynamic_initialization = "DI" in solver_config['dynamic_op']
 
     def compute_gradients(
             self,
@@ -94,6 +95,10 @@ class IGA(HyperGradient):
             gFyfy = gFyfy + torch.sum(Fy * fy)
             gfyfy = gfyfy + torch.sum(fy * fy)
         GN_loss = -gFyfy.detach() / gfyfy.detach() * lower_loss
+
+        if self.dynamic_initialization:
+            grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)),retain_graph=True)
+            update_tensor_grads(self.ll_var, grads_lower)
 
         grads_upper = torch.autograd.grad(GN_loss + upper_loss, list(self.ul_var))
         update_tensor_grads( self.ul_var,grads_upper)

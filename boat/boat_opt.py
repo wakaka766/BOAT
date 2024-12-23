@@ -157,8 +157,9 @@ class Problem:
                 setattr(self._ll_solver, 'ul_lr', upper_opt.defaults['lr'])
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
-                self._lower_init_opt.param_groups[0]['params'] = self._lower_opt.param_groups[0]['params']
-                self._lower_init_opt.param_groups[0]['lr'] = self.boat_configs["DI"]["lr"]
+                for _ in range(len(self._lower_init_opt.param_groups)):
+                    self._lower_init_opt.param_groups[_]['params'] = self._lower_opt.param_groups[_]['params']
+                    self._lower_init_opt.param_groups[_]['lr'] = self.boat_configs["DI"]["lr"]
             self._ul_solver = getattr(
                 ul_grads, "%s" % hyper_op
             )(ul_objective=self._ul_loss,

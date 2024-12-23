@@ -42,10 +42,7 @@ import platform
 
 # 假设 meta_learning.py 已经被复制到正确的位置
 dynamic_methodlist = (["NGD"], ["NGD", "GDA"])
-hyper_methodlist = (
-    ["IAD"], ["IAD", "PTT"], ["CG", "IAD"], ["CG", "IAD", "PTT"], ["NS", "IAD"], ["NS", "IAD", "PTT"], ["FOA", "IAD"],
-    ["FOA", "IAD", "PTT"]
-)
+hyper_methodlist = (["IAD"], ["IAD", "PTT"], ["CG", "IAD"], ["CG", "IAD", "PTT"], ["NS", "IAD"], ["NS", "IAD", "PTT"], ["FOA", "IAD"],["FOA", "IAD", "PTT"])
 
 # 获取当前时间
 t0 = time.strftime("%Y_%m_%d_%H_%M_%S")
