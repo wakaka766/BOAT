@@ -1,15 +1,17 @@
 import time
-from typing import Dict, Any, Callable
-# import torch
 import copy
-import jittor as jit
-# from torch import Tensor
-# from torch.optim import Optimizer
-from jittor import Module
-from jittor.optim import Optimizer
-import boat_jit.higher_jit as higher
-
-from boat_jit.utils.op_utils import copy_parameter_from_list, average_grad
+from typing import Dict, Any, Callable
+from boat_jit.utils.op_utils import copy_parameter_from_list, average_grad, manual_update
+try:
+    import jittor as jit
+    from jittor.optim import Optimizer
+    import boat_jit.higher_jit as higher
+except ImportError as e:
+    missing_module = str(e).split()[-1]
+    print(f"Error: The required module '{missing_module}' is not installed.")
+    print("Please run the following command to install all required dependencies:")
+    print("pip install -r requirements.txt")
+    raise
 
 importlib = __import__("importlib")
 ll_grads = importlib.import_module("boat_jit.dynamic_ol")
@@ -108,7 +110,6 @@ class Problem:
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
             if 'DM' in self._dynamic_op:
-                print("right!")
                 self.boat_configs["DM"]['auxiliary_v'] = [jit.zeros_like(param) for param in self._ll_var]
                 self.boat_configs["DM"]['auxiliary_v_opt'] = jit.nn.SGD(self.boat_configs["DM"]['auxiliary_v'],
                                                                     lr=self.boat_configs["DM"]['auxiliary_v_lr'])
@@ -157,8 +158,9 @@ class Problem:
                 setattr(self._ll_solver, 'ul_lr', upper_opt.defaults['lr'])
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
-                self._lower_init_opt.param_groups[0]['params'] = self._lower_opt.param_groups[0]['params']
-                self._lower_init_opt.param_groups[0]['lr'] = self.boat_configs["DI"]["lr"]
+                for _ in range(len(self._lower_init_opt.param_groups)):
+                    self._lower_init_opt.param_groups[_]['params'] = self._lower_opt.param_groups[_]['params']
+                    self._lower_init_opt.param_groups[_]['lr'] = self.boat_configs["DI"]["lr"]
             self._ul_solver = getattr(
                 ul_grads, "%s" % hyper_op
             )(ul_objective=self._ul_loss,
@@ -174,7 +176,7 @@ class Problem:
 
         return self
 
-    def run_iter(self, ll_feed_dict: Dict[str, Tensor], ul_feed_dict: Dict[str, Tensor], current_iter: int) -> tuple:
+    def run_iter(self, ll_feed_dict: Dict[str, jit.Var], ul_feed_dict: Dict[str, jit.Var], current_iter: int) -> tuple:
         """
            Run a single iteration of the bi-level optimization process.
 
@@ -252,14 +254,16 @@ class Problem:
                         copy_parameter_from_list(self._ll_model, list(auxiliary_model.parameters(time=max_loss_iter)))
                 # update the dynamic initialization of lower-level variables
                 if "DI" in self.boat_configs['dynamic_op']:
-                    self._lower_init_opt.step()
-                    self._lower_init_opt.zero_grad()
+                    # self._lower_init_opt.step()
+                    # self._lower_init_opt.zero_grad()
+                    manual_update(self._lower_init_opt,self._lower_opt.param_groups[0]['params'])
                 run_time = forward_time + backward_time
-            if not self.boat_configs['return_grad']:
-                self._upper_opt.step()
-                self._upper_opt.zero_grad()
-            else:
-                return [var.grad for var in list(self._ul_var)], run_time
+        if not self.boat_configs['return_grad']:
+            # self._upper_opt.step()
+            # self._upper_opt.zero_grad()
+            manual_update(self._upper_opt,self._ul_var)
+        else:
+            return [var._custom_grad for var in list(self._ul_var)], run_time
 
         return self._log_results_dict['upper_loss'], run_time
 

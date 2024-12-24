@@ -1,9 +1,8 @@
-import torch.autograd
-
 from .dynamical_system import DynamicalSystem
 from jittor import Module
-from higher.patch import _MonkeyPatchBase
-from higher.optim import DifferentiableOptimizer
+from typing import Callable
+from ..higher_jit.patch import _MonkeyPatchBase
+from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 from ..utils.op_utils import stop_grads
 class NGD(DynamicalSystem):
@@ -81,31 +80,40 @@ class NGD(DynamicalSystem):
         :returns: None
         """
 
-        if self.truncate_iters > 0:
-            ll_backup = [x.data.clone().detach().requires_grad_() for x in self.ll_model.parameters()]
-            for lower_iter in range(self.truncate_iters):
-                lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-                lower_loss.backward()
-                self.ll_opt.step()
-                self.ll_opt.zero_grad()
-            for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
-                y.data = x.data.clone().detach().requires_grad_()
-            for x, y in zip(ll_backup, self.ll_model.parameters()):
-                y.data = x.data.clone().detach().requires_grad_()
+        # if self.truncate_iters > 0:
+        #     ll_backup = [x.data.clone().detach().requires_grad_() for x in self.ll_model.parameters()]
+        #     for _ in range(self.truncate_iters):
+        #         lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+        #         self.ll_opt.step(lower_loss)
+        #     for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
+        #         y.update(x.clone().detach())
+        #     for x, y in zip(ll_backup, self.ll_model.parameters()):
+        #         y.update(x.clone().detach())
 
+        if self.truncate_iters > 0:
+            ll_backup = [x.clone().stop_grad() for x in self.ll_model.parameters()]
+
+            for _ in range(self.truncate_iters):
+                lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+                self.ll_opt.step(lower_loss)
+
+            for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
+                y.update(x.clone())
+
+            for x, y in zip(ll_backup, self.ll_model.parameters()):
+                y.update(x.clone())
 
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []
-            for lower_iter in range(self.lower_loop):
+            for _ in range(self.lower_loop):
                 lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
                 auxiliary_opt.step(lower_loss)
                 upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-                # print(torch.autograd.grad(upper_loss,list(self.ul_model.parameters()),allow_unused=False))
                 ul_loss_list.append(upper_loss.item())
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
             return ll_step_with_max_ul_loss+1
-        for lower_iter in range(self.lower_loop - self.truncate_iters):
+        for _ in range(self.lower_loop - self.truncate_iters):
             lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
             auxiliary_opt.step(lower_loss,grad_callback= stop_grads if self.foa else None)
         return self.lower_loop - self.truncate_iters

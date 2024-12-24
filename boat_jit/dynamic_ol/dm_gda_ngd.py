@@ -1,10 +1,10 @@
 from .dynamical_system import DynamicalSystem
 import jittor as jit
 from jittor import Module
-from higher.patch import _MonkeyPatchBase
-from higher.optim import DifferentiableOptimizer
+from ..higher_jit.patch import _MonkeyPatchBase
+from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import update_tensor_grads,grad_unused_zero,list_tensor_norm,list_tensor_matmul
+from ..utils.op_utils import update_tensor_grads,grad_unused_zero,list_tensor_norm,list_tensor_matmul,custom_grad,manual_update
 
 class DM_GDA_NGD(DynamicalSystem):
 
@@ -66,6 +66,8 @@ class DM_GDA_NGD(DynamicalSystem):
         self.eta = solver_config['DM']['eta0']
         self.strategy = solver_config['DM']['strategy']
         self.hyper_op =  solver_config["hyper_op"]
+        self.gda_loss = solver_config['gda_loss']
+
 
     def optimize(
         self,
@@ -116,107 +118,99 @@ class DM_GDA_NGD(DynamicalSystem):
         for params in self.ul_opt.param_groups:
             params['lr'] = x_lr
         #############
-        self.ll_opt.zero_grad()
-        self.auxiliary_v_opt.zero_grad()
-        loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+        # self.ll_opt.zero_grad()
+        # self.auxiliary_v_opt.zero_grad()
+        # loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+        # upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+        # assert (self.alpha>0) and (self.alpha<1), \
+        #         "Set the coefficient alpha properly in (0,1)."
+        # loss_full = (1.0 - self.alpha) * loss_f + self.alpha * upper_loss
+        
+        assert (self.alpha > 0) and (self.alpha < 1), \
+                    "Set the coefficient alpha properly in (0,1)."
+        assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."
+        ll_feed_dict['alpha'] = self.alpha
+        loss_full = self.gda_loss(ll_feed_dict,ul_feed_dict,self.ul_model,auxiliary_model)
+        
+        grad_y_temp = jit.grad(loss_full, list(auxiliary_model.parameters()),retain_graph=True)
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        assert (self.alpha>0) and (self.alpha<1), \
-                "Set the coefficient alpha properly in (0,1)."
-        loss_full = (1.0 - self.alpha) * loss_f + self.alpha * upper_loss
-        grad_y_temp = jit.grad(loss_full, auxiliary_model.parameters(),retain_graph=True)
-
         grad_outer_params = grad_unused_zero(upper_loss, list(auxiliary_model.parameters()), retain_graph=True)
         grads_phi_params = grad_unused_zero(loss_full, list(auxiliary_model.parameters()), retain_graph=True)
-        grads = grad_unused_zero(grads_phi_params, list(self.ul_model.parameters()), retain_graph=True)  # dx (dy f) v
+        grads = custom_grad(grads_phi_params, list(self.ul_model.parameters()),self.auxiliary_v, retain_graph=True)  # dx (dy f) v
         grad_outer_hparams = grad_unused_zero(upper_loss, list(self.ul_model.parameters()))
 
         if "RAD" in self.hyper_op:
-            vsp = grad_unused_zero(grads_phi_params, list(auxiliary_model.parameters()))  # dy (dy f) v=d2y f v
+            vsp = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)  # dy (dy f) v=d2y f v
 
             for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
-                v0.grad = v - gow
+                v0._custom_grad = v - gow
             update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
-            self.ll_opt.step()
-            self.auxiliary_v_opt.step()
+            # self.ll_opt.step()
+            manual_update(self.ll_opt,list(self.ll_model.parameters()))
+            # self.auxiliary_v_opt.step()
+            manual_update(self.auxiliary_v_opt,self.auxiliary_v)
 
             grads = [-g + v if g is not None else v for g, v in zip(grads, grad_outer_hparams)]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
 
         else:
+            # 第一次计算梯度
+            vsp = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)
 
-            vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v, retain_graph=True,allow_unused=True)  # dy (dy f) v=d2y f v
+            # 计算 tem
             tem = [v - gow for v, gow in zip(vsp, grad_outer_params)]
 
+            # 计算 ita_u 和 ita_l
             ita_u = list_tensor_norm(tem) ** 2
-            grad_tem = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem, retain_graph=True,
-                                  allow_unused=True)  # dy (dy f) v=d2y f v
-
+            grad_tem = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem)
             ita_l = list_tensor_matmul(tem, grad_tem)
-            # print(ita_u,ita_l)
+
+            # 计算 ita
             ita = ita_u / (ita_l + 1e-12)
-            self.auxiliary_v = [v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)]  # (I-ita*d2yf)v+ita*dy F)
 
-            vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v,
-                             allow_unused=True)  # dy (dy f) v=d2y f v
+            # 更新 self.auxiliary_v
+            self.auxiliary_v = [
+                v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)
+            ]
 
+            # 第二次计算梯度
+            vsp = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)
+
+            # 更新 v0 的梯度
             for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
-                v0.grad = v - gow
-            update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
-            self.ll_opt.step()
+                v0._custom_grad = v - gow
 
+            # 更新 ll_model 的梯度并执行优化步骤
+            update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
+            # self.ll_opt.step()
+            manual_update(self.ll_opt, list(self.ll_model.parameters()))
+
+            # 更新 ul_model 的梯度
             grads = [-g + v if g is not None else v for g, v in zip(grads, grad_outer_hparams)]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
 
-        return -1
-        # if self.alpha > 0.0 or self.truncate_max_loss_iter:
-        #     assert ul_feed_dict is not None,\
-        #         "GDA and PTT method need validate data and validate target"
-        # alpha = self.alpha
 
-        # truncate with T-RAD method
-        # if self.truncate_iters > 0:
-        #     ll_backup = [x.data.clone().detach().requires_grad_() for x in self.ll_model.parameters()]
-        #     for lower_iter in range(self.truncate_iters):
-        #         lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-        #         if self.alpha == 0.0:
-        #             loss_f = lower_loss
-        #         else:
-        #             upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        #             loss_f = (1.0 - alpha) * lower_loss + alpha * upper_loss
-        #         loss_f.backward()
-        #         self.ll_opt.step()
-        #         self.ll_opt.zero_grad()
-        #     for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
-        #         y.data = x.data.clone().detach().requires_grad_()
-        #     for x, y in zip(ll_backup, self.ll_model.parameters()):
-        #         y.data = x.data.clone().detach().requires_grad_()
-        #
-        #
-        # # truncate with PTT method
-        # if self.truncate_max_loss_iter:
-        #     ul_loss_list = []
-        #     for lower_iter in range(self.lower_loop):
-        #         lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-        #         if self.alpha == 0.0:
-        #             auxiliary_opt.step(lower_loss)
-        #         else:
-        #             upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        #             loss_f = (1.0 - alpha) * lower_loss + alpha * upper_loss
-        #             auxiliary_opt.step(loss_f)
-        #             alpha = alpha * self.alpha_decay
-        #         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        #         ul_loss_list.append(upper_loss.item())
-        #     ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
-        #     return ll_step_with_max_ul_loss+1
-        #
-        #
-        #
-        # for lower_iter in range(self.lower_loop - self.truncate_iters):
-        #     lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-        #     if self.alpha == 0.0:
-        #         auxiliary_opt.step(lower_loss)
-        #     else:
-        #         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        #         loss_f = (1.0 - alpha) * lower_loss + alpha * upper_loss
-        #         auxiliary_opt.step(loss_f)
-        #         alpha = alpha * self.alpha_decay
+            # vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v, retain_graph=True,allow_unused=True)  # dy (dy f) v=d2y f v
+            # tem = [v - gow for v, gow in zip(vsp, grad_outer_params)]
+
+            # ita_u = list_tensor_norm(tem) ** 2
+            # grad_tem = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem, retain_graph=True,
+            #                       allow_unused=True)  # dy (dy f) v=d2y f v
+
+            # ita_l = list_tensor_matmul(tem, grad_tem)
+            # # print(ita_u,ita_l)
+            # ita = ita_u / (ita_l + 1e-12)
+            # self.auxiliary_v = [v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)]  # (I-ita*d2yf)v+ita*dy F)
+
+            # vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v,
+            #                  allow_unused=True)  # dy (dy f) v=d2y f v
+
+            # for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
+            #     v0.grad = v - gow
+            # update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
+            # self.ll_opt.step()
+
+            # grads = [-g + v if g is not None else v for g, v in zip(grads, grad_outer_hparams)]
+            # update_tensor_grads(list(self.ul_model.parameters()), grads)
+
+        return -1

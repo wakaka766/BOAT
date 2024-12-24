@@ -88,15 +88,18 @@ class FD_PTT(HyperGradient):
         lower_model_params = list(
             auxiliary_model.parameters(time=max_loss_iter))
         loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model,params=lower_model_params)
-        grad_x = jit.grad(loss, list(self.ul_model.parameters()), retain_graph=True)
-        grad_y = jit.grad(loss, list(auxiliary_model.parameters()), retain_graph=self.dynamic_initialization)
+        dalpha = jit.grad(loss, list(self.ul_model.parameters()), retain_graph=True)
+        vector = jit.grad(loss, list(auxiliary_model.parameters()), retain_graph=self.dynamic_initialization)
 
-        dalpha = [v.data for v in grad_x]
-        vector = [v.data for v in grad_y]
-        implicit_grads = self._hessian_vector_product(vector, ll_feed_dict,ul_feed_dict)
+        # dalpha = [v.data for v in grad_x]
+        # vector = [v.data for v in grad_y]
+        implicit_grads = self._hessian_vector_product(vector, ll_feed_dict, ul_feed_dict)
 
+        # for g, ig in zip(dalpha, implicit_grads):
+        #     g.sub_(ig.data,alpha= self.ll_lr)
+        
         for g, ig in zip(dalpha, implicit_grads):
-            g.sub_(ig.data,alpha= self.ll_lr)
+            g.update(g - ig * self.ll_lr)
 
         if self.dynamic_initialization:
             grads_lower = jit.grad(loss, list(auxiliary_model.parameters(time=0)))
@@ -106,48 +109,106 @@ class FD_PTT(HyperGradient):
 
         return loss
 
-    def _hessian_vector_product(
-            self,
-            vector,
-            ll_feed_dict,
-            ul_feed_dict
-    ):
+
+    def _hessian_vector_product(self, vector, ll_feed_dict, ul_feed_dict):
         """
         Built-in calculation function. Compute the first order approximation of
         the second-order derivative of upper variables.
 
         Parameters
         ----------
-           train_data: Tensor
-                The training data used for upper level problem optimization.
+        vector: list of jt.Var
+            The vector used for Hessian-vector product computation.
 
-            train_target: Tensor
-                The labels of the samples in the train data.
+        ll_feed_dict: dict
+            The lower-level feed dictionary.
+
+        ul_feed_dict: dict
+            The upper-level feed dictionary.
 
         Returns
         -------
-        Tensor
-           Returns the calculated first order approximation grads.
+        list of jt.Var
+            The calculated first-order approximation grads.
         """
-        eta = self._r / torch.cat([x.view(-1) for x in vector]).norm()
+        # Compute eta
+        vector_flat = jit.concat([v.flatten() for v in vector])
+        eta = self._r / vector_flat.norm()
+
+        # Update parameters: w+ = w + eta * vector
         for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.add_(v, alpha=eta)  # w+
+            p.update(p + v * eta)
+
+        # Compute loss and gradients for w+
         if self.gda_loss is not None:
             ll_feed_dict['alpha'] = self.alpha
             loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
         else:
             loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-        grads_p = torch.autograd.grad(loss, list(self.ul_model.parameters()))
+        grads_p = jit.grad(loss, self.ul_model.parameters())
 
+        # Update parameters: w- = w - 2 * eta * vector
         for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.sub_(v, alpha=2 * eta)  # w-
+            p.update(p - 2 * eta * v)
+
+        # Compute loss and gradients for w-
         if self.gda_loss is not None:
             loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
         else:
             loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-        grads_n = torch.autograd.grad(loss, list(self.ul_model.parameters()))
+        grads_n = jit.grad(loss, self.ul_model.parameters())
 
+        # Restore parameters: w = w + eta * vector
         for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.add_(v, alpha=eta)  # w
+            p.update(p + eta * v)
 
-        return [(x - y).div_(2 * eta) for x, y in zip(grads_p, grads_n)]
+        # Compute Hessian-vector product approximation
+        return [(gp - gn) / (2 * eta) for gp, gn in zip(grads_p, grads_n)]
+
+
+
+    # def _hessian_vector_product(
+    #         self,
+    #         vector,
+    #         ll_feed_dict,
+    #         ul_feed_dict
+    # ):
+    #     """
+    #     Built-in calculation function. Compute the first order approximation of
+    #     the second-order derivative of upper variables.
+
+    #     Parameters
+    #     ----------
+    #        train_data: Tensor
+    #             The training data used for upper level problem optimization.
+
+    #         train_target: Tensor
+    #             The labels of the samples in the train data.
+
+    #     Returns
+    #     -------
+    #     Tensor
+    #        Returns the calculated first order approximation grads.
+    #     """
+    #     eta = self._r / torch.cat([x.view(-1) for x in vector]).norm()
+    #     for p, v in zip(self.ll_model.parameters(), vector):
+    #         p.data.add_(v, alpha=eta)  # w+
+    #     if self.gda_loss is not None:
+    #         ll_feed_dict['alpha'] = self.alpha
+    #         loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
+    #     else:
+    #         loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+    #     grads_p = torch.autograd.grad(loss, list(self.ul_model.parameters()))
+
+    #     for p, v in zip(self.ll_model.parameters(), vector):
+    #         p.data.sub_(v, alpha=2 * eta)  # w-
+    #     if self.gda_loss is not None:
+    #         loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
+    #     else:
+    #         loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+    #     grads_n = torch.autograd.grad(loss, list(self.ul_model.parameters()))
+
+    #     for p, v in zip(self.ll_model.parameters(), vector):
+    #         p.data.add_(v, alpha=eta)  # w
+
+    #     return [(x - y).div_(2 * eta) for x, y in zip(grads_p, grads_n)]

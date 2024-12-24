@@ -1,9 +1,10 @@
 from .dynamical_system import DynamicalSystem
 
 from jittor import Module
+from jittor.optim import Optimizer
 from typing import Callable
-from higher.patch import _MonkeyPatchBase
-from higher.optim import DifferentiableOptimizer
+from ..higher_jit.patch import _MonkeyPatchBase
+from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 from ..utils.op_utils import stop_grads
 class GDA_NGD(DynamicalSystem):
@@ -94,27 +95,27 @@ class GDA_NGD(DynamicalSystem):
 
         # truncate with RGT operation
         if self.truncate_iters > 0:
-            ll_backup = [x.data.clone().detach().requires_grad_() for x in self.ll_model.parameters()]
-            for lower_iter in range(self.truncate_iters):
+            ll_backup = [x.clone().stop_grad() for x in self.ll_model.parameters()]
+            for _ in range(self.truncate_iters):
                 assert (self.alpha > 0) and (self.alpha < 1), \
                     "Set the coefficient alpha properly in (0,1)."
                 assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."
                 ll_feed_dict['alpha'] = alpha
                 loss_f = self.gda_loss(ll_feed_dict,ul_feed_dict,self.ul_model,auxiliary_model)
                 alpha = alpha * self.alpha_decay
-                loss_f.backward()
-                self.ll_opt.step()
-                self.ll_opt.zero_grad()
+                self.ll_opt.step(loss_f)
             for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
-                y.data = x.data.clone().detach().requires_grad_()
+                y.update(x.clone())
             for x, y in zip(ll_backup, self.ll_model.parameters()):
-                y.data = x.data.clone().detach().requires_grad_()
+                y.update(x.clone())
+
+
 
 
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []
-            for lower_iter in range(self.lower_loop):
+            for _ in range(self.lower_loop):
                 assert (self.alpha > 0) and (self.alpha < 1), \
                     "Set the coefficient alpha properly in (0,1)."
                 assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."
@@ -127,7 +128,7 @@ class GDA_NGD(DynamicalSystem):
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
             return ll_step_with_max_ul_loss+1
 
-        for lower_iter in range(self.lower_loop - self.truncate_iters):
+        for _ in range(self.lower_loop - self.truncate_iters):
             assert (self.alpha > 0) and (self.alpha < 1), \
                 "Set the coefficient alpha properly in (0,1)."
             assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."

@@ -1,5 +1,5 @@
 from ..dynamic_ol.dynamical_system import DynamicalSystem
-from boat_jit.utils.op_utils import update_grads,grad_unused_zero,update_tensor_grads,copy_parameter_from_list
+from boat_jit.utils.op_utils import update_grads,grad_unused_zero,update_tensor_grads,copy_parameter_from_list,manual_update
 import numpy
 from jittor import Module
 from jittor.optim import Optimizer
@@ -111,13 +111,13 @@ class MESM(DynamicalSystem):
             reg += (diff ** 2).sum()  # Jittor-compatible L2 norm calculation
         lower_loss = (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model) + self.ll_objective(ll_feed_dict,self.ul_model, self.ll_model) - 0.5 * self.gamma_1 * reg
 
-        self.ll_opt.zero_grad()
+        # self.ll_opt.zero_grad()
         grad_y_parmaters = grad_unused_zero(lower_loss, list(self.ll_model.parameters()))
 
         update_tensor_grads(self.ll_var, grad_y_parmaters)
 
-        self.ll_opt.step()
-
+        # self.ll_opt.step()
+        manual_update(self.ll_opt, self.ll_var)
         upper_loss = (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model) + self.ll_objective(ll_feed_dict,self.ul_model, self.ll_model) - self.ll_objective(ll_feed_dict,self.ul_model, self.y_hat)
         grad_x_parmaters = grad_unused_zero(upper_loss, list(self.ul_model.parameters()))
         update_tensor_grads(self.ul_var, grad_x_parmaters)

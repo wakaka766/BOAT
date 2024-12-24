@@ -1,4 +1,4 @@
-import jit
+import jittor as jit
 from .hyper_gradient import HyperGradient
 from jittor import Module
 from typing import List, Callable, Dict

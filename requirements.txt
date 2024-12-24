@@ -1,7 +1,8 @@
-torch >=1.4
 numpy
-higher
 setuptools
 typing
-torchmeta
 tqdm
+higher
+torch >=1.4
+scikit-learn >= 1.3
+scipy >= 1.8

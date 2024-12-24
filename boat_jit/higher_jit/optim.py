@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''Differentiable optimizer wrappers around ``torch.optim`` instances.'''
+'''Differentiable optimizer wrappers around ``jittor.optim`` instances.'''
 
 import abc as _abc
 import collections as _collections
@@ -97,9 +97,12 @@ class DifferentiableOptimizer(_abc.ABC):
         reference_params = list(reference_params)
 
         # Copy param groups and set up structures for copy state
+        self.lr = other.lr
         self.param_groups = _copy.deepcopy(other.param_groups)
         self._group_to_param_list: _typing.List[_typing.List[int]] = []
-        self.state: _StateType = [
+
+
+        self.state: _typing.List[_typing.Dict[int, _typing.Dict[str, _typing.Any]]] = [
             _collections.defaultdict(dict)
             for _ in range(len(self.param_groups))
         ]
@@ -110,24 +113,24 @@ class DifferentiableOptimizer(_abc.ABC):
 
         self._grad_callback = grad_callback
 
-        # Copy and cast state
+        # Initialize state
         zipped = zip(self.param_groups, other.param_groups)
         for group_idx, (group, orig_group) in enumerate(zipped):
             local_list = []
-            for p_idx, p in enumerate(orig_group['params']):
-                if p in other.state:
-                    self.state[group_idx][p_idx] = {
+            for param_idx, param in enumerate(orig_group['params']):
+                param_id = id(param)  # Use the unique ID of the parameter
+                if param_id in other._grad_map:
+                    # Initialize state for the parameter
+                    self.state[group_idx][param_idx] = {
                         k: _utils._recursive_copy_and_cast(v, device)
-                        for k, v in other.state[p].items()
+                        for k, v in other._grad_map[param_id].items()
                     }
-                index = _utils._find_param_in_list(p, reference_params)
+                index = _utils._find_param_in_list(param, reference_params)
                 if index is None:
                     raise ValueError(
-                        "Could not find parameter {} in reference parameters.".
-                        format(str(p))
+                        f"Could not find parameter {param} in reference parameters."
                     )
                 local_list.append(index)
-            group['params'] = [None] * len(group['params'])
             self._group_to_param_list.append(local_list)
 
         self._fmodel = fmodel
@@ -219,16 +222,14 @@ class DifferentiableOptimizer(_abc.ABC):
 
         params = list(params)
 
-        # This allows us to gracefully deal with cases where params are frozen.
         grad_targets = [
-            p if p.requires_grad else jit.zeros([], requires_grad=True)
+            p if not p.is_stop_grad() else jit.zeros_like(p).stop_grad()
             for p in params
         ]
 
         all_grads = jit.grad(
             loss,
             grad_targets,
-            create_graph=self._track_higher_grads,
             retain_graph=True,  # Jittor does not have allow_unused, retain_graph used here
         )
 
@@ -270,517 +271,545 @@ class DifferentiableSGD(DifferentiableOptimizer):
 
     This optimizer creates a gradient tape as it updates parameters."""
 
+
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
         zipped = zip(self.param_groups, grouped_grads)
-        for group_idx, (group, grads) in enumerate(zipped):
-            weight_decay = group['weight_decay']
-            momentum = group['momentum']
-            dampening = group['dampening']
-            nesterov = group['nesterov']
 
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+        for group_idx, (group, grads) in enumerate(zipped):
+            momentum = group.get("momentum", 0.0)  # 如果 group 中没有，默认为 0.0
+            weight_decay = group.get("weight_decay", 0.0)
+            dampening = group.get("dampening", 0.0)
+            nesterov = group.get("nesterov", False)
+            # 遍历参数和梯度
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
+                # 如果 weight_decay 不为 0，则对梯度进行正则化
                 if weight_decay != 0:
-                    g = _add(g, weight_decay, p)
+                    g += weight_decay * p
+
+                # 使用 self.state 管理动量相关状态
+                param_state = self.state[group_idx].get(p_idx, {})
                 if momentum != 0:
-                    param_state = self.state[group_idx][p_idx]
-                    if 'momentum_buffer' not in param_state:
-                        buf = param_state['momentum_buffer'] = g
-                    else:
-                        buf = param_state['momentum_buffer']
-                        buf = _add(buf.mul(momentum), 1 - dampening, g)
-                        param_state['momentum_buffer'] = buf
+                    # 初始化 momentum_buffer 如果不存在
+                    if "momentum_buffer" not in param_state:
+                        param_state["momentum_buffer"] = jit.zeros_like(p).stop_grad()
+
+                    buf = param_state["momentum_buffer"]
+                    buf *= momentum
+                    buf += g * (1 - dampening)
+
                     if nesterov:
-                        g = _add(g, momentum, buf)
+                        # 如果使用 Nesterov 动量
+                        g += momentum * buf
                     else:
                         g = buf
 
-                group['params'][p_idx] = _add(p, -group['lr'], g)
+                    # 更新状态
+                    self.state[group_idx][p_idx] = param_state
+
+                # 最终更新参数
+                p -= self.lr * g
 
 
 class DifferentiableAdam(DifferentiableOptimizer):
-    r"""A differentiable version of the Adam optimizer.
+    r"""A differentiable version of the Adam optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            amsgrad = group['amsgrad']
-            beta1, beta2 = group['betas']
-            weight_decay = group['weight_decay']
+            amsgrad = group.get("amsgrad", False)
+            beta1, beta2 = group.get("betas", (0.9, 0.999))
+            weight_decay = group.get("weight_decay", 0.0)
+            eps = group.get("eps", 1e-8)
 
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-
-                if g is None:
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                state = self.state[group_idx][p_idx]
-
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    # Exponential moving average of gradient values
-                    state['exp_avg'] = jit.zeros_like(p.data)
-                    # Exponential moving average of squared gradient values
-                    state['exp_avg_sq'] = jit.zeros_like(p.data)
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["exp_avg"] = jit.zeros_like(p).stop_grad()
+                    param_state["exp_avg_sq"] = jit.zeros_like(p).stop_grad()
                     if amsgrad:
-                        # Maintains max of all exp. mov. avg. of sq. grad. vals
-                        state['max_exp_avg_sq'] = jit.zeros_like(p.data)
+                        param_state["max_exp_avg_sq"] = jit.zeros_like(p).stop_grad()
 
-                exp_avg, exp_avg_sq = state['exp_avg'], state['exp_avg_sq']
+                exp_avg, exp_avg_sq = param_state["exp_avg"], param_state["exp_avg_sq"]
                 if amsgrad:
-                    max_exp_avg_sq = state['max_exp_avg_sq']
+                    max_exp_avg_sq = param_state["max_exp_avg_sq"]
 
-                state['step'] += 1
-                bias_correction1 = 1 - beta1**state['step']
-                bias_correction2 = 1 - beta2**state['step']
+                # Update step count
+                param_state["step"] += 1
+                step = param_state["step"]
 
+                # Apply weight decay
                 if weight_decay != 0:
-                    g = g + (weight_decay * p)
+                    g += weight_decay * p
 
                 # Decay the first and second moment running average coefficient
-                state['exp_avg'] = exp_avg = (exp_avg * beta1) + (1 - beta1) * g
-                state['exp_avg_sq'] = exp_avg_sq = (
-                    (exp_avg_sq * beta2) + (1 - beta2) * g * g
-                )
+                exp_avg *= beta1
+                exp_avg += (1 - beta1) * g
 
-                # Deal with stability issues
-                mask = exp_avg_sq == 0.
-                _maybe_mask(exp_avg_sq, mask)
+                exp_avg_sq *= beta2
+                exp_avg_sq += (1 - beta2) * (g * g)
+
+                # Bias correction terms
+                bias_correction1 = 1 - beta1 ** step
+                bias_correction2 = 1 - beta2 ** step
 
                 if amsgrad:
-                    # Maintains the max of all 2nd moment running avg. till now
-                    state['max_exp_avg_sq'] = max_exp_avg_sq = jit.maximum(
-                        max_exp_avg_sq, exp_avg_sq
-                    )
-                    # Use the max. for normalizing running avg. of gradient
-                    denom = _add(
-                        max_exp_avg_sq.sqrt() / _math.sqrt(bias_correction2),
-                        group['eps']
-                    )
+                    # Maintain the max of all 2nd moment running avg till now
+                    max_exp_avg_sq = jit.maximum(max_exp_avg_sq, exp_avg_sq)
+                    param_state["max_exp_avg_sq"] = max_exp_avg_sq
+                    denom = (max_exp_avg_sq.sqrt() / jit.sqrt(bias_correction2)) + eps
                 else:
-                    denom = _add(
-                        exp_avg_sq.sqrt() / _math.sqrt(bias_correction2),
-                        group['eps']
-                    )
+                    denom = (exp_avg_sq.sqrt() / jit.sqrt(bias_correction2)) + eps
 
-                step_size = group['lr'] / bias_correction1
+                step_size = group["lr"] / bias_correction1
 
-                group['params'][p_idx] = _addcdiv(
-                    p, -step_size, exp_avg, denom
-                )
+                # Update parameters
+                p -= step_size * (exp_avg / denom)
 
+                # Save updated state
+                self.state[group_idx][p_idx] = param_state
 
 class DifferentiableAdamW(DifferentiableOptimizer):
-    r"""A differentiable version of the AdamW optimizer.
+    r"""A differentiable version of the AdamW optimizer for Jittor.
 
-        This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            amsgrad = group['amsgrad']
-            beta1, beta2 = group['betas']
+            amsgrad = group.get("amsgrad", False)
+            beta1, beta2 = group.get("betas", (0.9, 0.999))
+            weight_decay = group.get("weight_decay", 0.01)  # Typical default for AdamW
+            eps = group.get("eps", 1e-8)
 
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-
-                if g is None:
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                # Perform stepweight decay
-                p = p * (1 - group['lr'] * group['weight_decay'])
-
-                if g.is_sparse:
-                    raise RuntimeError(
-                        'AdamW does not support sparse gradients')
-
-                state = self.state[group_idx][p_idx]
-
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    # Exponential moving average of gradient values
-                    state['exp_avg'] = jit.zeros_like(p.data)
-                    # Exponential moving average of squared gradient values
-                    state['exp_avg_sq'] = jit.zeros_like(p.data)
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["exp_avg"] = jit.zeros_like(p).stop_grad()
+                    param_state["exp_avg_sq"] = jit.zeros_like(p).stop_grad()
                     if amsgrad:
-                        # Maintains max of all exp. mov. avg. of sq. grad. vals
-                        state['max_exp_avg_sq'] = jit.zeros_like(p.data)
+                        param_state["max_exp_avg_sq"] = jit.zeros_like(p).stop_grad()
 
-                exp_avg, exp_avg_sq = state['exp_avg'], state['exp_avg_sq']
+                exp_avg, exp_avg_sq = param_state["exp_avg"], param_state["exp_avg_sq"]
                 if amsgrad:
-                    max_exp_avg_sq = state['max_exp_avg_sq']
+                    max_exp_avg_sq = param_state["max_exp_avg_sq"]
 
-                state['step'] += 1
-                bias_correction1 = 1 - beta1**state['step']
-                bias_correction2 = 1 - beta2**state['step']
+                # Apply weight decay directly on the parameter (AdamW specific)
+                p *= (1 - group["lr"] * weight_decay)
+
+                # Update step count
+                param_state["step"] += 1
+                step = param_state["step"]
 
                 # Decay the first and second moment running average coefficient
-                state['exp_avg'] = exp_avg = (exp_avg * beta1) + (1 - beta1) * g
-                state['exp_avg_sq'] = exp_avg_sq = (
-                    (exp_avg_sq * beta2) + (1 - beta2) * g * g
-                )
+                exp_avg *= beta1
+                exp_avg += (1 - beta1) * g
 
-                # Deal with stability issues
-                mask = exp_avg_sq == 0.
-                _maybe_mask(exp_avg_sq, mask)
+                exp_avg_sq *= beta2
+                exp_avg_sq += (1 - beta2) * (g * g)
+
+                # Bias correction terms
+                bias_correction1 = 1 - beta1 ** step
+                bias_correction2 = 1 - beta2 ** step
 
                 if amsgrad:
-                    # Maintains the max of all 2nd moment running avg. till now
-                    state['max_exp_avg_sq'] = max_exp_avg_sq = jit.minimum(
-                        max_exp_avg_sq, exp_avg_sq
-                    )
-                    # Use the max. for normalizing running avg. of gradient
-                    denom = _add(
-                        max_exp_avg_sq.sqrt() / _math.sqrt(bias_correction2),
-                        group['eps']
-                    )
+                    # Maintain the max of all 2nd moment running avg till now
+                    max_exp_avg_sq = jit.maximum(max_exp_avg_sq, exp_avg_sq)
+                    param_state["max_exp_avg_sq"] = max_exp_avg_sq
+                    denom = (max_exp_avg_sq.sqrt() / jit.sqrt(bias_correction2)) + eps
                 else:
-                    denom = _add(
-                        exp_avg_sq.sqrt() / _math.sqrt(bias_correction2),
-                        group['eps']
-                    )
+                    denom = (exp_avg_sq.sqrt() / jit.sqrt(bias_correction2)) + eps
 
-                step_size = group['lr'] / bias_correction1
+                step_size = group["lr"] / bias_correction1
 
-                group['params'][p_idx] = _addcdiv(
-                    p, -step_size, exp_avg, denom
-                )
+                # Update parameters
+                p -= step_size * (exp_avg / denom)
+
+                # Save updated state
+                self.state[group_idx][p_idx] = param_state
 
 
 class DifferentiableAdadelta(DifferentiableOptimizer):
-    r"""A differentiable version of the Adadelta optimizer.
+    r"""A differentiable version of the Adadelta optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
-        for group_idx, (group, grads) in enumerate(zipped):
-            rho, eps = group['rho'], group['eps']
 
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+        for group_idx, (group, grads) in enumerate(zipped):
+            rho = group.get("rho", 0.9)
+            eps = group.get("eps", 1e-6)
+            weight_decay = group.get("weight_decay", 0.0)
+
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                if g.data.is_sparse:
-                    raise RuntimeError(
-                        'Adadelta does not support sparse gradients'
-                    )
-                state = self.state[group_idx][p_idx]
-
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    state['square_avg'] = jit.zeros_like(p.data)
-                    state['acc_delta'] =  jit.zeros_like(p.data)
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["square_avg"] = jit.zeros_like(p).stop_grad()
+                    param_state["acc_delta"] = jit.zeros_like(p).stop_grad()
 
-                square_avg, acc_delta = state['square_avg'], state['acc_delta']
-                state['step'] += 1
+                square_avg = param_state["square_avg"]
+                acc_delta = param_state["acc_delta"]
 
-                if group['weight_decay'] != 0:
-                    g = _add(g, group['weight_decay'], p)
+                # Update step count
+                param_state["step"] += 1
 
-                square_avg = _addcmul(square_avg.mul(rho), 1 - rho, g, g)
-                state['square_avg'] = square_avg
-                std = _add(square_avg, eps).sqrt()
-                delta = _add(acc_delta, eps).sqrt().div(std).mul(g)
-                state['acc_delta'] = _addcmul(
-                    acc_delta.mul(rho), 1 - rho, delta, delta
-                )
-                group['params'][p_idx] = _add(p, -group['lr'], delta)
+                # Apply weight decay if needed
+                if weight_decay != 0:
+                    g += weight_decay * p
+
+                # Update square_avg
+                square_avg *= rho
+                square_avg += (1 - rho) * (g * g)
+                param_state["square_avg"] = square_avg
+
+                # Compute update step
+                std = (square_avg + eps).sqrt()
+                delta = (acc_delta + eps).sqrt() / std * g
+
+                # Update acc_delta
+                acc_delta *= rho
+                acc_delta += (1 - rho) * (delta * delta)
+                param_state["acc_delta"] = acc_delta
+
+                # Update parameter
+                p -= group["lr"] * delta
+
+                # Save updated state
+                self.state[group_idx][p_idx] = param_state
 
 
 class DifferentiableAdagrad(DifferentiableOptimizer):
-    r"""A differentiable version of the Adagrad optimizer.
+    r"""A differentiable version of the Adagrad optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+            lr = group.get("lr", 1e-2)
+            lr_decay = group.get("lr_decay", 0.0)
+            weight_decay = group.get("weight_decay", 0.0)
+            eps = group.get("eps", 1e-10)
+
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                state = self.state[group_idx][p_idx]
+                # State initialization
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["sum"] = jit.zeros_like(p).stop_grad()
 
-                state['step'] += 1
+                sum_ = param_state["sum"]
 
-                if group['weight_decay'] != 0:
-                    if g.data.is_sparse:
-                        raise RuntimeError(
-                            "weight_decay option is not compatible with sparse "
-                            "gradients"
-                        )
-                    g = _add(g, group['weight_decay'], p)
+                # Update step count
+                param_state["step"] += 1
+                step = param_state["step"]
 
-                clr = group['lr'] / (
-                    1 + (state['step'] - 1) * group['lr_decay']
-                )
+                # Apply weight decay if needed
+                if weight_decay != 0:
+                    g += weight_decay * p
 
-                if g.is_sparse:
-                    # TODO: implement support for sparse gradients.
-                    raise NotImplementedError(
-                        "sparse gradient support for DifferentiableAdagrad not "
-                        "implemented yet."
-                    )
-                else:
-                    state['sum'] = sum_ = _addcmul(state['sum'], 1, g, g)
-                    mask = sum_ == 0.
-                    _maybe_mask(sum_, mask)
-                    std = _add(state['sum'].sqrt(), group['eps'] if 'eps' in group else 1e-10)
-                    group['params'][p_idx] = _addcdiv(p, -clr, g, std)
+                # Compute adjusted learning rate
+                clr = lr / (1 + (step - 1) * lr_decay)
+
+                # Update sum of squared gradients
+                sum_ += g * g
+                param_state["sum"] = sum_
+
+                # Compute parameter update
+                std = (sum_.sqrt() + eps)
+                p -= clr * g / std
+
+                # Save updated state
+                self.state[group_idx][p_idx] = param_state
 
 
 class DifferentiableAdamax(DifferentiableOptimizer):
-    r"""A differentiable version of the Adamax optimizer.
+    r"""A differentiable version of the Adamax optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+            lr = group.get("lr", 2e-3)
+            betas = group.get("betas", (0.9, 0.999))
+            eps = group.get("eps", 1e-8)
+            weight_decay = group.get("weight_decay", 0.0)
+
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                if g.is_sparse:
-                    raise RuntimeError(
-                        'Adamax does not support sparse gradients'
-                    )
-
-                state = self.state[group_idx][p_idx]
-
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    state['exp_avg'] = jit.zeros_like(p.data)
-                    state['exp_inf'] = jit.zeros_like(p.data)
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["exp_avg"] = jit.zeros_like(p).stop_grad()
+                    param_state["exp_inf"] = jit.zeros_like(p).stop_grad()
 
-                exp_avg, exp_inf = state['exp_avg'], state['exp_inf']
-                beta1, beta2 = group['betas']
-                eps = group['eps']
+                exp_avg = param_state["exp_avg"]
+                exp_inf = param_state["exp_inf"]
+                beta1, beta2 = betas
 
-                state['step'] += 1
+                # Update step count
+                param_state["step"] += 1
+                step = param_state["step"]
 
-                if group['weight_decay'] != 0:
-                    g = _add(g, group['weight_decay'], p)
+                # Apply weight decay
+                if weight_decay != 0:
+                    g += weight_decay * p
 
                 # Update biased first moment estimate
-                state['exp_avg'] = exp_avg = _add(
-                    exp_avg.mul(beta1), 1 - beta1, g
-                )
-                # Update the exponentially weighted infinity norm.
-                state['exp_inf'] = exp_inf = exp_inf.mul(beta2).unsqueeze(0)
-                norm_buf = jit.concat(
-                    [exp_inf, _add(g.abs(), eps).unsqueeze(0)], 0
-                )
-                exp_inf, _ = jit.maximum(norm_buf, 0, keepdims=False)
-                state['exp_inf'] = exp_inf
+                exp_avg = exp_avg * beta1 + (1 - beta1) * g
+                param_state["exp_avg"] = exp_avg
 
-                bias_correction = 1 - beta1**state['step']
-                clr = group['lr'] / bias_correction
+                # Update the exponentially weighted infinity norm
+                exp_inf = jit.maximum(exp_inf * beta2, g.abs())
+                param_state["exp_inf"] = exp_inf
 
-                group['params'][p_idx] = _addcdiv(p, -clr, exp_avg, exp_inf)
+                # Bias correction
+                bias_correction = 1 - beta1**step
+                clr = lr / bias_correction
+
+                # Parameter update
+                p -= clr * exp_avg / (exp_inf + eps)
+
+                # Save updated state
+                self.state[group_idx][p_idx] = param_state
 
 
 class DifferentiableASGD(DifferentiableOptimizer):
-    r"""A differentiable version of the ASGD optimizer.
+    r"""A differentiable version of the ASGD optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+            lr = group.get("lr", 1e-2)
+            lambd = group.get("lambd", 1e-4)
+            alpha = group.get("alpha", 0.75)
+            t0 = group.get("t0", 1e6)
+            weight_decay = group.get("weight_decay", 0.0)
+
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                if g.is_sparse:
-                    raise RuntimeError('ASGD does not support sparse gradients')
-                state = self.state[group_idx][p_idx]
-
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    state['eta'] = group['lr']
-                    state['mu'] = 1
-                    state['ax'] = jit.zeros_like(p.data)
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["eta"] = lr
+                    param_state["mu"] = 1
+                    param_state["ax"] = jit.zeros_like(p).stop_grad()
 
-                state['step'] += 1
+                eta = param_state["eta"]
+                mu = param_state["mu"]
+                ax = param_state["ax"]
 
-                if group['weight_decay'] != 0:
-                    g = _add(g, group['weight_decay'], p)
+                # Update step count
+                param_state["step"] += 1
+                step = param_state["step"]
 
-                # decay term
-                p = p.mul(1 - group['lambd'] * state['eta'])
+                # Apply weight decay
+                if weight_decay != 0:
+                    g += weight_decay * p
 
-                # update parameter
-                group['params'][p_idx] = _add(p, -state['eta'], g)
+                # Decay term
+                p *= 1 - lambd * eta
 
-                # averaging
-                if state['mu'] != 1:
-                    state['ax'] = _add(
-                        state['ax'],
-                        p.sub(state['ax']).mul(state['mu'])
-                    )
+                # Update parameter
+                p -= eta * g
+
+                # Averaging
+                if mu != 1:
+                    ax += (p - ax) * mu
                 else:
-                    state['ax'] = p
+                    ax = p
 
-                # update eta and mu
-                state['eta'] = (
-                    group['lr'] / _math.pow(
-                    (1 + group['lambd'] * group['lr'] * state['step']),
-                    group['alpha']
-                    )   
-                )
-                state['mu'] = 1 / max(1, state['step'] - group['t0'])
+                # Update eta and mu
+                param_state["eta"] = lr / ((1 + lambd * lr * step) ** alpha)
+                param_state["mu"] = 1 / max(1, step - t0)
+
+                # Save updated parameter and state
+                group["params"][p_idx] = p
+                param_state["ax"] = ax
+                self.state[group_idx][p_idx] = param_state
 
 
 class DifferentiableRMSprop(DifferentiableOptimizer):
-    r"""A differentiable version of the RMSprop optimizer.
+    r"""A differentiable version of the RMSprop optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         _warnings.warn(
-            "Differentiable RMSprop suffers from gradient correctness issues. "
-            "Consider using another optimizer until we fix these..."
+            "Differentiable RMSprop may suffer from gradient correctness issues. "
+            "Consider verifying behavior for specific use cases."
         )
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+            lr = group.get("lr", 1e-2)
+            alpha = group.get("alpha", 0.99)
+            eps = group.get("eps", 1e-8)
+            weight_decay = group.get("weight_decay", 0.0)
+            momentum = group.get("momentum", 0.0)
+            centered = group.get("centered", False)
+
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
-                if g.is_sparse:
-                    raise RuntimeError(
-                        'RMSprop does not support sparse gradients'
-                    )
-                state = self.state[group_idx][p_idx]
-
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    state['square_avg'] = jit.zeros_like(p.data)
-                    if group['momentum'] > 0:
-                        state['momentum_buffer'] = jit.zeros_like(p.data)
-                    if group['centered']:
-                        state['grad_avg'] = jit.zeros_like(p.data)
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["square_avg"] = jit.zeros_like(p).stop_grad()
+                    if momentum > 0:
+                        param_state["momentum_buffer"] = jit.zeros_like(p).stop_grad()
+                    if centered:
+                        param_state["grad_avg"] = jit.zeros_like(p).stop_grad()
 
-                square_avg = state['square_avg']
-                alpha = group['alpha']
+                square_avg = param_state["square_avg"]
+                param_state["step"] += 1
 
-                state['step'] += 1
+                # Apply weight decay
+                if weight_decay != 0:
+                    g += weight_decay * p
 
-                if group['weight_decay'] != 0:
-                    g = _add(g, group['weight_decay'], p)
+                # Update running average of squared gradients
+                square_avg = alpha * square_avg + (1 - alpha) * g * g
+                param_state["square_avg"] = square_avg
 
-                square_avg = _addcmul(square_avg.mul(alpha), 1 - alpha, g, g)
-                state['square_avg'] = square_avg
+                # Prevent NaNs for zero values
+                if jit.any(square_avg == 0):
+                    square_avg += eps
 
-                # NB: This prevents nans but is not sufficient to recover
-                # correct gradients.
-                mask = square_avg == 0.
-                _maybe_mask(square_avg, mask)
-
-                if group['centered']:
-                    grad_avg = state['grad_avg']
-                    grad_avg = _add(grad_avg.mul(alpha), 1 - alpha, g)
-                    state['grad_avg'] = grad_avg
-                    eps = group['eps']
-                    avg = _add(
-                        _addcmul(square_avg, -1, grad_avg, grad_avg).sqrt(), eps
-                    )
+                # Calculate centered RMSprop if applicable
+                if centered:
+                    grad_avg = param_state["grad_avg"]
+                    grad_avg = alpha * grad_avg + (1 - alpha) * g
+                    param_state["grad_avg"] = grad_avg
+                    avg = (square_avg - grad_avg * grad_avg).sqrt() + eps
                 else:
-                    avg = _add(square_avg.sqrt(), group['eps'])
+                    avg = square_avg.sqrt() + eps
 
-                if group['momentum'] > 0:
-                    buf = state['momentum_buffer']
-                    buf = _addcdiv(buf.mul(group['momentum']), g, avg)
-                    state['momentum_buffer'] = buf
-                    p = _add(p, -group['lr'], buf)
+                # Momentum updates if enabled
+                if momentum > 0:
+                    buf = param_state.get("momentum_buffer", jit.zeros_like(p).stop_grad())
+                    buf = momentum * buf + g / avg
+                    param_state["momentum_buffer"] = buf
+                    p -= lr * buf
                 else:
-                    p = _addcdiv(p, -group['lr'], g, avg)
+                    p -= lr * g / avg
 
-                group['params'][p_idx] = p
+                # Save updated parameter and state
+                group["params"][p_idx] = p
+                self.state[group_idx][p_idx] = param_state
 
 
 class DifferentiableRprop(DifferentiableOptimizer):
-    r"""A differentiable version of the Rprop optimizer.
+    r"""A differentiable version of the Rprop optimizer for Jittor.
 
-    This optimizer creates a gradient tape as it updates parameters."""
+    This optimizer creates a gradient tape as it updates parameters.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         _warnings.warn(
-            "Differentiable Rprop (correctly) yields zero second order "
-            "gradients, as only the sign of the gradient is used in updates. "
-            "Future versions will offer higher order gradients based on a "
-            "continuous relaxation of the forward pass."
+            "Differentiable Rprop correctly yields zero second-order gradients, "
+            "as only the sign of the gradient is used in updates. Future versions "
+            "may include higher-order gradient approximations."
         )
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
-
         zipped = zip(self.param_groups, grouped_grads)
+
         for group_idx, (group, grads) in enumerate(zipped):
-            for p_idx, (p, g) in enumerate(zip(group['params'], grads)):
-                if g is None:
+            etaminus, etaplus = group.get("etas", (0.5, 1.2))
+            step_size_min, step_size_max = group.get("step_sizes", (1e-6, 50))
+
+            for p_idx, (p, g) in enumerate(zip(group["params"], grads)):
+                if g is None or p.is_stop_grad():
                     continue
 
                 if g.is_sparse:
-                    raise RuntimeError(
-                        'Rprop does not support sparse gradients'
-                    )
-
-                state = self.state[group_idx][p_idx]
+                    raise RuntimeError("Rprop does not support sparse gradients")
 
                 # State initialization
-                if len(state) == 0:
-                    state['step'] = 0
-                    state['prev'] = jit.zeros_like(p.data)
-                    state['step_size'] = g.new().resize_as_(g).fill_(
-                        group['lr']
-                    )
+                param_state = self.state[group_idx].get(p_idx, {})
+                if not param_state:
+                    param_state["step"] = 0
+                    param_state["prev"] = jit.zeros_like(p).stop_grad()
+                    param_state["step_size"] = jit.full_like(
+                        p, group.get("lr", 1e-2)
+                    ).stop_grad()
 
-                etaminus, etaplus = group['etas']
-                step_size_min, step_size_max = group['step_sizes']
-                step_size = state['step_size']
+                prev_grad = param_state["prev"]
+                step_size = param_state["step_size"]
 
-                state['step'] += 1
+                param_state["step"] += 1
 
-                sign = g.mul(state['prev']).sign()
-                sign[sign.gt(0)] = etaplus
-                sign[sign.lt(0)] = etaminus
-                sign[sign.eq(0)] = 1
+                # Determine gradient sign
+                sign = (g * prev_grad).sign()
+                sign_positive = sign > 0
+                sign_negative = sign < 0
 
-                # update stepsizes with step size updates
-                step_size = step_size.mul(sign).clamp(
-                    step_size_min, step_size_max
-                )
-                state['step_size'] = step_size
+                # Update step sizes
+                step_size = jit.where(sign_positive, step_size * etaplus, step_size)
+                step_size = jit.where(sign_negative, step_size * etaminus, step_size)
+                step_size = step_size.clamp(step_size_min, step_size_max)
+                param_state["step_size"] = step_size
 
-                # for dir<0, dfdx=0
-                # for dir>=0 dfdx=dfdx
-                g = jit.where(sign.equal(etaminus), jit.zeros_like(g), g)
+                # Zero out gradient where sign is negative
+                g = jit.where(sign_negative, jit.zeros_like(g), g)
 
-                # update parameters
-                group['params'][p_idx] = _addcmul(p, -1, g.sign(), step_size)
+                # Update parameters
+                p -= g.sign() * step_size
 
-                state['prev'] = g.clone()
+                # Save state
+                param_state["prev"] = g.clone().stop_grad()
+                self.state[group_idx][p_idx] = param_state
 
 
 _OptMappingType = _typing.Dict[jit.optim.Optimizer, _typing.Type[DifferentiableOptimizer]]
@@ -819,7 +848,7 @@ _opt_mapping = {
     if k in available_optimizers
 }
 
-print("Updated optimizer mapping:", _opt_mapping)
+# print("Updated optimizer mapping:", _opt_mapping)
 
 
 
@@ -837,11 +866,11 @@ def get_diff_optim(
 
     Args:
         opt: an existing optimizer, assumed to be an instance of
-            ``torch.optim.Optimizer``, of a supported type which is either defined
-            in ``torch.optim``, or a custom implemantation which has been added to
+            ``jittor.optim.Optimizer``, of a supported type which is either defined
+            in ``jittor.optim``, or a custom implementation which has been added to
             higher at runtime by using ``higher.register_optim``. We assume this
             optimizer tracks the parameters (or some subset thereof) of a single
-            ``torch.nn.Module`` instance, with support for parameter groups.
+            ``jittor.Module`` instance, with support for parameter groups.
         reference_params: the parameters of the module tracked by ``opt``, as
             returned by ``module.parameters()``.
         fmodel (optional): a patched version of the ``module`` tracked by ``opt``.
@@ -904,7 +933,7 @@ def create_diff_optim(
     r"""Construct a differentiable version of an new optimizer.
 
     Args:
-        opt_type: the type (constructor) for a torch.optim.Optimizer subtype
+        opt_type: the type (constructor) for a jittor.optim.Optimizer subtype
             from amongst the types supported by the library, or registered with
             it a runtime.
         opt_kwargs: a dictionary of keywords to be passed to the optimizer
@@ -998,7 +1027,7 @@ def register_optim(
 
     Args:
         optim_type: the type of a new optimizer, assumed to be an instance of
-            ``torch.optim.Optimizer``.
+            ``jittor.optim.Optimizer``.
         diff_optim_type: the type of a new differentiable optimizer, assumed to
             be an instance of ``higher.optim.DifferentiableOptimizer`` with
             functionally equivalent logic to ``optim_type``.
@@ -1069,7 +1098,7 @@ def apply_trainable_opt_params(
                 "parameter groups.".format(k)
             )
         for group_idx, group in enumerate(opt.param_groups):
-            replacement = v[0] if len(v) is 1 else v[group_idx]
+            replacement = v[0] if len(v) == 1 else v[group_idx]
             group[k] = _recursive_apply(replacement, group[k])
 
 

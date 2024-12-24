@@ -46,6 +46,7 @@ class RAD_RGT(HyperGradient):
             ul_var: List,
             solver_config: Dict
     ):
+
         super(RAD_RGT, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
         self.dynamic_initialization = "DI" in solver_config['dynamic_op']
         self.truncate_iter = solver_config["RGT"]['truncate_iter']
@@ -81,7 +82,7 @@ class RAD_RGT(HyperGradient):
         assert self.truncate_iter > 0, "With RGT operation, 'truncate_iter' should be greater than 0"
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         grads_upper = jit.grad(upper_loss, self.ul_var,
-                                          retain_graph=self.dynamic_initialization, allow_unused=True)
+                                          retain_graph=self.dynamic_initialization)
         update_tensor_grads(self.ul_var, grads_upper)
 
         if self.dynamic_initialization:

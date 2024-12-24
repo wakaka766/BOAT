@@ -226,15 +226,17 @@ def _make_functional(
 
             self._fast_params = None
             self._param_names = param_names
-
+            # print("_param_names", self._param_names)
             self._original_params = original_params
-
+            # print("_original_params", self._original_params)
             # for pretty printing
-            self._parameters = _OrderedDict(
-                (name, _ParameterPlaceholder(name))
-                for name in self._param_names
-            )
-            self._modules: _typing.Dict[str, _MonkeyPatchBase] = _OrderedDict()
+            # self._parameters = _OrderedDict(
+            #     (name, _ParameterPlaceholder(name))
+            #     for name in self._param_names
+            # )
+            for name in self._param_names:
+                placeholder = _ParameterPlaceholder(name)
+                setattr(self, name, placeholder)
 
         @property
         def direct_submodule_call(self):
@@ -316,7 +318,8 @@ def _make_functional(
                             )
                         buffers[name] = value
                     else:
-                        object.__setattr__(self, name, value)
+                        object.__setattr__(self, name, value)      
+
 
     MonkeyPatched.__name__ = "InnerFunctional" + type(module).__name__
     MonkeyPatched.__qualname__ = MonkeyPatched.__name__
@@ -336,17 +339,10 @@ def _make_functional(
             continue
         setattr(fmodule, name, attr)
 
-    # # Deal with "None"-style params
-    # with _modify_internally(fmodule):
-    #     for name, attr in module.__dict__['_parameters'].items():
-    #         if isinstance(attr, _torch.nn.Parameter):
-    #             continue
-    #         else:
-    #             setattr(fmodule, name, attr)
-
     # Deal with "None"-style params
     with _modify_internally(fmodule):
-        for name, attr in module.__dict__['_parameters'].items():
+        # for name, attr in module.__dict__['_parameters'].items():
+        for name, attr in module._parameters.items():
             if isinstance(attr, jit.Var) and not attr.stop_grad:
                 continue
             else:
@@ -360,9 +356,11 @@ def _make_functional(
         fmodule._modules[name] = fchild
         setattr(fmodule, name, fchild)
 
-    true_forward = type(module).forward
+    true_forward = getattr(type(module), "execute", None) or getattr(type(module), "forward", None)
+    # true_forward = type(module).forward
 
     def patched_forward(self, *args, params=None, **kwargs):
+        # print('run patched_forward!!!')
         if self.direct_submodule_call:
             # If submodule was called directly, run intialisation that happens
             # at top level call. If *full set of params* is provided here, it 
@@ -395,7 +393,8 @@ def _make_functional(
             
             return true_forward(self, *args, **kwargs)
 
-    setattr(MonkeyPatched, "forward", patched_forward)
+    # setattr(MonkeyPatched, "forward", patched_forward)
+    setattr(MonkeyPatched, "execute", patched_forward)
 
     def flatten_parameters(self):
         return  # no-op
@@ -444,9 +443,10 @@ def make_functional(
     _, fmodule, MonkeyPatched = _make_functional(module, params_box, 0)
     top_name = "Functional" + MonkeyPatched._wrapped_name
     MonkeyPatched.__name__ = MonkeyPatched.__qualname__ = top_name
-
-    MonkeyPatched.boxed_forward = MonkeyPatched.forward
-
+    ###################
+    # MonkeyPatched.boxed_forward = MonkeyPatched.forward
+    MonkeyPatched.boxed_forward = MonkeyPatched.execute
+    #############
     param_mapping = _utils._get_param_mapping(module, [], [])
     setattr(fmodule, "_param_mapping", param_mapping)
 
@@ -477,8 +477,11 @@ def make_functional(
         self.fast_params = params
         params = self._expand_params(params)
         _update_patched_params(self, [params], 0)
-
-    setattr(MonkeyPatched, "forward", _patched_forward)
+    
+    ##############
+    setattr(MonkeyPatched, "execute", _patched_forward)
+    ##############
+    # setattr(MonkeyPatched, "forward", _patched_forward)
     setattr(MonkeyPatched, "parameters", _patched_parameters)
     setattr(MonkeyPatched, "update_params", _update_params)
     setattr(MonkeyPatched, "_refill_params_box", _refill_params_box)

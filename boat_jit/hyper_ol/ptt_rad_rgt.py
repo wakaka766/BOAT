@@ -78,7 +78,6 @@ class PTT_RAD_RGT(HyperGradient):
 
         :returns: the current upper-level objective
         """
-
         assert self.truncate_iter > 0, "With RGT operation, 'truncate_iter' should be greater than 0"
         assert self.truncate_max_loss_iter and (max_loss_iter > 0), "With PTT operation, 'max_loss_iter' should be greater than 0"
         lower_model_params = list(auxiliary_model.parameters(time = max_loss_iter))

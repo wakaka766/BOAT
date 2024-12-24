@@ -1,7 +1,7 @@
 from .dynamical_system import DynamicalSystem
 from jittor import Module
-from higher.patch import _MonkeyPatchBase
-from higher.optim import DifferentiableOptimizer
+from ..higher_jit.patch import _MonkeyPatchBase
+from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 
 class DI_NGD(DynamicalSystem):
@@ -46,7 +46,9 @@ class DI_NGD(DynamicalSystem):
         super(DI_NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.ul_objective = ul_objective
-
+        self.truncate_iters = solver_config['RGT']["truncate_iter"]
+        self.ll_opt = solver_config['ll_opt']
+        
     def optimize(
         self,
         ll_feed_dict: Dict,
@@ -80,17 +82,31 @@ class DI_NGD(DynamicalSystem):
         :returns: None
         """
 
+        if self.truncate_iters > 0:
+            ll_backup = [x.clone().stop_grad() for x in self.ll_model.parameters()]
+
+            for _ in range(self.truncate_iters):
+                lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+                self.ll_opt.step(lower_loss)
+
+            for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
+                y.update(x.clone())
+
+            for x, y in zip(ll_backup, self.ll_model.parameters()):
+                y.update(x.clone())
+
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []
-            for lower_iter in range(self.lower_loop):
+            for _ in range(self.lower_loop):
                 lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
                 auxiliary_opt.step(lower_loss)
                 upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
                 ul_loss_list.append(upper_loss.item())
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
             return ll_step_with_max_ul_loss+1
-        for lower_iter in range(self.lower_loop):
+        
+        for _ in range(self.lower_loop - self.truncate_iters):
             lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
             auxiliary_opt.step(lower_loss)
         return self.lower_loop

@@ -40,7 +40,7 @@ def innerloop_ctx(
         model: a ``jit.Module`` subclass instance.
         opt: an existing optimizer, assumed to be an instance of
             ``jit.optim.Optimizer``, of a supported type which is either
-            defined in ``jit.optim``, or a custom implemantation which has
+            defined in ``jit.optim``, or a custom implementation which has
             been added to higher at runtime by using ``higher.register_optim``.
             We assume this optimizer tracks the parameters (or some subset
             thereof) of a single ``jit.Module`` instance, with support for
@@ -78,7 +78,7 @@ def innerloop_ctx(
         additional kwarg-only parameter ``params``, which should be a list of
         jit tensors requiring gradients, ideally provided by this function
         (see below) or by an update step from one of the optimizers in 
-        ``higher.optim``. And ``diffopt`` is an initialized 
+        ``higher_jit.optim``. And ``diffopt`` is an initialized
         ``DifferentiableOptimizer`` instance of the right subtype.
     """
     fmodel = monkeypatch(

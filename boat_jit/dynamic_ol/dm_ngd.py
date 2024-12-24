@@ -1,10 +1,10 @@
 from .dynamical_system import DynamicalSystem
 import jittor as jit
 from jittor import Module
-from higher.patch import _MonkeyPatchBase
-from higher.optim import DifferentiableOptimizer
+from ..higher_jit.patch import _MonkeyPatchBase
+from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import update_tensor_grads,grad_unused_zero,list_tensor_norm,list_tensor_matmul
+from ..utils.op_utils import update_tensor_grads,grad_unused_zero,list_tensor_norm,list_tensor_matmul,custom_grad,manual_update
 
 class DM_NGD(DynamicalSystem):
 
@@ -107,53 +107,86 @@ class DM_NGD(DynamicalSystem):
             params['lr'] = x_lr
 
         #############
-        self.ll_opt.zero_grad()
-        self.auxiliary_v_opt.zero_grad()
+        # self.ll_opt.zero_grad()
+        # self.auxiliary_v_opt.zero_grad()
         loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-        grad_y_temp = jit.grad(loss_f, auxiliary_model.parameters(),retain_graph=True)
+        grad_y_temp = jit.grad(loss_f,list(auxiliary_model.parameters()),retain_graph=True)
 
         #############
 
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        grad_outer_params = grad_unused_zero(upper_loss, list(auxiliary_model.parameters()))
+        grad_outer_params = grad_unused_zero(upper_loss, list(auxiliary_model.parameters()),retain_graph=True)
         grads_phi_params = grad_unused_zero(loss_f, list(auxiliary_model.parameters()), retain_graph=True)
-        grads = grad_unused_zero(grads_phi_params, list(self.ul_model.parameters()), retain_graph=True)  # dx (dy f) v
+        grads = custom_grad(grads_phi_params, list(self.ul_model.parameters()),self.auxiliary_v, retain_graph=True)  # dx (dy f) v
         grad_outer_hparams = grad_unused_zero(upper_loss, list(self.ul_model.parameters()))
 
         if "RAD" in self.hyper_op:
-            vsp = grad_unused_zero(grads_phi_params, list(auxiliary_model.parameters()))  # dy (dy f) v=d2y f v
+            vsp = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)  # dy (dy f) v=d2y f v
 
             for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
-                v0.grad = v - gow
+                v0._custom_grad = v - gow
             update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
-            self.ll_opt.step()
-            self.auxiliary_v_opt.step()
+            # self.ll_opt.step()
+            manual_update(self.ll_opt,list(self.ll_model.parameters()))
+            # self.auxiliary_v_opt.step()
+            manual_update(self.auxiliary_v_opt,self.auxiliary_v)
 
             grads = [-g + v for g, v in zip(grads, grad_outer_hparams)]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
         else:
-            vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v, retain_graph=True,allow_unused=True)  # dy (dy f) v=d2y f v
+            # 计算梯度和权重
+            vsp = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)
+
+            # 计算 tem
             tem = [v - gow for v, gow in zip(vsp, grad_outer_params)]
 
+            # 计算 ita
             ita_u = list_tensor_norm(tem) ** 2
-            grad_tem = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem, retain_graph=True,
-                                  allow_unused=True)  # dy (dy f) v=d2y f v
-
+            grad_tem = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem)
             ita_l = list_tensor_matmul(tem, grad_tem)
-            # print(ita_u,ita_l)
             ita = ita_u / (ita_l + 1e-12)
-            self.auxiliary_v = [v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)]  # (I-ita*d2yf)v+ita*dy F)
 
-            vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v,
-                             allow_unused=True)  # dy (dy f) v=d2y f v
+            # 更新 auxiliary_v
+            self.auxiliary_v = [
+                v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)
+            ]
 
+            # 再次计算 vsp
+            vsp = custom_grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)
+
+            # 更新梯度并优化
             for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
-                v0.grad = v - gow
+                v0._custom_grad = v - gow
+
             update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
-            self.ll_opt.step()
+            # self.ll_opt.step()
+            manual_update(self.ll_opt, list(self.ll_model.parameters()))
 
             grads = [-g + v if g is not None else v for g, v in zip(grads, grad_outer_hparams)]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
+            
+            # vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v, retain_graph=True,allow_unused=True)  # dy (dy f) v=d2y f v
+            # tem = [v - gow for v, gow in zip(vsp, grad_outer_params)]
+
+            # ita_u = list_tensor_norm(tem) ** 2
+            # grad_tem = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem, retain_graph=True,
+            #                       allow_unused=True)  # dy (dy f) v=d2y f v
+
+            # ita_l = list_tensor_matmul(tem, grad_tem)
+            # # print(ita_u,ita_l)
+            # ita = ita_u / (ita_l + 1e-12)
+            # self.auxiliary_v = [v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)]  # (I-ita*d2yf)v+ita*dy F)
+
+            # vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v,
+            #                  allow_unused=True)  # dy (dy f) v=d2y f v
+
+            # for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
+            #     v0.grad = v - gow
+            # update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
+            # self.ll_opt.step()
+
+            # grads = [-g + v if g is not None else v for g, v in zip(grads, grad_outer_hparams)]
+            # update_tensor_grads(list(self.ul_model.parameters()), grads)
 
         return -1
 

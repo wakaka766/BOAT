@@ -1,12 +1,18 @@
 import time
-from typing import Dict, Any, Callable
-import torch
 import copy
-from torch import Tensor
-from torch.optim import Optimizer
-import higher
-
+from typing import Dict, Any, Callable
 from boat.utils.op_utils import copy_parameter_from_list, average_grad
+try:
+    import torch
+    from torch import Tensor
+    from torch.optim import Optimizer
+    import higher
+except ImportError as e:
+    missing_module = str(e).split()[-1]
+    print(f"Error: The required module '{missing_module}' is not installed.")
+    print("Please run the following command to install all required dependencies:")
+    print("    pip install -r requirements.txt")
+    raise
 
 importlib = __import__("importlib")
 ll_grads = importlib.import_module("boat.dynamic_ol")
@@ -256,11 +262,11 @@ class Problem:
                     self._lower_init_opt.step()
                     self._lower_init_opt.zero_grad()
                 run_time = forward_time + backward_time
-            if not self.boat_configs['return_grad']:
-                self._upper_opt.step()
-                self._upper_opt.zero_grad()
-            else:
-                return [var.grad for var in list(self._ul_var)], run_time
+        if not self.boat_configs['return_grad']:
+            self._upper_opt.step()
+            self._upper_opt.zero_grad()
+        else:
+            return [var.grad for var in list(self._ul_var)], run_time
 
         return self._log_results_dict['upper_loss'], run_time
 

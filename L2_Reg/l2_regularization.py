@@ -1,19 +1,12 @@
 import argparse
-import copy
-import math
 import numpy as np
 import os
-import time
 import torch
 import boat
 import torch.nn as nn
 import torch.nn.functional as F
-import torchvision.transforms as transforms
-
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.datasets import fetch_20newsgroups_vectorized
-from torchvision import datasets
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 def get_data(args):
@@ -163,9 +156,9 @@ def main():
     ll_feed_dict = {"data": valset[0].to(device), "target": valset[1].to(device)}
 
     if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
-        iterations = 3
+        iterations = 30
     else:
-        iterations = 1
+        iterations = 10
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
             b_optimizer._ll_solver.strategy = "s" + str(x_itr % 3 + 1)
