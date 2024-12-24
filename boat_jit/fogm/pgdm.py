@@ -104,6 +104,8 @@ class PGDM(DynamicalSystem):
         # loss.backward()
         grads_lower = grad_unused_zero(loss, self.ll_var)
         update_tensor_grads(self.ll_var, grads_lower)
+        grads_upper = grad_unused_zero(loss, self.ul_var)
+        update_tensor_grads(self.ul_var, grads_upper)
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
         # self.ll_opt.step()
