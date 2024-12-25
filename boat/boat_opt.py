@@ -10,7 +10,7 @@ except ImportError as e:
     missing_module = str(e).split()[-1]
     print(f"Error: The required module '{missing_module}' is not installed.")
     print("Please run the following command to install all required dependencies:")
-    print("    pip install -r requirements.txt")
+    print("pip install -r requirements.txt")
     raise
 from boat.utils.op_utils import copy_parameter_from_list, average_grad
 
