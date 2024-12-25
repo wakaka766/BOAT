@@ -2,16 +2,11 @@ import time
 import copy
 from typing import Dict, Any, Callable
 from boat_jit.utils.op_utils import copy_parameter_from_list, average_grad, manual_update
-try:
-    import jittor as jit
-    from jittor.optim import Optimizer
-    import boat_jit.higher_jit as higher
-except ImportError as e:
-    missing_module = str(e).split()[-1]
-    print(f"Error: The required module '{missing_module}' is not installed.")
-    print("Please run the following command to install all required dependencies:")
-    print("pip install -r requirements.txt")
-    raise
+
+import jittor as jit
+from jittor.optim import Optimizer
+import boat_jit.higher_jit as higher
+
 
 importlib = __import__("importlib")
 ll_grads = importlib.import_module("boat_jit.dynamic_ol")
