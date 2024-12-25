@@ -58,8 +58,8 @@ def test_missing_higher_module():
         command = [
             "python",
             "/home/runner/work/BOAT/BOAT/data_hyper_cleaning/data_hyper_cleaning.py",
-            "--dynamic_method", ",".join("NGD"),
-            "--hyper_method", ",".join("RAD")
+            "--dynamic_method", "NGD",
+            "--hyper_method", "RAD"
         ]
 
         result = subprocess.run(command, capture_output=True, text=True)
