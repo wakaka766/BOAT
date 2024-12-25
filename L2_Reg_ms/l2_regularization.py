@@ -7,12 +7,14 @@ import mindspore.ops as ops
 import boat_ms as boat
 from mindspore.common import COOTensor
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import mindspore as ms
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_20newsgroups_vectorized
+
 
 def get_data(args):
     def from_sparse(x):
@@ -21,33 +23,48 @@ def get_data(args):
         indices = np.vstack((x.row, x.col)).astype(np.int32).T  # 非零元素的坐标
         values = x.data.astype(np.float32)  # 非零元素的值
         shape = x.shape  # 稀疏矩阵的形状
-        return COOTensor(indices=Tensor(indices, ms.int32), values=Tensor(values, ms.float32), shape=shape)
+        return COOTensor(
+            indices=Tensor(indices, ms.int32),
+            values=Tensor(values, ms.float32),
+            shape=shape,
+        )
 
     val_size = 0.5
     # 加载训练集和测试集数据
-    train_x, train_y = fetch_20newsgroups_vectorized(subset='train',
-                                                     return_X_y=True,
-                                                     data_home=args.data_path,
-                                                     download_if_missing=True)
+    train_x, train_y = fetch_20newsgroups_vectorized(
+        subset="train",
+        return_X_y=True,
+        data_home=args.data_path,
+        download_if_missing=True,
+    )
 
-    test_x, test_y = fetch_20newsgroups_vectorized(subset='test',
-                                                   return_X_y=True,
-                                                   data_home=args.data_path,
-                                                   download_if_missing=True)
+    test_x, test_y = fetch_20newsgroups_vectorized(
+        subset="test",
+        return_X_y=True,
+        data_home=args.data_path,
+        download_if_missing=True,
+    )
 
     # 分割训练集为训练集和验证集，测试集为测试集和评估集
-    train_x, val_x, train_y, val_y = train_test_split(train_x, train_y, stratify=train_y, test_size=val_size)
-    test_x, teval_x, test_y, teval_y = train_test_split(test_x, test_y, stratify=test_y, test_size=0.5)
+    train_x, val_x, train_y, val_y = train_test_split(
+        train_x, train_y, stratify=train_y, test_size=val_size
+    )
+    test_x, teval_x, test_y, teval_y = train_test_split(
+        test_x, test_y, stratify=test_y, test_size=0.5
+    )
 
     # 将数据转换为稀疏张量格式
-    train_x, val_x, test_x, teval_x = map(from_sparse, [train_x, val_x, test_x, teval_x])
-    train_y, val_y, test_y, teval_y = map(lambda y: Tensor(y, ms.int32), [train_y, val_y, test_y, teval_y])
+    train_x, val_x, test_x, teval_x = map(
+        from_sparse, [train_x, val_x, test_x, teval_x]
+    )
+    train_y, val_y, test_y, teval_y = map(
+        lambda y: Tensor(y, ms.int32), [train_y, val_y, test_y, teval_y]
+    )
 
     # 输出数据形状
     print(train_y.shape[0], val_y.shape[0], test_y.shape[0], teval_y.shape[0])
 
     return (train_x, train_y), (val_x, val_y), (test_x, test_y), (teval_x, teval_y)
-
 
 
 def evaluate(x, w, testset):
@@ -66,7 +83,9 @@ def evaluate(x, w, testset):
 
     # Check if test_x is a COOTensor (sparse tensor)
     if isinstance(test_x, ms.COOTensor):
-        y = ops.SparseTensorDenseMatmul()(test_x.indices, test_x.values, test_x.shape, x)
+        y = ops.SparseTensorDenseMatmul()(
+            test_x.indices, test_x.values, test_x.shape, x
+        )
     else:
         y = ops.MatMul()(test_x, x)
 
@@ -84,7 +103,6 @@ def evaluate(x, w, testset):
     return loss, acc
 
 
-
 base_folder = os.path.dirname(os.path.abspath(__file__))
 parent_folder = os.path.dirname(base_folder)
 
@@ -94,38 +112,82 @@ with open(os.path.join(parent_folder, "configs_ms/boat_config_l2.json"), "r") as
 with open(os.path.join(parent_folder, "configs_ms/loss_config_l2.json"), "r") as f:
     loss_config = json.load(f)
 
+
 def main():
     def parse_args():
         parser = argparse.ArgumentParser()
-        parser.add_argument('--generate_data', action='store_true', default=False, help='whether to create data')
-        parser.add_argument('--pretrain', action='store_true', default=False, help='whether to create data')
-        parser.add_argument('--epochs', type=int, default=1000)
-        parser.add_argument('--iterations', type=int, default=10, help='T')
-        parser.add_argument('--data_path', default='./data', help='where to save data')
-        parser.add_argument('--model_path', default='./save_l2reg', help='where to save model')
-        parser.add_argument('--x_lr', type=float, default=100)
-        parser.add_argument('--xhat_lr', type=float, default=100)
-        parser.add_argument('--w_lr', type=float, default=1000)
-        parser.add_argument('--w_momentum', type=float, default=0.9)
-        parser.add_argument('--x_momentum', type=float, default=0.9)
-        parser.add_argument('--K', type=int, default=10, help='k')
-        parser.add_argument('--u1', type=float, default=1.0)
-        parser.add_argument('--BVFSM_decay', type=str, default='log', choices=['log', 'power2'])
-        parser.add_argument('--seed', type=int, default=1)
-        parser.add_argument('--alg', type=str, default='BOME', choices=[
-            'BOME', 'BSG_1', 'penalty', 'AID_CG', 'AID_FP', 'ITD', 'BVFSM', 'baseline', 'VRBO', 'reverse', 'stocBiO',
-            'MRBO']
-                            )
-        parser.add_argument('--dynamic_method', type=str, default=None,
-                            help='omniglot or miniimagenet or tieredImagenet')
-        parser.add_argument('--hyper_method', type=str, default=None,
-                            help='convnet for 4 convs or resnet for Residual blocks')
-        parser.add_argument('--fo_gm', type=str, default=None, help='convnet for 4 convs or resnet for Residual blocks')
+        parser.add_argument(
+            "--generate_data",
+            action="store_true",
+            default=False,
+            help="whether to create data",
+        )
+        parser.add_argument(
+            "--pretrain",
+            action="store_true",
+            default=False,
+            help="whether to create data",
+        )
+        parser.add_argument("--epochs", type=int, default=1000)
+        parser.add_argument("--iterations", type=int, default=10, help="T")
+        parser.add_argument("--data_path", default="./data", help="where to save data")
+        parser.add_argument(
+            "--model_path", default="./save_l2reg", help="where to save model"
+        )
+        parser.add_argument("--x_lr", type=float, default=100)
+        parser.add_argument("--xhat_lr", type=float, default=100)
+        parser.add_argument("--w_lr", type=float, default=1000)
+        parser.add_argument("--w_momentum", type=float, default=0.9)
+        parser.add_argument("--x_momentum", type=float, default=0.9)
+        parser.add_argument("--K", type=int, default=10, help="k")
+        parser.add_argument("--u1", type=float, default=1.0)
+        parser.add_argument(
+            "--BVFSM_decay", type=str, default="log", choices=["log", "power2"]
+        )
+        parser.add_argument("--seed", type=int, default=1)
+        parser.add_argument(
+            "--alg",
+            type=str,
+            default="BOME",
+            choices=[
+                "BOME",
+                "BSG_1",
+                "penalty",
+                "AID_CG",
+                "AID_FP",
+                "ITD",
+                "BVFSM",
+                "baseline",
+                "VRBO",
+                "reverse",
+                "stocBiO",
+                "MRBO",
+            ],
+        )
+        parser.add_argument(
+            "--dynamic_method",
+            type=str,
+            default=None,
+            help="omniglot or miniimagenet or tieredImagenet",
+        )
+        parser.add_argument(
+            "--hyper_method",
+            type=str,
+            default=None,
+            help="convnet for 4 convs or resnet for Residual blocks",
+        )
+        parser.add_argument(
+            "--fo_gm",
+            type=str,
+            default=None,
+            help="convnet for 4 convs or resnet for Residual blocks",
+        )
         args = parser.parse_args()
 
         np.random.seed(args.seed)
         ms.set_seed(args.seed)
         return args
+
     import pickle
 
     def save_data(data, path):
@@ -142,16 +204,18 @@ def main():
             for item in dataset:
                 if isinstance(item, ms.COOTensor):
                     # Convert COOTensor to a savable format
-                    tensors.append({
-                        'indices': item.indices.asnumpy(),
-                        'values': item.values.asnumpy(),
-                        'shape': item.shape
-                    })
+                    tensors.append(
+                        {
+                            "indices": item.indices.asnumpy(),
+                            "values": item.values.asnumpy(),
+                            "shape": item.shape,
+                        }
+                    )
                 else:
                     tensors.append(item.asnumpy())
             processed_data.append(tensors)
 
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             pickle.dump(processed_data, f)
         print(f"[info] Successfully saved data to {path}")
 
@@ -165,20 +229,27 @@ def main():
         Returns:
             Loaded data with COOTensor reconstructed.
         """
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             raw_data = pickle.load(f)
 
         reconstructed_data = []
         for dataset in raw_data:
             tensors = []
             for item in dataset:
-                if isinstance(item, dict) and 'indices' in item and 'values' in item and 'shape' in item:
+                if (
+                    isinstance(item, dict)
+                    and "indices" in item
+                    and "values" in item
+                    and "shape" in item
+                ):
                     # Reconstruct COOTensor
-                    tensors.append(ms.COOTensor(
-                        indices=ms.Tensor(item['indices'], ms.int32),
-                        values=ms.Tensor(item['values'], ms.float32),
-                        shape=item['shape']
-                    ))
+                    tensors.append(
+                        ms.COOTensor(
+                            indices=ms.Tensor(item["indices"], ms.int32),
+                            values=ms.Tensor(item["values"], ms.float32),
+                            shape=item["shape"],
+                        )
+                    )
                 else:
                     tensors.append(ms.Tensor(item, ms.float32))
             reconstructed_data.append(tensors)
@@ -212,7 +283,11 @@ def main():
             super(LowerModel, self).__init__()
             # 使用 HeNormal 初始化
             he_normal = HeNormal()
-            self.y = ms.Parameter(ms.Tensor(shape=(n_feats, num_classes), dtype=ms.float32, init=he_normal))
+            self.y = ms.Parameter(
+                ms.Tensor(
+                    shape=(n_feats, num_classes), dtype=ms.float32, init=he_normal
+                )
+            )
 
         def construct(self):
             return self.y
@@ -223,17 +298,17 @@ def main():
     lower_opt = nn.SGD(lower_model.trainable_params(), learning_rate=0.1)
     print(args.dynamic_method)
     print(args.hyper_method)
-    dynamic_method = args.dynamic_method.split(',') if args.dynamic_method else []
-    hyper_method = args.hyper_method.split(',') if args.hyper_method else []
+    dynamic_method = args.dynamic_method.split(",") if args.dynamic_method else []
+    hyper_method = args.hyper_method.split(",") if args.hyper_method else []
     if "RGT" in hyper_method:
-        boat_config['RGT']['truncate_iter'] = 1
+        boat_config["RGT"]["truncate_iter"] = 1
     boat_config["dynamic_op"] = dynamic_method
     boat_config["hyper_op"] = hyper_method
     boat_config["fo_gm"] = args.fo_gm
-    boat_config['lower_level_model'] = lower_model
-    boat_config['upper_level_model'] = upper_model
-    boat_config['lower_level_var'] = lower_model.trainable_params()
-    boat_config['upper_level_var'] = upper_model.trainable_params()
+    boat_config["lower_level_model"] = lower_model
+    boat_config["upper_level_model"] = upper_model
+    boat_config["lower_level_var"] = lower_model.trainable_params()
+    boat_config["upper_level_var"] = upper_model.trainable_params()
     b_optimizer = boat.Problem(boat_config, loss_config)
     b_optimizer.build_ll_solver(lower_opt)
     b_optimizer.build_ul_solver(upper_opt)
@@ -248,16 +323,21 @@ def main():
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
             b_optimizer._ll_solver.strategy = "s" + str(x_itr % 3 + 1)
-        elif "DM" in boat_config["dynamic_op"] and (not ("GDA" in boat_config["dynamic_op"])):
+        elif "DM" in boat_config["dynamic_op"] and (
+            not ("GDA" in boat_config["dynamic_op"])
+        ):
             b_optimizer._ll_solver.strategy = "s" + str(1)
-        loss, run_time = b_optimizer.run_iter(ll_feed_dict, ul_feed_dict, current_iter=x_itr)
+        loss, run_time = b_optimizer.run_iter(
+            ll_feed_dict, ul_feed_dict, current_iter=x_itr
+        )
 
         if x_itr % 1 == 0:
             test_loss, test_acc = evaluate(lower_model(), upper_model(), testset)
             teval_loss, teval_acc = evaluate(lower_model(), upper_model(), tevalset)
             print(
-                f"[info] epoch {x_itr:5d} te loss {test_loss:10.4f} te acc {test_acc:10.4f} teval loss {teval_loss:10.4f} teval acc {teval_acc:10.4f} time {run_time:8.2f}")
+                f"[info] epoch {x_itr:5d} te loss {test_loss:10.4f} te acc {test_acc:10.4f} teval loss {teval_loss:10.4f} teval acc {teval_acc:10.4f} time {run_time:8.2f}"
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

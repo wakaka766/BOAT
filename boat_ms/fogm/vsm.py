@@ -8,16 +8,16 @@ import copy
 
 class VSM(DynamicalSystem):
     def __init__(
-            self,
-            ll_objective: Callable,
-            lower_loop: int,
-            ul_model: nn.Cell,
-            ul_objective: Callable,
-            ll_model: nn.Cell,
-            ll_opt: nn.Optimizer,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        lower_loop: int,
+        ul_model: nn.Cell,
+        ul_objective: Callable,
+        ll_model: nn.Cell,
+        ll_opt: nn.Optimizer,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict[str, Any],
     ):
         super(VSM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.ul_objective = ul_objective
@@ -25,19 +25,14 @@ class VSM(DynamicalSystem):
         self.ul_var = ul_var
         self.ll_opt = ll_opt
         self.y_loop = lower_loop
-        self.z_loop = solver_config['VSM']["z_loop"]
-        self.ll_l2_reg = solver_config['VSM']["ll_l2_reg"]
-        self.ul_l2_reg = solver_config['VSM']["ul_l2_reg"]
-        self.ul_ln_reg = solver_config['VSM']["ul_ln_reg"]
-        self.reg_decay = float(solver_config['VSM']['reg_decay'])
-        self.z_lr = solver_config['VSM']['z_lr']
+        self.z_loop = solver_config["VSM"]["z_loop"]
+        self.ll_l2_reg = solver_config["VSM"]["ll_l2_reg"]
+        self.ul_l2_reg = solver_config["VSM"]["ul_l2_reg"]
+        self.ul_ln_reg = solver_config["VSM"]["ul_ln_reg"]
+        self.reg_decay = float(solver_config["VSM"]["reg_decay"])
+        self.z_lr = solver_config["VSM"]["z_lr"]
 
-    def optimize(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            current_iter: int
-    ):
+    def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
         Execute the optimization procedure with the data from feed_dict.
 
@@ -71,7 +66,9 @@ class VSM(DynamicalSystem):
                 :returns: The total loss (loss_z).
                 """
                 # Compute the L2 regularization term
-                loss_l2_z = self.ll_l2_reg / reg_decay * l2_reg(ll_model.trainable_params())
+                loss_l2_z = (
+                    self.ll_l2_reg / reg_decay * l2_reg(ll_model.trainable_params())
+                )
 
                 # Compute the lower-level objective
                 loss_z_ = self.ll_objective(ll_feed_dict, ul_model, ll_model)
@@ -84,7 +81,7 @@ class VSM(DynamicalSystem):
             # 计算梯度：loss_z
             grads = ops.GradOperation(get_by_list=True)(
                 lambda: compute_loss_z(ll_feed_dict, self.ul_model, self.ll_model),
-                self.ll_model.trainable_params()
+                self.ll_model.trainable_params(),
             )
             new_grads = grads()
             for param, grad in zip(self.ll_model.trainable_params(), new_grads):
@@ -92,10 +89,13 @@ class VSM(DynamicalSystem):
 
         # Auxiliary model and its optimization
         auxiliary_model = copy.deepcopy(self.ll_model)
-        auxiliary_opt = nn.SGD(auxiliary_model.trainable_params(), learning_rate=self.z_lr)
+        auxiliary_opt = nn.SGD(
+            auxiliary_model.trainable_params(), learning_rate=self.z_lr
+        )
 
-
-        loss_l2_z = self.ll_l2_reg / reg_decay * l2_reg(self.ll_model.trainable_params())
+        loss_l2_z = (
+            self.ll_l2_reg / reg_decay * l2_reg(self.ll_model.trainable_params())
+        )
 
         # 计算辅助模型的目标损失
         loss_z_ = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
@@ -104,7 +104,9 @@ class VSM(DynamicalSystem):
         loss_z = loss_z_ + loss_l2_z
 
         # 清零梯度
-        def compute_loss_y(ll_feed_dict, ul_feed_dict, ul_model, auxiliary_model, reg_decay):
+        def compute_loss_y(
+            ll_feed_dict, ul_feed_dict, ul_model, auxiliary_model, reg_decay
+        ):
             """
             Compute the total loss (loss_y) for the auxiliary model update step.
             Includes:
@@ -122,7 +124,9 @@ class VSM(DynamicalSystem):
             # Compute individual terms
             loss_y_f_ = self.ll_objective(ll_feed_dict, ul_model, auxiliary_model)
             loss_y_ = self.ul_objective(ul_feed_dict, ul_model, auxiliary_model)
-            loss_l2_y = self.ul_l2_reg / reg_decay * l2_reg(auxiliary_model.trainable_params())
+            loss_l2_y = (
+                self.ul_l2_reg / reg_decay * l2_reg(auxiliary_model.trainable_params())
+            )
             loss_ln = ops.log(loss_y_f_ + loss_z - loss_y_f_)  # Logarithmic term
             loss_ln = self.ul_ln_reg / reg_decay * loss_ln
 
@@ -131,26 +135,39 @@ class VSM(DynamicalSystem):
             return loss_y
 
         for y_idx in range(self.y_loop):
-                # 清零梯度
-                for param in auxiliary_model.trainable_params():
-                    if param.grad is not None:
-                        param.grad.set_data(mnp.zeros_like(param.grad))
-                # 计算梯度
-                grads = ops.GradOperation(get_by_list=True)(
-                    lambda: compute_loss_y(ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model, reg_decay),
-                    auxiliary_model.trainable_params()
-                )()
-                # print("auxiliary_model grads:", grads)
+            # 清零梯度
+            for param in auxiliary_model.trainable_params():
+                if param.grad is not None:
+                    param.grad.set_data(mnp.zeros_like(param.grad))
+            # 计算梯度
+            grads = ops.GradOperation(get_by_list=True)(
+                lambda: compute_loss_y(
+                    ll_feed_dict,
+                    ul_feed_dict,
+                    self.ul_model,
+                    auxiliary_model,
+                    reg_decay,
+                ),
+                auxiliary_model.trainable_params(),
+            )()
+            # print("auxiliary_model grads:", grads)
 
-                # 使用优化器更新参数
-                auxiliary_opt(grads)
-            # 更新辅助模型
-            # for param, grad in zip(auxiliary_model.trainable_params(), grads):
-            #     param.set_data(param - self.z_lr * grad)
+            # 使用优化器更新参数
+            auxiliary_opt(grads)
+        # 更新辅助模型
+        # for param, grad in zip(auxiliary_model.trainable_params(), grads):
+        #     param.set_data(param - self.z_lr * grad)
 
         # 更新上层模型
         def compute_loss_x(
-                ll_feed_dict, ul_feed_dict, ul_model, ll_model, auxiliary_model, reg_decay, ul_ln_reg, ll_l2_reg
+            ll_feed_dict,
+            ul_feed_dict,
+            ul_model,
+            ll_model,
+            auxiliary_model,
+            reg_decay,
+            ul_ln_reg,
+            ll_l2_reg,
         ):
             """
             Compute the total loss (loss_x) for the upper-level update.
@@ -174,7 +191,9 @@ class VSM(DynamicalSystem):
 
             # Compute logarithmic regularization term
             loss_y_f_ = self.ll_objective(ll_feed_dict, ul_model, auxiliary_model)
-            loss_ln = ul_ln_reg / reg_decay * ops.log(loss_y_f_ + loss_z - loss_y_f_ + 1e-8)  # Avoid log(0) error
+            loss_ln = (
+                ul_ln_reg / reg_decay * ops.log(loss_y_f_ + loss_z - loss_y_f_ + 1e-8)
+            )  # Avoid log(0) error
 
             # Compute upper-level objective
             loss_x_ = self.ul_objective(ul_feed_dict, ul_model, auxiliary_model)
@@ -185,18 +204,30 @@ class VSM(DynamicalSystem):
         # Use GradOperation to calculate gradients
         grad_fn = ops.GradOperation(get_by_list=True)(
             lambda: compute_loss_x(
-                ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model, auxiliary_model,
-                reg_decay, self.ul_ln_reg, self.ll_l2_reg
+                ll_feed_dict,
+                ul_feed_dict,
+                self.ul_model,
+                self.ll_model,
+                auxiliary_model,
+                reg_decay,
+                self.ul_ln_reg,
+                self.ll_l2_reg,
             ),
-            self.ul_var
+            self.ul_var,
         )
         ul_grads = grad_fn()
         # print("UL_grads:", ul_grads)
 
         # 调用 compute_loss_x 计算损失值
         loss_x_value = compute_loss_x(
-            ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model, auxiliary_model,
-            reg_decay, self.ul_ln_reg, self.ll_l2_reg
+            ll_feed_dict,
+            ul_feed_dict,
+            self.ul_model,
+            self.ll_model,
+            auxiliary_model,
+            reg_decay,
+            self.ul_ln_reg,
+            self.ll_l2_reg,
         )
         # print("Loss_x Value:", loss_x_value)
         # 使用优化器更新参数
