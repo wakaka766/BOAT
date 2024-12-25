@@ -1,10 +1,16 @@
 from ..dynamic_ol.dynamical_system import DynamicalSystem
-from boat_jit.utils.op_utils import grad_unused_zero,require_model_grad,update_tensor_grads,stop_model_grad,manual_update
+from boat_jit.utils.op_utils import (
+    grad_unused_zero,
+    require_model_grad,
+    update_tensor_grads,
+    stop_model_grad,
+    manual_update,
+)
 import jittor as jit
 from jittor import Module
 from jittor.optim import Optimizer
 import copy
-from typing import Dict, Any, Callable,List
+from typing import Dict, Any, Callable, List
 
 
 class PGDM(DynamicalSystem):
@@ -35,36 +41,32 @@ class PGDM(DynamicalSystem):
     ----------
     _`[1]` Shen H, Chen T. On penalty-based bilevel gradient descent method[C]. In ICML, 2023.
     """
+
     def __init__(
-            self,
-            ll_objective: Callable,
-            lower_loop: int,
-            ul_model: Module,
-            ul_objective: Callable,
-            ll_model: Module,
-            ll_opt: Optimizer,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        lower_loop: int,
+        ul_model: Module,
+        ul_objective: Callable,
+        ll_model: Module,
+        ll_opt: Optimizer,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict[str, Any],
     ):
         super(PGDM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.ul_objective = ul_objective
         self.ll_opt = ll_opt
         self.ll_var = ll_var
         self.ul_var = ul_var
-        self.y_hat_lr = float(solver_config['PGDM']['y_hat_lr'])
-        self.gamma_init = solver_config['PGDM']["gamma_init"]
-        self.gamma_max = solver_config['PGDM']["gamma_max"]
-        self.gamma_argmax_step = solver_config['PGDM']["gamma_argmax_step"]
+        self.y_hat_lr = float(solver_config["PGDM"]["y_hat_lr"])
+        self.gamma_init = solver_config["PGDM"]["gamma_init"]
+        self.gamma_max = solver_config["PGDM"]["gamma_max"]
+        self.gamma_argmax_step = solver_config["PGDM"]["gamma_argmax_step"]
         self.gam = self.gamma_init
         self.device = solver_config["device"]
 
-    def optimize(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            current_iter: int
-    ):
+    def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
         Execute the optimization procedure with the data from feed_dict.
 
@@ -86,7 +88,9 @@ class PGDM(DynamicalSystem):
 
         if self.gamma_init > self.gamma_max:
             self.gamma_max = self.gamma_init
-            print('Initial gamma is larger than max gamma, proceeding with gamma_max=gamma_init.')
+            print(
+                "Initial gamma is larger than max gamma, proceeding with gamma_max=gamma_init."
+            )
         step_gam = (self.gamma_max - self.gamma_init) / self.gamma_argmax_step
         lr_decay = min(1 / (self.gam + 1e-8), 1)
         require_model_grad(y_hat)
@@ -96,11 +100,18 @@ class PGDM(DynamicalSystem):
             grads_hat = grad_unused_zero(tr_loss, y_hat.parameters())
             update_tensor_grads(list(y_hat.parameters()), grads_hat)
             # y_hat_opt.step()
-            manual_update(y_hat_opt,list(y_hat.parameters()))
+            manual_update(y_hat_opt, list(y_hat.parameters()))
 
         # self.ll_opt.zero_grad()
         F_y = self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model)
-        loss = lr_decay * (F_y + self.gam * (self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model) - self.ll_objective(ll_feed_dict, self.ul_model, y_hat)))
+        loss = lr_decay * (
+            F_y
+            + self.gam
+            * (
+                self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+                - self.ll_objective(ll_feed_dict, self.ul_model, y_hat)
+            )
+        )
         # loss.backward()
         grads_lower = grad_unused_zero(loss, self.ll_var)
         update_tensor_grads(self.ll_var, grads_lower)
@@ -109,5 +120,5 @@ class PGDM(DynamicalSystem):
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
         # self.ll_opt.step()
-        manual_update(self.ll_opt,list(self.ll_var))
+        manual_update(self.ll_opt, list(self.ll_var))
         return F_y

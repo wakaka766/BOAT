@@ -7,8 +7,9 @@ from ..higher_jit.patch import _MonkeyPatchBase
 from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 from ..utils.op_utils import stop_grads
-class GDA_NGD(DynamicalSystem):
 
+
+class GDA_NGD(DynamicalSystem):
     """
     Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) _`[1]`, Gradient Descent
     Aggregation (GDA) _`[2]`.
@@ -39,24 +40,24 @@ class GDA_NGD(DynamicalSystem):
     """
 
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            lower_loop: int,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        lower_loop: int,
+        solver_config: Dict[str, Any],
     ):
 
         super(GDA_NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.ul_objective = ul_objective
-        self.alpha = solver_config['GDA']["alpha_init"]
-        self.alpha_decay = solver_config['GDA']["alpha_decay"]
-        self.truncate_iters = solver_config['RGT']["truncate_iter"]
-        self.ll_opt = solver_config['ll_opt']
-        self.gda_loss = solver_config['gda_loss']
-        self.foa = 'FOA' in solver_config['hyper_op']
+        self.alpha = solver_config["GDA"]["alpha_init"]
+        self.alpha_decay = solver_config["GDA"]["alpha_decay"]
+        self.truncate_iters = solver_config["RGT"]["truncate_iter"]
+        self.ll_opt = solver_config["ll_opt"]
+        self.gda_loss = solver_config["gda_loss"]
+        self.foa = "FOA" in solver_config["hyper_op"]
 
     def optimize(
         self,
@@ -64,7 +65,7 @@ class GDA_NGD(DynamicalSystem):
         ul_feed_dict: Dict,
         auxiliary_model: _MonkeyPatchBase,
         auxiliary_opt: DifferentiableOptimizer,
-        current_iter: int
+        current_iter: int,
     ):
         """
         Execute the lower-level optimization procedure with the data from feed_dict and patched models.
@@ -97,11 +98,16 @@ class GDA_NGD(DynamicalSystem):
         if self.truncate_iters > 0:
             ll_backup = [x.clone().stop_grad() for x in self.ll_model.parameters()]
             for _ in range(self.truncate_iters):
-                assert (self.alpha > 0) and (self.alpha < 1), \
-                    "Set the coefficient alpha properly in (0,1)."
-                assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."
-                ll_feed_dict['alpha'] = alpha
-                loss_f = self.gda_loss(ll_feed_dict,ul_feed_dict,self.ul_model,auxiliary_model)
+                assert (self.alpha > 0) and (
+                    self.alpha < 1
+                ), "Set the coefficient alpha properly in (0,1)."
+                assert (
+                    self.gda_loss is not None
+                ), "Define the gda_loss properly in loss_func.py."
+                ll_feed_dict["alpha"] = alpha
+                loss_f = self.gda_loss(
+                    ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
+                )
                 alpha = alpha * self.alpha_decay
                 self.ll_opt.step(loss_f)
             for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
@@ -109,32 +115,41 @@ class GDA_NGD(DynamicalSystem):
             for x, y in zip(ll_backup, self.ll_model.parameters()):
                 y.update(x.clone())
 
-
-
-
         # truncate with PTT method
         if self.truncate_max_loss_iter:
             ul_loss_list = []
             for _ in range(self.lower_loop):
-                assert (self.alpha > 0) and (self.alpha < 1), \
-                    "Set the coefficient alpha properly in (0,1)."
-                assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."
-                ll_feed_dict['alpha'] = alpha
-                loss_f = self.gda_loss(ll_feed_dict,ul_feed_dict,self.ul_model,auxiliary_model)
+                assert (self.alpha > 0) and (
+                    self.alpha < 1
+                ), "Set the coefficient alpha properly in (0,1)."
+                assert (
+                    self.gda_loss is not None
+                ), "Define the gda_loss properly in loss_func.py."
+                ll_feed_dict["alpha"] = alpha
+                loss_f = self.gda_loss(
+                    ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
+                )
                 auxiliary_opt.step(loss_f)
                 alpha = alpha * self.alpha_decay
-                upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+                upper_loss = self.ul_objective(
+                    ul_feed_dict, self.ul_model, auxiliary_model
+                )
                 ul_loss_list.append(upper_loss.item())
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
-            return ll_step_with_max_ul_loss+1
+            return ll_step_with_max_ul_loss + 1
 
         for _ in range(self.lower_loop - self.truncate_iters):
-            assert (self.alpha > 0) and (self.alpha < 1), \
-                "Set the coefficient alpha properly in (0,1)."
-            assert self.gda_loss is not None, "Define the gda_loss properly in loss_func.py."
-            ll_feed_dict['alpha'] = alpha
-            loss_f = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model)
+            assert (self.alpha > 0) and (
+                self.alpha < 1
+            ), "Set the coefficient alpha properly in (0,1)."
+            assert (
+                self.gda_loss is not None
+            ), "Define the gda_loss properly in loss_func.py."
+            ll_feed_dict["alpha"] = alpha
+            loss_f = self.gda_loss(
+                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
+            )
             auxiliary_opt.step(loss_f)
             alpha = alpha * self.alpha_decay
-            auxiliary_opt.step(loss_f,grad_callback= stop_grads if self.foa else None)
+            auxiliary_opt.step(loss_f, grad_callback=stop_grads if self.foa else None)
         return self.lower_loop - self.truncate_iters

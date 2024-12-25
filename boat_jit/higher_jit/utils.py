@@ -21,14 +21,12 @@ Utility functions for components of ``higher_jit``.
 import typing as _typing
 import jittor as jit
 
-_T = _typing.TypeVar('_T')
-_U = _typing.TypeVar('_U')
+_T = _typing.TypeVar("_T")
+_U = _typing.TypeVar("_U")
 
 
 def _copy_tensor(
-        t: jit.Var,
-        safe_copy: bool,
-        device: _typing.Optional[str] = None
+    t: jit.Var, safe_copy: bool, device: _typing.Optional[str] = None
 ) -> jit.Var:
     if safe_copy:
         t = t.clone().detach()
@@ -41,11 +39,13 @@ def _copy_tensor(
 
 
 def _recursive_copy_and_cast(
-        target: _typing.Union[list, tuple, dict, set, jit.Var],
-        device: _typing.Optional[str]
+    target: _typing.Union[list, tuple, dict, set, jit.Var],
+    device: _typing.Optional[str],
 ) -> jit.Var:
     def map_fn(x):
-        if isinstance(x, jit.Var):  # Replacing _torch.is_tensor(x) with isinstance(x, jit.Var)
+        if isinstance(
+            x, jit.Var
+        ):  # Replacing _torch.is_tensor(x) with isinstance(x, jit.Var)
             return _copy_tensor(x, True, device=device)
         else:
             return x
@@ -54,43 +54,33 @@ def _recursive_copy_and_cast(
 
 
 def _recursive_map(
-        target: _typing.Union[list, tuple, dict, set, _T],
-        map_fn: _typing.Callable[[_T], _U],
+    target: _typing.Union[list, tuple, dict, set, _T],
+    map_fn: _typing.Callable[[_T], _U],
 ) -> _typing.Union[list, tuple, dict, set, _U]:
     if isinstance(target, list):
-        return type(target)(
-            [_recursive_map(x, map_fn) for x in target]
-        )
+        return type(target)([_recursive_map(x, map_fn) for x in target])
     elif isinstance(target, tuple):
-        return type(target)(
-            [_recursive_map(x, map_fn) for x in target]
-        )
+        return type(target)([_recursive_map(x, map_fn) for x in target])
     elif isinstance(target, dict):
-        return type(target)(
-            {k: _recursive_map(v, map_fn)
-             for k, v in target.items()}
-        )
+        return type(target)({k: _recursive_map(v, map_fn) for k, v in target.items()})
     elif isinstance(target, set):
-        return type(target)(
-            {_recursive_map(x, map_fn)
-             for x in target}
-        )
+        return type(target)({_recursive_map(x, map_fn) for x in target})
     else:
         return map_fn(target)
 
 
 def _is_container(target: _typing.Any) -> bool:
     flag = (
-            isinstance(target, list) or
-            isinstance(target, tuple) or
-            isinstance(target, dict) or
-            isinstance(target, set)
+        isinstance(target, list)
+        or isinstance(target, tuple)
+        or isinstance(target, dict)
+        or isinstance(target, set)
     )
     return flag
 
 
 def _find_param_in_list(
-        param: jit.Var, l: _typing.Iterable[jit.Var]
+    param: jit.Var, l: _typing.Iterable[jit.Var]
 ) -> _typing.Optional[int]:
     for i, p in enumerate(l):
         if p is param:
@@ -100,8 +90,7 @@ def _find_param_in_list(
 
 
 def _get_param_mapping(
-        module: jit.Module, seen: _typing.List[jit.Var],
-        mapping: _typing.List[int]
+    module: jit.Module, seen: _typing.List[jit.Var], mapping: _typing.List[int]
 ) -> _typing.List[int]:
     for param in module._parameters.values():
         if param is None:
@@ -134,9 +123,7 @@ def flatten(x: _typing.Any) -> _typing.List[_typing.Any]:
 
 
 def get_func_params(
-        module: jit.Module,
-        device: _typing.Optional[str] = None,
-        safe_copy: bool = True
+    module: jit.Module, device: _typing.Optional[str] = None, safe_copy: bool = True
 ) -> _typing.List[jit.Var]:
     r"""Returns a detached copy of module parameters which requires gradient."""
     params = [_copy_tensor(p, safe_copy, device) for p in module.parameters()]

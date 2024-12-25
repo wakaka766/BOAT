@@ -38,32 +38,33 @@ class IAD_NS_PTT(HyperGradient):
      with non-convex followers and beyond[C]. In NeurIPS, 2021.
     """
 
-
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict,
     ):
-        super(IAD_NS_PTT, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
-        self.dynamic_initialization = "DI" in solver_config['dynamic_op']
+        super(IAD_NS_PTT, self).__init__(
+            ul_objective, ul_model, ll_model, ll_var, ul_var
+        )
+        self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
-        self.ll_lr = solver_config['ll_opt'].defaults["lr"]
+        self.ll_lr = solver_config["ll_opt"].defaults["lr"]
         self.ll_objective = ll_objective
         self.tolerance = solver_config["CG"]["tolerance"]
         self.K = solver_config["CG"]["k"]
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
 
     def compute_gradients(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            auxiliary_model: _MonkeyPatchBase,
-            max_loss_iter: int = 0
+        self,
+        ll_feed_dict: Dict,
+        ul_feed_dict: Dict,
+        auxiliary_model: _MonkeyPatchBase,
+        max_loss_iter: int = 0,
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -87,7 +88,8 @@ class IAD_NS_PTT(HyperGradient):
         """
 
         assert self.truncate_max_loss_iter and (
-                max_loss_iter > 0), "With PTT operation, 'max_loss_iter' should be greater than 0"
+            max_loss_iter > 0
+        ), "With PTT operation, 'max_loss_iter' should be greater than 0"
 
         hparams = list(auxiliary_model.parameters(time=0))
 
@@ -100,10 +102,22 @@ class IAD_NS_PTT(HyperGradient):
 
         lower_model_params = list(auxiliary_model.parameters(time=max_loss_iter))
 
-        lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
-        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+        lower_loss = self.ll_objective(
+            ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+        )
+        upper_loss = self.ul_objective(
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+        )
 
-        grads_upper = neumann(lower_model_params, hparams, upper_loss, lower_loss, self.K, fp_map, self.tolerance)
+        grads_upper = neumann(
+            lower_model_params,
+            hparams,
+            upper_loss,
+            lower_loss,
+            self.K,
+            fp_map,
+            self.tolerance,
+        )
 
         update_tensor_grads(self.ul_var, grads_upper)
 

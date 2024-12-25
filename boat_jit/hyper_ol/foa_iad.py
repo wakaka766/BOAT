@@ -6,7 +6,6 @@ from ..higher_jit.patch import _MonkeyPatchBase
 from boat_jit.utils.op_utils import update_tensor_grads
 
 
-
 class FOA_IAD(HyperGradient):
     """
     Calculation of the hyper gradient of the upper-level variables with First-Order Approximation (FOA) _`[1]`
@@ -37,23 +36,23 @@ class FOA_IAD(HyperGradient):
     """
 
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            ll_var:List,
-            ul_var:List,
-            solver_config : Dict
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict,
     ):
-        super(FOA_IAD, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
+        super(FOA_IAD, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
 
     def compute_gradients(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            auxiliary_model: _MonkeyPatchBase,
-            max_loss_iter: int = 0
+        self,
+        ll_feed_dict: Dict,
+        ul_feed_dict: Dict,
+        auxiliary_model: _MonkeyPatchBase,
+        max_loss_iter: int = 0,
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -78,6 +77,6 @@ class FOA_IAD(HyperGradient):
 
         ul_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         grads_upper = jit.grad(ul_loss, list(self.ll_model.parameters()))
-        update_tensor_grads(self.ul_var,grads_upper)
+        update_tensor_grads(self.ul_var, grads_upper)
 
         return ul_loss

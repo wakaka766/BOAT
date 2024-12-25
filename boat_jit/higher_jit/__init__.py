@@ -32,7 +32,7 @@ def innerloop_ctx(
     device: _typing.Optional[str] = None,
     copy_initial_weights: bool = True,
     override: optim._OverrideType = None,
-    track_higher_grads: bool = True
+    track_higher_grads: bool = True,
 ):
     r"""A context manager for writing differentiable inner loops.
 
@@ -77,15 +77,15 @@ def innerloop_ctx(
         version of the original module, for which calls to forward take the
         additional kwarg-only parameter ``params``, which should be a list of
         jit tensors requiring gradients, ideally provided by this function
-        (see below) or by an update step from one of the optimizers in 
+        (see below) or by an update step from one of the optimizers in
         ``higher_jit.optim``. And ``diffopt`` is an initialized
         ``DifferentiableOptimizer`` instance of the right subtype.
     """
     fmodel = monkeypatch(
-        model, 
-        device, 
+        model,
+        device,
         copy_initial_weights=copy_initial_weights,
-        track_higher_grads=track_higher_grads
+        track_higher_grads=track_higher_grads,
     )
     diffopt = optim.get_diff_optim(
         opt,
@@ -93,7 +93,7 @@ def innerloop_ctx(
         fmodel=fmodel,
         device=device,
         override=override,
-        track_higher_grads=track_higher_grads
+        track_higher_grads=track_higher_grads,
     )
     yield fmodel, diffopt
 

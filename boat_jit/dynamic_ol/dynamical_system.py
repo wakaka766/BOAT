@@ -2,13 +2,7 @@ import abc
 
 
 class DynamicalSystem(object):
-    def __init__(
-            self,
-            ll_objective,
-            lower_loop,
-            ul_model,
-            ll_model
-    ) -> None:
+    def __init__(self, ll_objective, lower_loop, ul_model, ll_model) -> None:
         """
         Implements the abstract class for the lower-level optimization procedure.
 

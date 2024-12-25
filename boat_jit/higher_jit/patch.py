@@ -31,9 +31,15 @@ from . import utils as _utils
 # ==============================================================================
 
 _internal_attrs = {
-    '_backend', '_parameters', '_buffers', '_backward_hooks', '_forward_hooks',
-    '_forward_pre_hooks', '_state_dict_hooks', '_load_state_dict_pre_hooks',
-    '_modules'
+    "_backend",
+    "_parameters",
+    "_buffers",
+    "_backward_hooks",
+    "_forward_hooks",
+    "_forward_pre_hooks",
+    "_state_dict_hooks",
+    "_load_state_dict_pre_hooks",
+    "_modules",
 }
 
 _BufferType = _typing.Dict[str, _typing.Optional[jit.Var]]
@@ -89,7 +95,7 @@ def _patched_parameters(
     return iter(self._fast_params[time])
 
 
-class _MonkeyPatchBase(_abc.ABC,  jit.Module):
+class _MonkeyPatchBase(_abc.ABC, jit.Module):
     @_abc.abstractmethod
     def __init__(self) -> None:
         self._param_mapping: _typing.List[int] = []
@@ -103,9 +109,7 @@ class _MonkeyPatchBase(_abc.ABC,  jit.Module):
             "version of a module which doesn't have forward (e.g. ModuleList)."
         )
 
-    def _expand_params(
-        self, params: _typing.List[jit.Var]
-    ) -> _typing.List[jit.Var]:
+    def _expand_params(self, params: _typing.List[jit.Var]) -> _typing.List[jit.Var]:
         expanded = []
         for index in self._param_mapping:
             expanded.append(params[index])
@@ -115,8 +119,7 @@ class _MonkeyPatchBase(_abc.ABC,  jit.Module):
     def init_fast_params(self):
         if not self.track_higher_grads:
             raise Exception(
-                "Cannot get initial parameters when not tracking higher "
-                "gradients."
+                "Cannot get initial parameters when not tracking higher " "gradients."
             )
         return self._fast_params[0]
 
@@ -141,19 +144,14 @@ class _MonkeyPatchBase(_abc.ABC,  jit.Module):
     @track_higher_grads.setter
     def track_higher_grads(self, value):
         if not isinstance(value, bool):
-            raise ValueError(
-                "Expected boolean argument. Got: {}.".format(type(value))
-            )
+            raise ValueError("Expected boolean argument. Got: {}.".format(type(value)))
         self._track_higher_grads = value
 
 
 def buffer_sync(
-    module: jit.Module,
-    fmodule: _MonkeyPatchBase,
-    device: _typing.Optional[str] = None
+    module: jit.Module, fmodule: _MonkeyPatchBase, device: _typing.Optional[str] = None
 ) -> None:
-    r"""One off sync (copy) of buffers in ``fmodule`` with those from ``module``.
-    """
+    r"""One off sync (copy) of buffers in ``fmodule`` with those from ``module``."""
     for key, value in module._buffers.items():
         if not isinstance(value, jit.Var):
             fmodule._buffers[key] = value
@@ -177,7 +175,7 @@ def buffer_sync(
 # ==============================================================================
 
 
-class _ParameterPlaceholder():
+class _ParameterPlaceholder:
     def __init__(self, name: str) -> None:
         self._param_name = name
 
@@ -209,7 +207,8 @@ def _make_functional(
         )
 
     param_names = list(
-        name for name in module._parameters.keys()
+        name
+        for name in module._parameters.keys()
         if module._parameters[name] is not None
     )
 
@@ -259,11 +258,13 @@ def _make_functional(
                     if name in d:
                         del d[name]
 
-            params = self.__dict__.get('_parameters')
+            params = self.__dict__.get("_parameters")
             if params is not None and name in params:
                 if not isinstance(value, jit.Var):
-                    raise TypeError("Require Tensor as fast weights. "
-                                    "Got {}".format(type(value).__name__))
+                    raise TypeError(
+                        "Require Tensor as fast weights. "
+                        "Got {}".format(type(value).__name__)
+                    )
 
                 if not self._being_modified_internally:
                     # Additional behaviour for when fast weights are being
@@ -281,16 +282,14 @@ def _make_functional(
                     fast_params[replacement_index] = value
                     self.update_params(fast_params)
 
-
                 # Change parameters in place, usually during boxed_forward pass
                 self._parameters[name] = value
             else:
-                modules = self.__dict__.get('_modules')
+                modules = self.__dict__.get("_modules")
                 if isinstance(value, jit.Module):
                     if modules is None:
                         raise AttributeError(
-                            "cannot assign module before Module.__init__() "
-                            "call"
+                            "cannot assign module before Module.__init__() " "call"
                         )
                     remove_from(self.__dict__, self._parameters, self._buffers)
                     modules[name] = value
@@ -305,11 +304,9 @@ def _make_functional(
                         )
                     modules[name] = value
                 else:
-                    buffers = self.__dict__.get('_buffers')
+                    buffers = self.__dict__.get("_buffers")
                     if buffers is not None and name in buffers:
-                        if value is not None and not isinstance(
-                            value, jit.Var
-                        ):
+                        if value is not None and not isinstance(value, jit.Var):
                             raise TypeError(
                                 "cannot assign '{}' as buffer '{}' "
                                 "(torch.Tensor or None expected)".format(
@@ -318,8 +315,7 @@ def _make_functional(
                             )
                         buffers[name] = value
                     else:
-                        object.__setattr__(self, name, value)      
-
+                        object.__setattr__(self, name, value)
 
     MonkeyPatched.__name__ = "InnerFunctional" + type(module).__name__
     MonkeyPatched.__qualname__ = MonkeyPatched.__name__
@@ -356,23 +352,25 @@ def _make_functional(
         fmodule._modules[name] = fchild
         setattr(fmodule, name, fchild)
 
-    true_forward = getattr(type(module), "execute", None) or getattr(type(module), "forward", None)
+    true_forward = getattr(type(module), "execute", None) or getattr(
+        type(module), "forward", None
+    )
     # true_forward = type(module).forward
 
     def patched_forward(self, *args, params=None, **kwargs):
         # print('run patched_forward!!!')
         if self.direct_submodule_call:
             # If submodule was called directly, run intialisation that happens
-            # at top level call. If *full set of params* is provided here, it 
+            # at top level call. If *full set of params* is provided here, it
             # will use those. If not, it will fall back on fast weights.
-            # In the future, we should be able to support passing only the 
+            # In the future, we should be able to support passing only the
             # submodule (+ children) weights here, but that's not simple.
             self.root._refill_params_box(params)
 
         with _modify_internally(self):
             for name, param in zip(
                 self._param_names,
-                params_box[0][params_offset:params_offset + num_params]
+                params_box[0][params_offset : params_offset + num_params],
             ):
                 setattr(self, name, param)
 
@@ -390,7 +388,7 @@ def _make_functional(
             is_RNN = isinstance(module, jit.nn.RNN)
             if is_RNN and jit.flags.use_cuda:
                 _warnings.simplefilter("ignore", category=UserWarning)
-            
+
             return true_forward(self, *args, **kwargs)
 
     # setattr(MonkeyPatched, "forward", patched_forward)
@@ -409,7 +407,7 @@ def _make_functional(
 def _update_patched_params(
     fmodule: _MonkeyPatchBase,
     params_box: _typing.Sequence[_typing.List[jit.Var]],
-    params_offset: int
+    params_offset: int,
 ) -> int:
     num_params = len([1 for p in fmodule._parameters.values() if p is not None])
     child_params_offset = params_offset + num_params
@@ -421,7 +419,7 @@ def _update_patched_params(
     with _modify_internally(fmodule):
         for name, param in zip(
             fmodule._param_names,
-            params_box[0][params_offset:params_offset + num_params]
+            params_box[0][params_offset : params_offset + num_params],
         ):
             setattr(fmodule, name, param)
     return child_params_offset
@@ -431,12 +429,12 @@ def _update_patched_params(
 # The main function which does the monkey patching.
 # ==============================================================================
 _EncapsulatorType = _typing.Optional[
-    _typing.Callable[[_MonkeyPatchBase, jit.Var], None]]
+    _typing.Callable[[_MonkeyPatchBase, jit.Var], None]
+]
 
 
 def make_functional(
-    module: jit.Module,
-    encapsulator: _EncapsulatorType = None
+    module: jit.Module, encapsulator: _EncapsulatorType = None
 ) -> _MonkeyPatchBase:
     r"""Returns a stateless version of an ``nn.Module`` instance."""
     params_box = [None]
@@ -462,22 +460,21 @@ def make_functional(
         # Copy fast parameters into params_box for use in boxed_forward
         params_box[0] = self._expand_params(self.fast_params)
 
-
     def _patched_forward(self, *args, params=None, **kwargs):
         self._refill_params_box(params)
 
         output = self.boxed_forward(*args, **kwargs)
-        
+
         # Clean up
         params_box[0] = None
-        
+
         return output
 
     def _update_params(self, params):
         self.fast_params = params
         params = self._expand_params(params)
         _update_patched_params(self, [params], 0)
-    
+
     ##############
     setattr(MonkeyPatched, "execute", _patched_forward)
     ##############
@@ -503,7 +500,7 @@ def monkeypatch(
     module: jit.Module,
     device: _typing.Optional[str] = None,
     copy_initial_weights: bool = True,
-    track_higher_grads: bool = True
+    track_higher_grads: bool = True,
 ) -> _MonkeyPatchBase:
     r"""Create a monkey-patched stateless version of a module.
 
@@ -538,9 +535,7 @@ def monkeypatch(
         of the optimizers in ``higher.optim``.
     """
 
-    def encapsulator(
-        fmodule: _MonkeyPatchBase, module: jit.Module
-    ) -> None:
+    def encapsulator(fmodule: _MonkeyPatchBase, module: jit.Module) -> None:
         if copy_initial_weights:
             params = _utils.get_func_params(module, device=device)
         else:

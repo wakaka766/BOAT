@@ -37,24 +37,24 @@ class IAD_PTT(HyperGradient):
     """
 
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            ll_var:List,
-            ul_var:List,
-            solver_config : Dict
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict,
     ):
-        super(IAD_PTT, self).__init__(ul_objective, ul_model, ll_model,ll_var,ul_var)
+        super(IAD_PTT, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
 
     def compute_gradients(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            auxiliary_model: _MonkeyPatchBase,
-            max_loss_iter: int = 0
+        self,
+        ll_feed_dict: Dict,
+        ul_feed_dict: Dict,
+        auxiliary_model: _MonkeyPatchBase,
+        max_loss_iter: int = 0,
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -77,9 +77,15 @@ class IAD_PTT(HyperGradient):
         :returns: the current upper-level objective
         """
 
-        assert self.truncate_max_loss_iter and (max_loss_iter > 0), "With PTT operation, 'max_loss_iter' should be greater than 0"
+        assert self.truncate_max_loss_iter and (
+            max_loss_iter > 0
+        ), "With PTT operation, 'max_loss_iter' should be greater than 0"
         lower_model_params = list(auxiliary_model.parameters(time=max_loss_iter))
-        ul_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model,params=lower_model_params)
-        grads_upper = jit.grad(ul_loss, list(auxiliary_model.parameters(time=0)), allow_unused=True)
-        update_tensor_grads(self.ul_var,grads_upper)
+        ul_loss = self.ul_objective(
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+        )
+        grads_upper = jit.grad(
+            ul_loss, list(auxiliary_model.parameters(time=0)), allow_unused=True
+        )
+        update_tensor_grads(self.ul_var, grads_upper)
         return ul_loss

@@ -14,7 +14,7 @@ def l2_reg(parameters):
     """
     loss = 0
     for w in parameters:
-        loss += (w ** 2).sum()  # Jittor-compatible L2 norm
+        loss += (w**2).sum()  # Jittor-compatible L2 norm
     return loss
 
 
@@ -80,7 +80,9 @@ def list_tensor_norm(list_tensor, p=2):
     norm = 0
     for t in list_tensor:
         # Compute the p-norm for each tensor and accumulate
-        norm += (t.abs() ** p).sum()  # Element-wise absolute value raised to the power of p
+        norm += (
+            t.abs() ** p
+        ).sum()  # Element-wise absolute value raised to the power of p
     return norm ** (1 / p)  # Take the p-th root of the accumulated sum
 
 
@@ -93,7 +95,7 @@ def require_model_grad(model=None):
 
     :raises AssertionError: If the model is not defined.
     """
-    assert model is not None, 'The module is not defined!'
+    assert model is not None, "The module is not defined!"
     for param in model.parameters():
         if param.is_stop_grad():  # Jittor-specific check for non-gradient variables
             param = param.clone()  # Recreate the variable to enable gradients
@@ -131,7 +133,9 @@ def manual_update(optimizer, variables: List[jit.Var]):
     :raises AttributeError: If a variable does not have the '_custom_grad' attribute.
     """
     for group in optimizer.param_groups:
-        lr = group.get("lr", optimizer.lr)  # Get the learning rate from the optimizer or group
+        lr = group.get(
+            "lr", optimizer.lr
+        )  # Get the learning rate from the optimizer or group
 
         for param in group["params"]:
             if param in variables:
@@ -210,7 +214,7 @@ def stop_model_grad(model=None):
     :param model: The model to stop gradients for.
     :type model: jittor.Module
     """
-    assert model is not None, 'The module is not defined!'
+    assert model is not None, "The module is not defined!"
     for param in model.parameters():
         param.stop_grad()
 
@@ -278,7 +282,9 @@ def get_outer_gradients(outer_loss, params, hparams, retain_graph=True):
     """
 
     grad_outer_w = grad_unused_zero(outer_loss, params, retain_graph=retain_graph)
-    grad_outer_hparams = grad_unused_zero(outer_loss, hparams, retain_graph=retain_graph)
+    grad_outer_hparams = grad_unused_zero(
+        outer_loss, hparams, retain_graph=retain_graph
+    )
 
     return grad_outer_w, grad_outer_hparams
 
@@ -310,11 +316,15 @@ def custom_grad(outputs, inputs, grad_outputs=None, retain_graph=False):
     elif not isinstance(grad_outputs, (tuple, list)):
         grad_outputs = (grad_outputs,)
 
-    assert len(outputs) == len(grad_outputs), \
-        "outputs and grad_outputs must have the same length."
+    assert len(outputs) == len(
+        grad_outputs
+    ), "outputs and grad_outputs must have the same length."
 
     # Compute the weighted scalar output for gradient computation
-    total_output = sum((output * grad_output).sum() for output, grad_output in zip(outputs, grad_outputs))
+    total_output = sum(
+        (output * grad_output).sum()
+        for output, grad_output in zip(outputs, grad_outputs)
+    )
 
     # Calculate gradients with respect to inputs
     grads = jit.grad(total_output, inputs, retain_graph=retain_graph)
@@ -322,39 +332,41 @@ def custom_grad(outputs, inputs, grad_outputs=None, retain_graph=False):
     return grads
 
 
-def neumann(params: List[jit.Var],
-            hparams: List[jit.Var],
-            upper_loss,
-            lower_loss,
-            k: int,
-            fp_map: Callable[[List[jit.Var], List[jit.Var]], List[jit.Var]],
-            tol=1e-10) -> List[jit.Var]:
+def neumann(
+    params: List[jit.Var],
+    hparams: List[jit.Var],
+    upper_loss,
+    lower_loss,
+    k: int,
+    fp_map: Callable[[List[jit.Var], List[jit.Var]], List[jit.Var]],
+    tol=1e-10,
+) -> List[jit.Var]:
     """
-        Compute hyperparameter gradients using the Neumann series approximation.
+    Compute hyperparameter gradients using the Neumann series approximation.
 
-        :param params: List of parameters for the lower-level optimization problem.
-        :type params: List[jit.Var]
+    :param params: List of parameters for the lower-level optimization problem.
+    :type params: List[jit.Var]
 
-        :param hparams: List of hyperparameters for the upper-level optimization problem.
-        :type hparams: List[jit.Var]
+    :param hparams: List of hyperparameters for the upper-level optimization problem.
+    :type hparams: List[jit.Var]
 
-        :param upper_loss: Loss function for the upper-level problem.
-        :type upper_loss: jit.Var
+    :param upper_loss: Loss function for the upper-level problem.
+    :type upper_loss: jit.Var
 
-        :param lower_loss: Loss function for the lower-level problem.
-        :type lower_loss: jit.Var
+    :param lower_loss: Loss function for the lower-level problem.
+    :type lower_loss: jit.Var
 
-        :param k: Number of iterations for the Neumann series approximation.
-        :type k: int
+    :param k: Number of iterations for the Neumann series approximation.
+    :type k: int
 
-        :param fp_map: Fixed-point map function that computes updates to lower-level parameters.
-        :type fp_map: Callable[[List[jit.Var], List[jit.Var]], List[jit.Var]]
+    :param fp_map: Fixed-point map function that computes updates to lower-level parameters.
+    :type fp_map: Callable[[List[jit.Var], List[jit.Var]], List[jit.Var]]
 
-        :param tol: Tolerance for early stopping based on convergence. Default is 1e-10.
-        :type tol: float
+    :param tol: Tolerance for early stopping based on convergence. Default is 1e-10.
+    :type tol: float
 
-        :returns: Hyperparameter gradients computed using the Neumann series approximation.
-        :rtype: List[jit.Var]
+    :returns: Hyperparameter gradients computed using the Neumann series approximation.
+    :rtype: List[jit.Var]
     """
 
     grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
@@ -375,15 +387,16 @@ def neumann(params: List[jit.Var],
     return grads
 
 
-
-def conjugate_gradient(params: List[jit.Var],
-                       hparams: List[jit.Var],
-                       upper_loss,
-                       lower_loss,
-                       K: int,
-                       fp_map: Callable[[List[jit.Var], List[jit.Var]], List[jit.Var]],
-                       tol=1e-10,
-                       stochastic=False) -> List[jit.Var]:
+def conjugate_gradient(
+    params: List[jit.Var],
+    hparams: List[jit.Var],
+    upper_loss,
+    lower_loss,
+    K: int,
+    fp_map: Callable[[List[jit.Var], List[jit.Var]], List[jit.Var]],
+    tol=1e-10,
+    stochastic=False,
+) -> List[jit.Var]:
     grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
 
     """
@@ -423,12 +436,18 @@ def conjugate_gradient(params: List[jit.Var],
     def dfp_map_dw(xs):
         if stochastic:
             w_mapped_in = fp_map(params, lower_loss)
-            Jfp_mapTv = custom_grad(w_mapped_in, params, grad_outputs=xs, retain_graph=False)
+            Jfp_mapTv = custom_grad(
+                w_mapped_in, params, grad_outputs=xs, retain_graph=False
+            )
         else:
-            Jfp_mapTv = custom_grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
+            Jfp_mapTv = custom_grad(
+                w_mapped, params, grad_outputs=xs, retain_graph=True
+            )
         return [v - j for v, j in zip(xs, Jfp_mapTv)]
 
-    vs = cg_step(dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol)  # K steps of conjugate gradient
+    vs = cg_step(
+        dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol
+    )  # K steps of conjugate gradient
 
     if stochastic:
         w_mapped = fp_map(params, lower_loss)
@@ -461,7 +480,9 @@ def cg_step(Ax, b, max_iter=100, epsilon=1.0e-5):
 
     x_last = [jit.zeros_like(bb) for bb in b]
     r_last = [jit.zeros_like(bb) + bb for bb in b]  # Jittor does not have copy_, use +
-    p_last = [jit.zeros_like(rr) + rr for rr in r_last]  # Jittor does not have copy_, use +
+    p_last = [
+        jit.zeros_like(rr) + rr for rr in r_last
+    ]  # Jittor does not have copy_, use +
 
     for _ in range(max_iter):
         Ap = Ax(p_last)

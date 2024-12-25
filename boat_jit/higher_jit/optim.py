@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''Differentiable optimizer wrappers around ``jittor.optim`` instances.'''
+"""Differentiable optimizer wrappers around ``jittor.optim`` instances."""
 
 import abc as _abc
 import collections as _collections
@@ -30,8 +30,7 @@ _GroupedGradsType = _typing.List[_typing.List[jit.Var]]
 _StateType = _typing.List[_typing.DefaultDict[int, _typing.Any]]
 _GradClosureType = _typing.Callable[[jit.Var], jit.Var]
 _OverrideType = _typing.Dict[str, _typing.List[_typing.Any]]
-_GradCallbackType = _typing.Callable[[_typing.List[jit.Var]],
-                                     _typing.List[jit.Var]]
+_GradCallbackType = _typing.Callable[[_typing.List[jit.Var]], _typing.List[jit.Var]]
 
 
 def _get_mask_closure(mask: jit.Var) -> _GradClosureType:
@@ -40,7 +39,9 @@ def _get_mask_closure(mask: jit.Var) -> _GradClosureType:
         if grad.requires_grad:
             grad.register_hook(_get_mask_closure(mask))
         return grad
+
     return closure
+
 
 def _maybe_mask(tensor: jit.Var, mask: jit.Var) -> None:
     if tensor.requires_grad:
@@ -57,7 +58,7 @@ class DifferentiableOptimizer(_abc.ABC):
         override: _typing.Optional[_OverrideType] = None,
         grad_callback: _typing.Optional[_GradCallbackType] = None,
         track_higher_grads: bool = True,
-        **kwargs
+        **kwargs,
     ) -> None:
         r"""Initialize the optimizer with the state of an existing optimizer.
 
@@ -101,10 +102,8 @@ class DifferentiableOptimizer(_abc.ABC):
         self.param_groups = _copy.deepcopy(other.param_groups)
         self._group_to_param_list: _typing.List[_typing.List[int]] = []
 
-
         self.state: _typing.List[_typing.Dict[int, _typing.Dict[str, _typing.Any]]] = [
-            _collections.defaultdict(dict)
-            for _ in range(len(self.param_groups))
+            _collections.defaultdict(dict) for _ in range(len(self.param_groups))
         ]
 
         # Deal with override
@@ -117,7 +116,7 @@ class DifferentiableOptimizer(_abc.ABC):
         zipped = zip(self.param_groups, other.param_groups)
         for group_idx, (group, orig_group) in enumerate(zipped):
             local_list = []
-            for param_idx, param in enumerate(orig_group['params']):
+            for param_idx, param in enumerate(orig_group["params"]):
                 param_id = id(param)  # Use the unique ID of the parameter
                 if param_id in other._grad_map:
                     # Initialize state for the parameter
@@ -154,7 +153,7 @@ class DifferentiableOptimizer(_abc.ABC):
         params: _typing.Iterable[jit.Var] = None,
         override: _typing.Optional[_OverrideType] = None,
         grad_callback: _typing.Optional[_GradCallbackType] = None,
-        **kwargs
+        **kwargs,
     ) -> _typing.Iterable[jit.Var]:
         r"""Perform a model update.
 
@@ -223,8 +222,7 @@ class DifferentiableOptimizer(_abc.ABC):
         params = list(params)
 
         grad_targets = [
-            p if not p.is_stop_grad() else jit.zeros_like(p).stop_grad()
-            for p in params
+            p if not p.is_stop_grad() else jit.zeros_like(p).stop_grad() for p in params
         ]
 
         all_grads = jit.grad(
@@ -242,7 +240,7 @@ class DifferentiableOptimizer(_abc.ABC):
         for group, mapping in zip(self.param_groups, self._group_to_param_list):
             grads = []
             for i, index in enumerate(mapping):
-                group['params'][i] = params[index]
+                group["params"][i] = params[index]
                 grads.append(all_grads[index])
             grouped_grads.append(grads)
 
@@ -250,7 +248,7 @@ class DifferentiableOptimizer(_abc.ABC):
 
         new_params = params[:]
         for group, mapping in zip(self.param_groups, self._group_to_param_list):
-            for p, index in zip(group['params'], mapping):
+            for p, index in zip(group["params"], mapping):
                 if self._track_higher_grads:
                     new_params[index] = p
                 else:
@@ -270,7 +268,6 @@ class DifferentiableSGD(DifferentiableOptimizer):
     r"""A differentiable version of the SGD optimizer.
 
     This optimizer creates a gradient tape as it updates parameters."""
-
 
     def _update(self, grouped_grads: _GroupedGradsType, **kwargs) -> None:
         zipped = zip(self.param_groups, grouped_grads)
@@ -361,8 +358,8 @@ class DifferentiableAdam(DifferentiableOptimizer):
                 exp_avg_sq += (1 - beta2) * (g * g)
 
                 # Bias correction terms
-                bias_correction1 = 1 - beta1 ** step
-                bias_correction2 = 1 - beta2 ** step
+                bias_correction1 = 1 - beta1**step
+                bias_correction2 = 1 - beta2**step
 
                 if amsgrad:
                     # Maintain the max of all 2nd moment running avg till now
@@ -379,6 +376,7 @@ class DifferentiableAdam(DifferentiableOptimizer):
 
                 # Save updated state
                 self.state[group_idx][p_idx] = param_state
+
 
 class DifferentiableAdamW(DifferentiableOptimizer):
     r"""A differentiable version of the AdamW optimizer for Jittor.
@@ -413,7 +411,7 @@ class DifferentiableAdamW(DifferentiableOptimizer):
                     max_exp_avg_sq = param_state["max_exp_avg_sq"]
 
                 # Apply weight decay directly on the parameter (AdamW specific)
-                p *= (1 - group["lr"] * weight_decay)
+                p *= 1 - group["lr"] * weight_decay
 
                 # Update step count
                 param_state["step"] += 1
@@ -427,8 +425,8 @@ class DifferentiableAdamW(DifferentiableOptimizer):
                 exp_avg_sq += (1 - beta2) * (g * g)
 
                 # Bias correction terms
-                bias_correction1 = 1 - beta1 ** step
-                bias_correction2 = 1 - beta2 ** step
+                bias_correction1 = 1 - beta1**step
+                bias_correction2 = 1 - beta2**step
 
                 if amsgrad:
                     # Maintain the max of all 2nd moment running avg till now
@@ -546,7 +544,7 @@ class DifferentiableAdagrad(DifferentiableOptimizer):
                 param_state["sum"] = sum_
 
                 # Compute parameter update
-                std = (sum_.sqrt() + eps)
+                std = sum_.sqrt() + eps
                 p -= clr * g / std
 
                 # Save updated state
@@ -736,7 +734,9 @@ class DifferentiableRMSprop(DifferentiableOptimizer):
 
                 # Momentum updates if enabled
                 if momentum > 0:
-                    buf = param_state.get("momentum_buffer", jit.zeros_like(p).stop_grad())
+                    buf = param_state.get(
+                        "momentum_buffer", jit.zeros_like(p).stop_grad()
+                    )
                     buf = momentum * buf + g / avg
                     param_state["momentum_buffer"] = buf
                     p -= lr * buf
@@ -812,7 +812,9 @@ class DifferentiableRprop(DifferentiableOptimizer):
                 self.state[group_idx][p_idx] = param_state
 
 
-_OptMappingType = _typing.Dict[jit.optim.Optimizer, _typing.Type[DifferentiableOptimizer]]
+_OptMappingType = _typing.Dict[
+    jit.optim.Optimizer, _typing.Type[DifferentiableOptimizer]
+]
 # _opt_mapping: _OptMappingType = {
 #     jit.optim.Adadelta: DifferentiableAdadelta,
 #     jit.optim.Adagrad: DifferentiableAdagrad,
@@ -851,8 +853,6 @@ _opt_mapping = {
 # print("Updated optimizer mapping:", _opt_mapping)
 
 
-
-
 def get_diff_optim(
     opt: jit.optim.Optimizer,
     reference_params: _typing.Iterable[jit.Var],
@@ -860,7 +860,7 @@ def get_diff_optim(
     device: _typing.Optional[str] = None,
     override: _typing.Optional[_OverrideType] = None,
     track_higher_grads: bool = True,
-    **kwargs
+    **kwargs,
 ) -> DifferentiableOptimizer:
     r"""Construct/initialize a differentiable version of an existing optimizer.
 
@@ -903,7 +903,7 @@ def get_diff_optim(
 
     Returns:
         An initialized ``DifferentiableOptimizer`` instance of the right subtype.
-  """
+    """
     if type(opt) in _opt_mapping:
         return _opt_mapping[type(opt)](
             opt,
@@ -912,7 +912,7 @@ def get_diff_optim(
             device=device,
             override=override,
             track_higher_grads=track_higher_grads,
-            **kwargs
+            **kwargs,
         )
     else:
         raise ValueError(
@@ -921,14 +921,14 @@ def get_diff_optim(
 
 
 def create_diff_optim(
-        opt_type: _typing.Type[jit.optim.Optimizer],
-        opt_kwargs: _typing.Optional[_typing.Dict[str, _typing.Any]] = None,
-        params: _typing.Optional[_typing.List[jit.Var]] = None,
-        fmodel: _typing.Optional[_patch._MonkeyPatchBase] = None,
-        device: _typing.Optional[str] = None,
-        override: _typing.Optional[_OverrideType] = None,
-        track_higher_grads: bool = True,
-        **kwargs
+    opt_type: _typing.Type[jit.optim.Optimizer],
+    opt_kwargs: _typing.Optional[_typing.Dict[str, _typing.Any]] = None,
+    params: _typing.Optional[_typing.List[jit.Var]] = None,
+    fmodel: _typing.Optional[_patch._MonkeyPatchBase] = None,
+    device: _typing.Optional[str] = None,
+    override: _typing.Optional[_OverrideType] = None,
+    track_higher_grads: bool = True,
+    **kwargs,
 ) -> DifferentiableOptimizer:
     r"""Construct a differentiable version of an new optimizer.
 
@@ -975,7 +975,7 @@ def create_diff_optim(
 
     Returns:
         An initialized ``DifferentiableOptimizer`` instance of the right subtype.
-  """
+    """
 
     if opt_type in _opt_mapping:
         if params is not None:
@@ -983,21 +983,15 @@ def create_diff_optim(
             if isinstance(params[0], dict):
                 dummy = [
                     {
-                    k: jit.zeros_like(v, requires_grad=True)
-                    if k == "params" else v
-                    for k, v in group.items()
-                    } for group in params
+                        k: jit.zeros_like(v, requires_grad=True) if k == "params" else v
+                        for k, v in group.items()
+                    }
+                    for group in params
                 ]
             else:
-                dummy = [
-                    jit.zeros_like(p, requires_grad=True)
-                    for p in params
-                ]
+                dummy = [jit.zeros_like(p, requires_grad=True) for p in params]
         elif fmodel is not None:
-            dummy = [
-                jit.zeros_like(p, requires_grad=True)
-                for p in fmodel.parameters()
-            ]
+            dummy = [jit.zeros_like(p, requires_grad=True) for p in fmodel.parameters()]
         else:
             raise ValueError("Must specify one of fmodel or params in kwargs.")
 
@@ -1011,7 +1005,7 @@ def create_diff_optim(
             device=device,
             override=override,
             track_higher_grads=track_higher_grads,
-            **kwargs
+            **kwargs,
         )
     else:
         raise ValueError(
@@ -1020,8 +1014,8 @@ def create_diff_optim(
 
 
 def register_optim(
-        optim_type: jit.optim.Optimizer,
-        diff_optim_type: _typing.Type[DifferentiableOptimizer]
+    optim_type: jit.optim.Optimizer,
+    diff_optim_type: _typing.Type[DifferentiableOptimizer],
 ) -> None:
     r"""Registers a new optimizer type for use with higher functions.
 
@@ -1036,7 +1030,7 @@ def register_optim(
 
 
 def get_trainable_opt_params(
-        opt: jit.optim.Optimizer, device: _typing.Optional[str] = None
+    opt: jit.optim.Optimizer, device: _typing.Optional[str] = None
 ) -> _OverrideType:
     r"""Get an override dictionary from an optimizer instance.
 
@@ -1070,8 +1064,7 @@ def get_trainable_opt_params(
             # Ignore hyperparameters that aren't structures containing ints
             # or floats
             if all(
-                    isinstance(x, int) or isinstance(x, float)
-                    for x in _utils.flatten(v)
+                isinstance(x, int) or isinstance(x, float) for x in _utils.flatten(v)
             ):
                 override[k].append(_utils._recursive_map(v, map_fn))
 
@@ -1107,10 +1100,10 @@ def apply_trainable_opt_params(
 def _add(
     tensor: jit.Var,
     a1: _typing.Union[float, int, jit.Var],
-    a2: _typing.Optional[jit.Var] = None
+    a2: _typing.Optional[jit.Var] = None,
 ) -> jit.Var:
     if a2 is None:
-        value: _typing.Union[jit.Var, float] = 1.
+        value: _typing.Union[jit.Var, float] = 1.0
         other = a1
     else:
         value = a1
@@ -1122,10 +1115,10 @@ def _addcdiv(
     tensor: jit.Var,
     a1: _typing.Union[float, int, jit.Var],
     a2: jit.Var,
-    a3: _typing.Optional[jit.Var] = None
+    a3: _typing.Optional[jit.Var] = None,
 ) -> jit.Var:
     if a3 is None:
-        value: _typing.Union[jit.Var, float] = 1.
+        value: _typing.Union[jit.Var, float] = 1.0
         tensor1 = a1
         tensor2 = a2
     else:
@@ -1139,10 +1132,10 @@ def _addcmul(
     tensor: jit.Var,
     a1: _typing.Union[float, int, jit.Var],
     a2: jit.Var,
-    a3: _typing.Optional[jit.Var] = None
+    a3: _typing.Optional[jit.Var] = None,
 ) -> jit.Var:
     if a3 is None:
-        value: _typing.Union[jit.Var, float] = 1.
+        value: _typing.Union[jit.Var, float] = 1.0
         tensor1 = a1
         tensor2 = a2
     else:
@@ -1155,22 +1148,16 @@ def _addcmul(
 # TODO(egrefen): this probably could be refactored into utils
 def _recursive_apply(
     replacement: _typing.Union[list, tuple, dict, set, jit.Var],
-    target: _typing.Union[jit.Var, int, float]
+    target: _typing.Union[jit.Var, int, float],
 ) -> _typing.Union[jit.Var, int, float]:
     if not isinstance(replacement, type(target)):
-        if (
-            isinstance(replacement, jit.Var) and
-            not _utils._is_container(target)
-        ):
+        if isinstance(replacement, jit.Var) and not _utils._is_container(target):
             return type(target)(replacement.item())
         raise ValueError(
             "Expected an non-container type for target, but got {} with value "
             "{}".format(type(target), target)
         )
-    elif (
-        isinstance(replacement, jit.Var) and
-        isinstance(target, jit.Var)
-    ):
+    elif isinstance(replacement, jit.Var) and isinstance(target, jit.Var):
         replacement = replacement.to(target.device)
         target.data = replacement.data
         return target
@@ -1184,13 +1171,14 @@ def _recursive_apply(
         )
     elif isinstance(replacement, dict) and isinstance(target, dict):
         return type(target)(
-            {k: _recursive_apply(r, t)
-            for (_, r), (k, t) in zip(replacement.items(), target.items())}
+            {
+                k: _recursive_apply(r, t)
+                for (_, r), (k, t) in zip(replacement.items(), target.items())
+            }
         )
     elif isinstance(target, set):
         return type(target)(
-            {_recursive_apply(r, t)
-             for r, t in zip(replacement, target)}
+            {_recursive_apply(r, t) for r, t in zip(replacement, target)}
         )
     else:
         raise ValueError(
