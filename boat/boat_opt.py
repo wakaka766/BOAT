@@ -2,17 +2,17 @@ import time
 import copy
 from typing import Dict, Any, Callable
 from boat.utils.op_utils import copy_parameter_from_list, average_grad
-try:
-    import torch
-    from torch import Tensor
-    from torch.optim import Optimizer
-    import higher
-except ImportError as e:
-    missing_module = str(e).split()[-1]
-    print(f"Error: The required module '{missing_module}' is not installed.")
-    print("Please run the following command to install all required dependencies:")
-    print("    pip install -r requirements.txt")
-    raise
+# try:
+import torch
+from torch import Tensor
+from torch.optim import Optimizer
+import higher
+# except ImportError as e:
+#     missing_module = str(e).split()[-1]
+#     print(f"Error: The required module '{missing_module}' is not installed.")
+#     print("Please run the following command to install all required dependencies:")
+#     print("    pip install -r requirements.txt")
+#     raise
 
 importlib = __import__("importlib")
 ll_grads = importlib.import_module("boat.dynamic_ol")

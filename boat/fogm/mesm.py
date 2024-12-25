@@ -93,7 +93,6 @@ class MESM(DynamicalSystem):
 
         grad_theta_parmaters = grad_unused_zero(theta_loss, list(self.y_hat.parameters()))
 
-        ## some convert
         errs = []
         for a, b in zip(list(self.y_hat.parameters()), list(self.ll_model.parameters())):
             diff = a - b

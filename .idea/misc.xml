@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="ten_attack" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="mindspore2.5" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="ReMeta" project-jdk-type="Python SDK" />
 </project>
