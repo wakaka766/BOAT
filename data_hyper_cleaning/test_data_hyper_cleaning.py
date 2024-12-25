@@ -55,19 +55,19 @@ def test_fogm_method(fogm_method):
 # 测试 ImportError 情况
 def test_missing_higher_module():
     with patch.dict('sys.modules', {'higher': None}):  # 模拟 higher 模块未安装
-        try:
-            # 重现你的异常处理逻辑
-            import torch
-            from torch import Tensor
-            from torch.optim import Optimizer
-            import higher
-        except ImportError as e:
-            # 检查异常信息
-            missing_module = str(e).split()[-1]
-            assert missing_module == "'higher'", f"Unexpected missing module: {missing_module}"
+        command = [
+            "python",
+            "/home/runner/work/BOAT/BOAT/data_hyper_cleaning/data_hyper_cleaning.py",
+            "--dynamic_method", ",".join("NGD"),
+            "--hyper_method", ",".join("RAD")
+        ]
 
-            # 检查输出内容
-            expected_message = "Error: The required module 'higher' is not installed."
-            assert expected_message in str(e), "The error message is incorrect."
+        result = subprocess.run(command, capture_output=True, text=True)
 
-            print("Test passed: Exception handling for missing 'higher' module works correctly.")
+        # 检查是否触发了 ImportError，并输出预期的错误信息
+        assert result.returncode != 0, "The script did not fail as expected when 'higher' module is missing."
+        assert "Error: The required module 'higher' is not installed." in result.stderr, (
+            f"Unexpected error message: {result.stderr}"
+        )
+
+        print("Test passed: Exception handling for missing 'higher' module works correctly.")
