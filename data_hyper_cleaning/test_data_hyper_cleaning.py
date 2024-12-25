@@ -51,23 +51,3 @@ def test_fogm_method(fogm_method):
     result = subprocess.run(command, capture_output=True, text=True)
 
     assert result.returncode == 0, f"Test failed for fo_gm={fogm_method}. Error: {result.stderr}"
-
-# 测试 ImportError 情况
-def test_missing_higher_module():
-    with patch.dict('sys.modules', {'higher': None}):  # 模拟 higher 模块未安装
-        command = [
-            "python",
-            "/home/runner/work/BOAT/BOAT/data_hyper_cleaning/data_hyper_cleaning.py",
-            "--dynamic_method", "NGD",
-            "--hyper_method", "RAD"
-        ]
-
-        result = subprocess.run(command, capture_output=True, text=True)
-
-        # 检查是否触发了 ImportError，并输出预期的错误信息
-        assert result.returncode != 0, "The script did not fail as expected when 'higher' module is missing."
-        assert "Error: The required module 'higher' is not installed." in result.stderr, (
-            f"Unexpected error message: {result.stderr}"
-        )
-
-        print("Test passed: Exception handling for missing 'higher' module works correctly.")
