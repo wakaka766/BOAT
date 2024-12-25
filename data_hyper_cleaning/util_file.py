@@ -4,7 +4,8 @@ import random
 import numpy as np
 import torch
 import math
-from  torch import nn
+from torch import nn
+
 
 class Dataset:
     def __init__(self, data, target, polluted=False, rho=0.0):
@@ -28,7 +29,7 @@ class Dataset:
         number_list = list(range(number))
         random.shuffle(number_list)
         self.dirty_target = copy.deepcopy(self.clean_target)
-        for i in number_list[:int(rho * number)]:
+        for i in number_list[: int(rho * number)]:
             dirty_set = copy.deepcopy(self.set)
             dirty_set.remove(int(self.clean_target[i]))
             self.dirty_target[i] = random.randint(0, len(dirty_set))
@@ -38,10 +39,14 @@ class Dataset:
 
     def data_flatten(self):
         try:
-            self.data = self.data.view(self.data.shape[0], self.data.shape[1] * self.data.shape[2])
+            self.data = self.data.view(
+                self.data.shape[0], self.data.shape[1] * self.data.shape[2]
+            )
         except BaseException:
-            self.data = self.data.reshape(self.data.shape[0],
-                                          self.data.shape[1] * self.data.shape[2] * self.data.shape[3])
+            self.data = self.data.reshape(
+                self.data.shape[0],
+                self.data.shape[1] * self.data.shape[2] * self.data.shape[3],
+            )
 
     # def get_batch(self,batch_size):
 
@@ -68,13 +73,28 @@ def data_splitting(dataset, tr, val, test):
         val_number = val
         test_number = test
 
-    train_data = Dataset(dataset.data[number_list[:int(tr_number)], :, :],
-                         dataset.targets[number_list[:int(tr_number)]])
-    val_data = Dataset(dataset.data[number_list[int(tr_number):int(tr_number + val_number)], :, :],
-                       dataset.targets[number_list[int(tr_number):int(tr_number + val_number)]])
+    train_data = Dataset(
+        dataset.data[number_list[: int(tr_number)], :, :],
+        dataset.targets[number_list[: int(tr_number)]],
+    )
+    val_data = Dataset(
+        dataset.data[number_list[int(tr_number) : int(tr_number + val_number)], :, :],
+        dataset.targets[number_list[int(tr_number) : int(tr_number + val_number)]],
+    )
     test_data = Dataset(
-        dataset.data[number_list[int(tr_number + val_number):(tr_number + val_number + test_number)], :, :],
-        dataset.targets[number_list[int(tr_number + val_number):(tr_number + val_number + test_number)]])
+        dataset.data[
+            number_list[
+                int(tr_number + val_number) : (tr_number + val_number + test_number)
+            ],
+            :,
+            :,
+        ],
+        dataset.targets[
+            number_list[
+                int(tr_number + val_number) : (tr_number + val_number + test_number)
+            ]
+        ],
+    )
     return train_data, val_data, test_data
 
 
@@ -86,7 +106,7 @@ def initialize(model):
     for m in model.modules():
         if isinstance(m, nn.Conv2d):
             n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-            m.weight.data.normal_(0, math.sqrt(2. / n))
+            m.weight.data.normal_(0, math.sqrt(2.0 / n))
             if m.bias is not None:
                 m.bias.data.zero_()
         elif isinstance(m, nn.BatchNorm2d):

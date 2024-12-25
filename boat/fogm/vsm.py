@@ -1,11 +1,11 @@
 from boat.utils.op_utils import l2_reg
 from ..dynamic_ol.dynamical_system import DynamicalSystem
-from boat.utils.op_utils import update_grads,update_tensor_grads
+from boat.utils.op_utils import update_grads, update_tensor_grads
 import torch
 from torch.nn import Module
 from torch.optim import Optimizer
 import copy
-from typing import Dict, Any, Callable,List
+from typing import Dict, Any, Callable, List
 
 
 class VSM(DynamicalSystem):
@@ -37,17 +37,18 @@ class VSM(DynamicalSystem):
     _`[1]` Liu B, Ye M, Wright S, et al. Bome! bilevel optimization made easy: A simple first-order approach[C].
     In NeurIPS, 2022.
     """
+
     def __init__(
-            self,
-            ll_objective: Callable,
-            lower_loop: int,
-            ul_model: Module,
-            ul_objective: Callable,
-            ll_model: Module,
-            ll_opt: Optimizer,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        lower_loop: int,
+        ul_model: Module,
+        ul_objective: Callable,
+        ll_model: Module,
+        ll_opt: Optimizer,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict[str, Any],
     ):
         super(VSM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.ul_objective = ul_objective
@@ -55,19 +56,14 @@ class VSM(DynamicalSystem):
         self.ul_var = ul_var
         self.ll_opt = ll_opt
         self.y_loop = lower_loop
-        self.z_loop = solver_config['VSM']["z_loop"]
-        self.ll_l2_reg = solver_config['VSM']["ll_l2_reg"]
-        self.ul_l2_reg = solver_config['VSM']["ul_l2_reg"]
-        self.ul_ln_reg = solver_config['VSM']["ul_ln_reg"]
-        self.reg_decay = float(solver_config['VSM']['reg_decay'])
-        self.z_lr = solver_config['VSM']['z_lr']
+        self.z_loop = solver_config["VSM"]["z_loop"]
+        self.ll_l2_reg = solver_config["VSM"]["ll_l2_reg"]
+        self.ul_l2_reg = solver_config["VSM"]["ul_l2_reg"]
+        self.ul_ln_reg = solver_config["VSM"]["ul_ln_reg"]
+        self.reg_decay = float(solver_config["VSM"]["reg_decay"])
+        self.z_lr = solver_config["VSM"]["z_lr"]
 
-    def optimize(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            current_iter: int
-    ):
+    def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
         Execute the optimization procedure with the data from feed_dict.
 
@@ -84,7 +80,7 @@ class VSM(DynamicalSystem):
 
         :returns: None
         """
-        reg_decay =  self.reg_decay * current_iter + 1
+        reg_decay = self.reg_decay * current_iter + 1
         for z_idx in range(self.z_loop):
             self.ll_opt.zero_grad()
             loss_l2_z = self.ll_l2_reg / reg_decay * l2_reg(self.ll_model.parameters())
@@ -94,7 +90,6 @@ class VSM(DynamicalSystem):
             update_grads(grads, self.ll_model)
             self.ll_opt.step()
         self.ll_opt.zero_grad()
-
 
         auxiliary_model = copy.deepcopy(self.ll_model)
         auxiliary_opt = torch.optim.SGD(auxiliary_model.parameters(), lr=self.z_lr)
@@ -124,7 +119,11 @@ class VSM(DynamicalSystem):
         loss_z = loss_z_ + loss_l2_z
 
         loss_y_f_ = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-        loss_ln = self.ul_ln_reg / reg_decay * torch.log(loss_y_f_.item() + loss_z - loss_y_f_)
+        loss_ln = (
+            self.ul_ln_reg
+            / reg_decay
+            * torch.log(loss_y_f_.item() + loss_z - loss_y_f_)
+        )
 
         loss_x_ = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         loss_x = loss_x_ - loss_ln

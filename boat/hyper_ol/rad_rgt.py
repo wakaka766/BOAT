@@ -6,7 +6,6 @@ from higher.patch import _MonkeyPatchBase
 from boat.utils.op_utils import update_tensor_grads
 
 
-
 class RAD_RGT(HyperGradient):
     """
     Calculation of the hyper gradient of the upper-level variables with Reverse Auto Differentiation (RAD) _`[1]` and
@@ -35,27 +34,26 @@ class RAD_RGT(HyperGradient):
     _`[2]` Shaban A, Cheng C A, Hatch N, et al. Truncated back-propagation for bilevel optimization[C]. In AISTATS,2019.
     """
 
-
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict,
     ):
         super(RAD_RGT, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
-        self.dynamic_initialization = "DI" in solver_config['dynamic_op']
-        self.truncate_iter = solver_config["RGT"]['truncate_iter']
+        self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
+        self.truncate_iter = solver_config["RGT"]["truncate_iter"]
 
     def compute_gradients(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            auxiliary_model: _MonkeyPatchBase,
-            max_loss_iter: int = 0
+        self,
+        ll_feed_dict: Dict,
+        ul_feed_dict: Dict,
+        auxiliary_model: _MonkeyPatchBase,
+        max_loss_iter: int = 0,
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -78,13 +76,21 @@ class RAD_RGT(HyperGradient):
         :returns: the current upper-level objective
         """
 
-        assert self.truncate_iter > 0, "With RGT operation, 'truncate_iter' should be greater than 0"
+        assert (
+            self.truncate_iter > 0
+        ), "With RGT operation, 'truncate_iter' should be greater than 0"
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        grads_upper = torch.autograd.grad(upper_loss, self.ul_var,
-                                          retain_graph=self.dynamic_initialization, allow_unused=True)
+        grads_upper = torch.autograd.grad(
+            upper_loss,
+            self.ul_var,
+            retain_graph=self.dynamic_initialization,
+            allow_unused=True,
+        )
         update_tensor_grads(self.ul_var, grads_upper)
 
         if self.dynamic_initialization:
-            grads_lower = torch.autograd.grad(upper_loss, list(auxiliary_model.parameters(time=0)))
+            grads_lower = torch.autograd.grad(
+                upper_loss, list(auxiliary_model.parameters(time=0))
+            )
             update_tensor_grads(self.ll_var, grads_lower)
         return upper_loss

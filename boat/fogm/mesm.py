@@ -1,11 +1,16 @@
 from ..dynamic_ol.dynamical_system import DynamicalSystem
-from boat.utils.op_utils import update_grads,grad_unused_zero,update_tensor_grads,copy_parameter_from_list
+from boat.utils.op_utils import (
+    update_grads,
+    grad_unused_zero,
+    update_tensor_grads,
+    copy_parameter_from_list,
+)
 import numpy
 import torch
 from torch.nn import Module
 from torch.optim import Optimizer
 import copy
-from typing import Dict, Any, Callable,List
+from typing import Dict, Any, Callable, List
 
 
 class MESM(DynamicalSystem):
@@ -37,17 +42,18 @@ class MESM(DynamicalSystem):
     _`[1]` Liu R, Liu Z, Yao W, et al. Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and
     Hessian-free Solution Strategy[J]. ICML, 2024.
     """
+
     def __init__(
-            self,
-            ll_objective: Callable,
-            lower_loop: int,
-            ul_model: Module,
-            ul_objective: Callable,
-            ll_model: Module,
-            ll_opt: Optimizer,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        lower_loop: int,
+        ul_model: Module,
+        ul_objective: Callable,
+        ll_model: Module,
+        ll_opt: Optimizer,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict[str, Any],
     ):
         super(MESM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.ul_objective = ul_objective
@@ -55,18 +61,15 @@ class MESM(DynamicalSystem):
         self.ll_var = ll_var
         self.ul_var = ul_var
         self.y_loop = lower_loop
-        self.eta = solver_config['MESM']["eta"]
-        self.gamma_1 = solver_config['MESM']['gamma_1']
-        self.c0 = solver_config['MESM']['c0']
+        self.eta = solver_config["MESM"]["eta"]
+        self.gamma_1 = solver_config["MESM"]["gamma_1"]
+        self.c0 = solver_config["MESM"]["c0"]
         self.y_hat = copy.deepcopy(self.ll_model)
-        self.y_hat_opt = torch.optim.SGD(self.y_hat.parameters(), lr=solver_config['MESM']['y_hat_lr'], momentum=0.9)
+        self.y_hat_opt = torch.optim.SGD(
+            self.y_hat.parameters(), lr=solver_config["MESM"]["y_hat_lr"], momentum=0.9
+        )
 
-    def optimize(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            current_iter: int
-    ):
+    def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
         Execute the optimization procedure with the data from feed_dict.
 
@@ -89,36 +92,54 @@ class MESM(DynamicalSystem):
         else:
             ck = numpy.power(current_iter + 1, 0.25) * self.c0
 
-        theta_loss = self.ll_objective(ll_feed_dict,self.ul_model,self.y_hat)
+        theta_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.y_hat)
 
-        grad_theta_parmaters = grad_unused_zero(theta_loss, list(self.y_hat.parameters()))
+        grad_theta_parmaters = grad_unused_zero(
+            theta_loss, list(self.y_hat.parameters())
+        )
 
         errs = []
-        for a, b in zip(list(self.y_hat.parameters()), list(self.ll_model.parameters())):
+        for a, b in zip(
+            list(self.y_hat.parameters()), list(self.ll_model.parameters())
+        ):
             diff = a - b
             errs.append(diff)
         vs_param = []
-        for v0, gt, err in zip(list(self.y_hat.parameters()), grad_theta_parmaters, errs):
-            vs_param.append(v0 - self.eta * (gt + self.gamma_1 * err) )  # upate \theta
+        for v0, gt, err in zip(
+            list(self.y_hat.parameters()), grad_theta_parmaters, errs
+        ):
+            vs_param.append(v0 - self.eta * (gt + self.gamma_1 * err))  # upate \theta
 
-        copy_parameter_from_list(self.y_hat,vs_param)
+        copy_parameter_from_list(self.y_hat, vs_param)
 
         reg = 0
         for param1, param2 in zip(list(self.ll_model.parameters()), vs_param):
             diff = param1 - param2
             # result_params.append(diff)
             reg += torch.norm(diff, p=2) ** 2
-        lower_loss = (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model) + self.ll_objective(ll_feed_dict,self.ul_model, self.ll_model) - 0.5 * self.gamma_1 * reg
+        lower_loss = (
+            (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model)
+            + self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+            - 0.5 * self.gamma_1 * reg
+        )
 
         self.ll_opt.zero_grad()
-        grad_y_parmaters = grad_unused_zero(lower_loss, list(self.ll_model.parameters()))
+        grad_y_parmaters = grad_unused_zero(
+            lower_loss, list(self.ll_model.parameters())
+        )
 
         update_tensor_grads(self.ll_var, grad_y_parmaters)
 
         self.ll_opt.step()
 
-        upper_loss = (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model) + self.ll_objective(ll_feed_dict,self.ul_model, self.ll_model) - self.ll_objective(ll_feed_dict,self.ul_model, self.y_hat)
-        grad_x_parmaters = grad_unused_zero(upper_loss, list(self.ul_model.parameters()))
+        upper_loss = (
+            (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model)
+            + self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+            - self.ll_objective(ll_feed_dict, self.ul_model, self.y_hat)
+        )
+        grad_x_parmaters = grad_unused_zero(
+            upper_loss, list(self.ul_model.parameters())
+        )
         update_tensor_grads(self.ul_var, grad_x_parmaters)
 
         return upper_loss

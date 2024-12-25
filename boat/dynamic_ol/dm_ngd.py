@@ -4,10 +4,15 @@ from torch.nn import Module
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import update_tensor_grads,grad_unused_zero,list_tensor_norm,list_tensor_matmul
+from ..utils.op_utils import (
+    update_tensor_grads,
+    grad_unused_zero,
+    list_tensor_norm,
+    list_tensor_matmul,
+)
+
 
 class DM_NGD(DynamicalSystem):
-
     """
     Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) _`[1]` and
     Dual Multiplier (DM) _`[3]`.
@@ -38,31 +43,31 @@ class DM_NGD(DynamicalSystem):
     """
 
     def __init__(
-            self,
-            ll_objective: Callable,
-            lower_loop: int,
-            ul_model: Module,
-            ul_objective: Callable,
-            ll_model: Module,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        lower_loop: int,
+        ul_model: Module,
+        ul_objective: Callable,
+        ll_model: Module,
+        solver_config: Dict[str, Any],
     ):
 
         super(DM_NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.ul_objective = ul_objective
-        self.alpha = solver_config['GDA']["alpha_init"]
-        self.alpha_decay = solver_config['GDA']["alpha_decay"]
-        self.truncate_iters = solver_config['RGT']["truncate_iter"]
-        self.ll_opt = solver_config['ll_opt']
-        self.auxiliary_v = solver_config["DM"]['auxiliary_v']
-        self.auxiliary_v_opt = solver_config["DM"]['auxiliary_v_opt']
-        self.auxiliary_v_lr = solver_config["DM"]['auxiliary_v_lr']
-        self.tau = solver_config['DM']['tau']
-        self.p = solver_config['DM']['p']
-        self.mu0 = solver_config['DM']['mu0']
-        self.eta = solver_config['DM']['eta0']
-        self.strategy = solver_config['DM']['strategy']
-        self.hyper_op =  solver_config["hyper_op"]
+        self.alpha = solver_config["GDA"]["alpha_init"]
+        self.alpha_decay = solver_config["GDA"]["alpha_decay"]
+        self.truncate_iters = solver_config["RGT"]["truncate_iter"]
+        self.ll_opt = solver_config["ll_opt"]
+        self.auxiliary_v = solver_config["DM"]["auxiliary_v"]
+        self.auxiliary_v_opt = solver_config["DM"]["auxiliary_v_opt"]
+        self.auxiliary_v_lr = solver_config["DM"]["auxiliary_v_lr"]
+        self.tau = solver_config["DM"]["tau"]
+        self.p = solver_config["DM"]["p"]
+        self.mu0 = solver_config["DM"]["mu0"]
+        self.eta = solver_config["DM"]["eta0"]
+        self.strategy = solver_config["DM"]["strategy"]
+        self.hyper_op = solver_config["hyper_op"]
 
     def optimize(
         self,
@@ -70,7 +75,7 @@ class DM_NGD(DynamicalSystem):
         ul_feed_dict: Dict,
         auxiliary_model: _MonkeyPatchBase,
         auxiliary_opt: DifferentiableOptimizer,
-        current_iter: int
+        current_iter: int,
     ):
         """
         Execute the lower-level optimization procedure with the data from feed_dict and patched models.
@@ -96,32 +101,59 @@ class DM_NGD(DynamicalSystem):
 
         :returns: None
         """
-        assert self.strategy == "s1", \
-                "Only 's1' strategy is supported for DM without GDA operation."
+        assert (
+            self.strategy == "s1"
+        ), "Only 's1' strategy is supported for DM without GDA operation."
 
-        x_lr = self.ul_lr * (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults['lr']
-        eta = self.eta * (current_iter + 1) ** (-0.5 * self.tau) * self.ll_opt.defaults['lr']
+        x_lr = (
+            self.ul_lr * (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults["lr"]
+        )
+        eta = (
+            self.eta
+            * (current_iter + 1) ** (-0.5 * self.tau)
+            * self.ll_opt.defaults["lr"]
+        )
         for params in self.auxiliary_v_opt.param_groups:
-            params['lr'] = eta
+            params["lr"] = eta
         for params in self.ul_opt.param_groups:
-            params['lr'] = x_lr
+            params["lr"] = x_lr
 
         #############
         self.ll_opt.zero_grad()
         self.auxiliary_v_opt.zero_grad()
         loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-        grad_y_temp = torch.autograd.grad(loss_f,auxiliary_model.parameters(),retain_graph=True)
+        grad_y_temp = torch.autograd.grad(
+            loss_f, auxiliary_model.parameters(), retain_graph=True
+        )
 
         #############
 
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        grad_outer_params = grad_unused_zero(upper_loss, list(auxiliary_model.parameters()))
-        grads_phi_params = grad_unused_zero(loss_f, list(auxiliary_model.parameters()),create_graph=True,retain_graph=True)
-        grads = grad_unused_zero(grads_phi_params, list(self.ul_model.parameters()), grad_outputs=self.auxiliary_v,retain_graph=True)  # dx (dy f) v
-        grad_outer_hparams =grad_unused_zero(upper_loss, list(self.ul_model.parameters()))
+        grad_outer_params = grad_unused_zero(
+            upper_loss, list(auxiliary_model.parameters())
+        )
+        grads_phi_params = grad_unused_zero(
+            loss_f,
+            list(auxiliary_model.parameters()),
+            create_graph=True,
+            retain_graph=True,
+        )
+        grads = grad_unused_zero(
+            grads_phi_params,
+            list(self.ul_model.parameters()),
+            grad_outputs=self.auxiliary_v,
+            retain_graph=True,
+        )  # dx (dy f) v
+        grad_outer_hparams = grad_unused_zero(
+            upper_loss, list(self.ul_model.parameters())
+        )
 
         if "RAD" in self.hyper_op:
-            vsp = grad_unused_zero(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v)  # dy (dy f) v=d2y f v
+            vsp = grad_unused_zero(
+                grads_phi_params,
+                list(auxiliary_model.parameters()),
+                grad_outputs=self.auxiliary_v,
+            )  # dy (dy f) v=d2y f v
 
             for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
                 v0.grad = v - gow
@@ -132,28 +164,48 @@ class DM_NGD(DynamicalSystem):
             grads = [-g + v for g, v in zip(grads, grad_outer_hparams)]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
         else:
-            vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v, retain_graph=True,allow_unused=True)  # dy (dy f) v=d2y f v
+            vsp = torch.autograd.grad(
+                grads_phi_params,
+                list(auxiliary_model.parameters()),
+                grad_outputs=self.auxiliary_v,
+                retain_graph=True,
+                allow_unused=True,
+            )  # dy (dy f) v=d2y f v
             tem = [v - gow for v, gow in zip(vsp, grad_outer_params)]
 
             ita_u = list_tensor_norm(tem) ** 2
-            grad_tem = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=tem, retain_graph=True,
-                                  allow_unused=True)  # dy (dy f) v=d2y f v
+            grad_tem = torch.autograd.grad(
+                grads_phi_params,
+                list(auxiliary_model.parameters()),
+                grad_outputs=tem,
+                retain_graph=True,
+                allow_unused=True,
+            )  # dy (dy f) v=d2y f v
 
             ita_l = list_tensor_matmul(tem, grad_tem)
             # print(ita_u,ita_l)
             ita = ita_u / (ita_l + 1e-12)
-            self.auxiliary_v = [v0 - ita * v + ita * gow for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)]  # (I-ita*d2yf)v+ita*dy F)
+            self.auxiliary_v = [
+                v0 - ita * v + ita * gow
+                for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params)
+            ]  # (I-ita*d2yf)v+ita*dy F)
 
-            vsp = torch.autograd.grad(grads_phi_params, list(auxiliary_model.parameters()), grad_outputs=self.auxiliary_v,
-                             allow_unused=True)  # dy (dy f) v=d2y f v
+            vsp = torch.autograd.grad(
+                grads_phi_params,
+                list(auxiliary_model.parameters()),
+                grad_outputs=self.auxiliary_v,
+                allow_unused=True,
+            )  # dy (dy f) v=d2y f v
 
             for v0, v, gow in zip(self.auxiliary_v, vsp, grad_outer_params):
                 v0.grad = v - gow
             update_tensor_grads(list(self.ll_model.parameters()), grad_y_temp)
             self.ll_opt.step()
 
-            grads = [-g + v if g is not None else v for g, v in zip(grads, grad_outer_hparams)]
+            grads = [
+                -g + v if g is not None else v
+                for g, v in zip(grads, grad_outer_hparams)
+            ]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
 
         return -1
-

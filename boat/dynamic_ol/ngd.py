@@ -9,6 +9,8 @@ from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 from ..utils.op_utils import stop_grads
+
+
 class NGD(DynamicalSystem):
     """
     Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) _`[1]`.
@@ -35,21 +37,21 @@ class NGD(DynamicalSystem):
     """
 
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            lower_loop: int,
-            solver_config: Dict[str, Any]
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        lower_loop: int,
+        solver_config: Dict[str, Any],
     ):
 
         super(NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
-        self.truncate_iters = solver_config['RGT']["truncate_iter"]
-        self.ul_objective=ul_objective
-        self.ll_opt = solver_config['ll_opt']
-        self.foa = 'FOA' in solver_config['hyper_op']
+        self.truncate_iters = solver_config["RGT"]["truncate_iter"]
+        self.ul_objective = ul_objective
+        self.ll_opt = solver_config["ll_opt"]
+        self.foa = "FOA" in solver_config["hyper_op"]
 
     def optimize(
         self,
@@ -57,7 +59,7 @@ class NGD(DynamicalSystem):
         ul_feed_dict: Dict,
         auxiliary_model: _MonkeyPatchBase,
         auxiliary_opt: DifferentiableOptimizer,
-        current_iter: int
+        current_iter: int,
     ):
         """
         Execute the lower-level optimization procedure with the data from feed_dict and patched models.
@@ -85,9 +87,14 @@ class NGD(DynamicalSystem):
         """
 
         if self.truncate_iters > 0:
-            ll_backup = [x.data.clone().detach().requires_grad_() for x in self.ll_model.parameters()]
+            ll_backup = [
+                x.data.clone().detach().requires_grad_()
+                for x in self.ll_model.parameters()
+            ]
             for lower_iter in range(self.truncate_iters):
-                lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
+                lower_loss = self.ll_objective(
+                    ll_feed_dict, self.ul_model, self.ll_model
+                )
                 lower_loss.backward()
                 self.ll_opt.step()
                 self.ll_opt.zero_grad()
@@ -100,14 +107,20 @@ class NGD(DynamicalSystem):
         if self.truncate_max_loss_iter:
             ul_loss_list = []
             for lower_iter in range(self.lower_loop):
-                lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+                lower_loss = self.ll_objective(
+                    ll_feed_dict, self.ul_model, auxiliary_model
+                )
                 auxiliary_opt.step(lower_loss)
-                upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+                upper_loss = self.ul_objective(
+                    ul_feed_dict, self.ul_model, auxiliary_model
+                )
                 # print(torch.autograd.grad(upper_loss,list(self.ul_model.parameters()),allow_unused=False))
                 ul_loss_list.append(upper_loss.item())
             ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
-            return ll_step_with_max_ul_loss+1
+            return ll_step_with_max_ul_loss + 1
         for lower_iter in range(self.lower_loop - self.truncate_iters):
             lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-            auxiliary_opt.step(lower_loss,grad_callback= stop_grads if self.foa else None)
+            auxiliary_opt.step(
+                lower_loss, grad_callback=stop_grads if self.foa else None
+            )
         return self.lower_loop - self.truncate_iters
