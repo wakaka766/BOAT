@@ -52,7 +52,7 @@ BOAT enables efficient implementation and adaptation of advanced BLO techniques 
 ##  🔨 **Installation**
 To install BOAT, use the following command:
 ```bash
-pip install boat
+pip install boat-ms
 ```
 
 ##  ⚡ **How to Use BOAT**
@@ -146,7 +146,7 @@ for x_itr in range(iterations):
 
 - [BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach (VFM)](https://proceedings.neurips.cc/paper_files/paper/2022/file/6dddcff5b115b40c998a08fbd1cea4d7-Paper-Conference.pdf)
 - [A Value-Function-based Interior-point Method for Non-convex Bi-level Optimization (VSM)](http://proceedings.mlr.press/v139/liu21o/liu21o.pdf)
-- [On Penalty-based Bilevel Gradient Descent Method (VPBGD)](https://proceedings.mlr.press/v202/shen23c/shen23c.pdf)
+- [On Penalty-based Bilevel Gradient Descent Method (PGDM)](https://proceedings.mlr.press/v202/shen23c/shen23c.pdf)
 - [Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy (MESM)](https://arxiv.org/pdf/2405.09927)
 
 
