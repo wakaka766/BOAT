@@ -59,7 +59,6 @@ import os
 import json
 
 # base_folder = os.path.dirname(os.path.abspath(__file__))
-# 获取上一级路径
 
 
 def evaluate(x, w, testset):
@@ -167,7 +166,7 @@ def main():
     print(f"[info] successfully generated data to {args.data_path}/l2reg.pt")
     device = torch.device(
         "cpu"
-    )  ## torch.device("cuda") if torch.cuda.is_available() else
+    ) 
     n_feats = trainset[0].shape[-1]
     num_classes = trainset[1].unique().shape[-1]
 
@@ -192,7 +191,6 @@ def main():
                 torch.zeros((n_feats, num_classes), requires_grad=True, device=device)
             )
             self.y.data = nn.init.kaiming_normal_(self.y.data.t(), mode="fan_out").t()
-            # self.y.data.copy_(torch.load("./save_l2reg/pretrained.pt").to(args.device))
 
         def forward(self):
             return self.y

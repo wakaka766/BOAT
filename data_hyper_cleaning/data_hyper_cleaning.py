@@ -64,7 +64,6 @@ import os
 import json
 
 # base_folder = os.path.dirname(os.path.abspath(__file__))
-# 获取上一级路径
 
 with open(os.path.join(parent_folder, "configs/boat_config_dhl.json"), "r") as f:
     boat_config = json.load(f)
@@ -111,12 +110,6 @@ def main():
     boat_config["lower_level_var"] = y.parameters()
     boat_config["upper_level_var"] = x.parameters()
     b_optimizer = boat.Problem(boat_config, loss_config)
-    # b_optimizer = boat.Problem(
-    #             'Feature', 'Dynamic', 'RAD',
-    #             ll_objective=train_loss, ul_objective=val_loss,
-    #             ll_model=y, ul_model=x, total_iters=3000)
-    # b_optimizer.build_ll_solver(100, y_opt)
-    # b_optimizer.build_ul_solver(x_opt)
 
     b_optimizer.build_ll_solver(y_opt)
     b_optimizer.build_ul_solver(x_opt)

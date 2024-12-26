@@ -105,10 +105,6 @@ boat_config["lower_level_model"] = lower_model
 boat_config["upper_level_model"] = upper_model
 boat_config["lower_level_var"] = lower_model.parameters()
 boat_config["upper_level_var"] = upper_model.parameters()
-
-# Customize additional settings (optional)
-if "RGT" in hyper_method:
-    boat_config["RGT"]["truncate_iter"] = 1
 ```
 
 ### **4. Initialize the BOAT Problem**
