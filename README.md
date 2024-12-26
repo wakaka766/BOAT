@@ -144,7 +144,6 @@ for x_itr in range(iterations):
 
 
 ## Related Methods
-
 - [Hyperparameter optimization with approximate gradient (CG)](https://arxiv.org/abs/1602.02355)
 - [Optimizing millions of hyperparameters by implicit differentiation (NS)](http://proceedings.mlr.press/v108/lorraine20a/lorraine20a.pdf)
 - [Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks (IAD)](https://arxiv.org/abs/1703.03400)
