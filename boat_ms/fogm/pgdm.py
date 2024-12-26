@@ -2,7 +2,7 @@ from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat_ms.utils.op_utils import require_model_grad
 
 import mindspore as ms
-from mindspore import nn, ops, Tensor
+from mindspore import nn, ops
 import copy
 from typing import Dict, Any, Callable, List
 

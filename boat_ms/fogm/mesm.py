@@ -1,7 +1,6 @@
 from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat_ms.utils.op_utils import copy_parameter_from_list
 import numpy as np
-import mindspore as ms
 from mindspore import nn, Tensor, ops
 from typing import Dict, Any, Callable, List
 import copy

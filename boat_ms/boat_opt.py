@@ -1,8 +1,6 @@
 import time
 from typing import Dict, Any, Callable
 import mindspore as ms
-import mindspore.nn as nn
-import mindspore.ops as ops
 from mindspore import Tensor
 from mindspore.nn.optim import Optimizer
 
@@ -45,8 +43,6 @@ class Problem:
 
         :param config: Configuration dictionary for the optimization setup.
             - "fo_gm": First Order Gradient based Method (optional), e.g., ["VSM"], ["VFM"], ["MESM"].
-            - "dynamic_op": List of dynamic operations (optional), e.g., ["NGD"], ["NGD", "GDA"], ["NGD", "GDA", "DI"].
-            - "hyper_op": Hyper-optimization method (optional), e.g., ["RAD"], ["RAD", "PTT"], ["IAD", "NS", "PTT"].
             - "lower_level_loss": Configuration for the lower-level loss function based on the json file configuration.
             - "upper_level_loss": Configuration for the upper-level loss function based on the json file configuration.
             - "lower_level_model": The lower-level model to be optimized.
@@ -65,8 +61,6 @@ class Problem:
         :returns: None
         """
         self._fo_gm = config["fo_gm"]
-        self._dynamic_op = config["dynamic_op"]
-        self._hyper_op = config["hyper_op"]
         self._ll_model = config["lower_level_model"]
         self._ul_model = config["upper_level_model"]
         self._ll_var = list(config["lower_level_var"])
@@ -174,55 +168,3 @@ class Problem:
         run_time = time.perf_counter() - start_time
 
         return self._log_results_dict["upper_loss"], run_time
-
-    def check_status(self):
-        """
-        Check the validity of the optimization setup and configuration.
-
-        :raises AssertionError: If any configuration constraints are violated.
-        """
-        if "DM" in self.boat_configs["dynamic_op"]:
-            assert (self.boat_configs["hyper_op"] == ["RAD"]) or (
-                self.boat_configs["hyper_op"] == ["CG"]
-            ), "When 'DM' is chosen, set the 'truncate_iter' properly."
-        if "RGT" in self.boat_configs["hyper_op"]:
-            assert (
-                self.boat_configs["RGT"]["truncate_iter"] > 0
-            ), "When 'RGT' is chosen, set the 'truncate_iter' properly."
-        if self.boat_configs["accumulate_grad"]:
-            assert (
-                "IAD" in self.boat_configs["hyper_op"]
-            ), "When using 'accumulate_grad', only 'IAD' based methods are supported."
-        if self.boat_configs["GDA"]["alpha_init"] > 0.0:
-            assert (
-                0.0 < self.boat_configs["GDA"]["alpha_decay"] <= 1.0
-            ), "Parameter 'alpha_decay' used in method BDA should be in the interval (0,1)."
-        if "FD" in self._hyper_op:
-            assert (
-                self.boat_configs["RGT"]["truncate_iter"] == 0
-            ), "One-stage method doesn't need trajectory truncation."
-
-        def check_model_structure(base_model, meta_model):
-            for param1, param2 in zip(base_model.parameters(), meta_model.parameters()):
-                if (
-                    (param1.shape != param2.shape)
-                    or (param1.dtype != param2.dtype)
-                    or (param1.device != param2.device)
-                ):
-                    return False
-            return True
-
-        if "IAD" in self._hyper_op:
-            assert check_model_structure(self._ll_model, self._ul_model), (
-                "With IAD or FOA operation, 'upper_level_model' and 'lower_level_model' have the same structure, "
-                "and 'lower_level_var' and 'upper_level_var' are the same group of variables."
-            )
-        assert (("DI" in self._dynamic_op) ^ ("IAD" in self._hyper_op)) or (
-            ("DI" not in self._dynamic_op) and ("IAD" not in self._hyper_op)
-        ), "Only one of the 'PTT' and 'RGT' methods could be chosen."
-        assert (
-            0.0 <= self.boat_configs["GDA"]["alpha_init"] <= 1.0
-        ), "Parameter 'alpha' used in method BDA should be in the interval (0,1)."
-        assert (
-            self.boat_configs["RGT"]["truncate_iter"] < self.boat_configs["lower_iters"]
-        ), "The value of 'truncate_iter' shouldn't be greater than 'lower_loop'."

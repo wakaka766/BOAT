@@ -42,15 +42,12 @@ class VSM(DynamicalSystem):
         """
         reg_decay = self.reg_decay * current_iter + 1
 
-        # Lower-level optimization loop
         for z_idx in range(self.z_loop):
-            # 清零梯度
             for param in self.ll_model.trainable_params():
                 if param.grad is not None:
                     param.grad.set_data(mnp.zeros_like(param.grad))
 
-            # 计算下层目标及其梯度
-            # 确保 reg_decay 和 self.ll_l2_reg 是 Tensor
+
             reg_decay = Tensor(reg_decay, ms.float32)
             self.ll_l2_reg = Tensor(self.ll_l2_reg, ms.float32)
 

@@ -1,7 +1,7 @@
 from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 
 import mindspore as ms
-from mindspore import nn, ops, Tensor, numpy as mnp
+from mindspore import nn, ops, numpy as mnp
 from typing import Dict, Any, Callable, List
 import copy
 
@@ -100,7 +100,6 @@ class VFM(DynamicalSystem):
             for param in y_hat.trainable_params():
                 param.set_data(mnp.zeros_like(param.data))
 
-            # tr_loss = self.ll_objective(ll_feed_dict, self.ul_model, y_hat)
             grad_fn = ops.GradOperation(get_by_list=True)(
                 self.ll_objective, y_hat.trainable_params()
             )
@@ -122,7 +121,6 @@ class VFM(DynamicalSystem):
 
         loss, gy, gx_minus_gx_k = g_x_xhat_w(self.ll_model, y_hat, self.ul_model)
 
-        # 更新 delta_F 和 delta_f
         delta_F[:n_params_y] = mnp.concatenate([p.view(-1) for p in grad_F_y]).astype(
             ms.float32
         )
@@ -138,8 +136,8 @@ class VFM(DynamicalSystem):
 
         norm_dq = (ops.norm(delta_f) ** 2).astype(
             ms.float32
-        )  # 使用 ops.norm 替代 mnp.linalg.norm
-        dot = ops.ReduceSum()(delta_F * delta_f)  # 用 ReduceSum 替代 NumPy 的 dot
+        )  
+        dot = ops.ReduceSum()(delta_F * delta_f)  
         correction = ops.ReLU()((self.u1 * loss - dot) / (norm_dq + 1e-8))
         d = delta_F + correction * delta_f
         y_grad = []
