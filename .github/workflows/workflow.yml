@@ -33,7 +33,7 @@ on:
       - main
 
 jobs:
-  test:
+  run:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
