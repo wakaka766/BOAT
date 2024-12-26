@@ -22,8 +22,15 @@
 #    - name: List files in BOAT/meta_learning
 #      run: ls -al /home/runner/work/BOAT/BOAT/meta_learning
 
-name: Tests
-on: [push, pull_request]
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -31,21 +38,20 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: [3.8, 3.9, 3.10]
+        python-version: [3.8, 3.9, 3.10]  # 确保是支持的 Python 版本
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Print environment info
-      run: |
-        echo "Python Version: ${{ matrix.python-version }}"
-        echo "OS: ${{ matrix.os }}"
-        python --version
+      - name: Verify Python Version
+        run: |
+          python --version
+          pip --version
 
     - name: Install requirements
       run: |
