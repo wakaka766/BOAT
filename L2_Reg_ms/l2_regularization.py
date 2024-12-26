@@ -18,11 +18,10 @@ from sklearn.datasets import fetch_20newsgroups_vectorized
 
 def get_data(args):
     def from_sparse(x):
-        # 将稀疏矩阵转换为 MindSpore 的 COOTensor
-        x = x.tocoo()  # 转为 COO 格式
-        indices = np.vstack((x.row, x.col)).astype(np.int32).T  # 非零元素的坐标
-        values = x.data.astype(np.float32)  # 非零元素的值
-        shape = x.shape  # 稀疏矩阵的形状
+        x = x.tocoo()  
+        indices = np.vstack((x.row, x.col)).astype(np.int32).T  
+        values = x.data.astype(np.float32)  
+        shape = x.shape  
         return COOTensor(
             indices=Tensor(indices, ms.int32),
             values=Tensor(values, ms.float32),
@@ -30,7 +29,6 @@ def get_data(args):
         )
 
     val_size = 0.5
-    # 加载训练集和测试集数据
     train_x, train_y = fetch_20newsgroups_vectorized(
         subset="train",
         return_X_y=True,
@@ -44,8 +42,7 @@ def get_data(args):
         data_home=args.data_path,
         download_if_missing=True,
     )
-
-    # 分割训练集为训练集和验证集，测试集为测试集和评估集
+    
     train_x, val_x, train_y, val_y = train_test_split(
         train_x, train_y, stratify=train_y, test_size=val_size
     )
@@ -53,7 +50,6 @@ def get_data(args):
         test_x, test_y, stratify=test_y, test_size=0.5
     )
 
-    # 将数据转换为稀疏张量格式
     train_x, val_x, test_x, teval_x = map(
         from_sparse, [train_x, val_x, test_x, teval_x]
     )
@@ -61,7 +57,6 @@ def get_data(args):
         lambda y: Tensor(y, ms.int32), [train_y, val_y, test_y, teval_y]
     )
 
-    # 输出数据形状
     print(train_y.shape[0], val_y.shape[0], test_y.shape[0], teval_y.shape[0])
 
     return (train_x, train_y), (val_x, val_y), (test_x, test_y), (teval_x, teval_y)
@@ -81,7 +76,6 @@ def evaluate(x, w, testset):
     """
     test_x, test_y = testset
 
-    # Check if test_x is a COOTensor (sparse tensor)
     if isinstance(test_x, ms.COOTensor):
         y = ops.SparseTensorDenseMatmul()(
             test_x.indices, test_x.values, test_x.shape, x
@@ -89,14 +83,11 @@ def evaluate(x, w, testset):
     else:
         y = ops.MatMul()(test_x, x)
 
-    # Compute softmax cross-entropy loss
     loss_fn = nn.SoftmaxCrossEntropyWithLogits(sparse=True)
-    loss = loss_fn(y, test_y).mean()  # Ensure loss is a scalar
+    loss = loss_fn(y, test_y).mean()  
 
-    # Convert to Python float
     loss = loss.asnumpy().item()
 
-    # Compute accuracy
     predictions = y.argmax(axis=-1)
     acc = (predictions == test_y).sum().asnumpy() / test_y.shape[0]
 
@@ -281,7 +272,6 @@ def main():
     class LowerModel(nn.Cell):
         def __init__(self, n_feats, num_classes):
             super(LowerModel, self).__init__()
-            # 使用 HeNormal 初始化
             he_normal = HeNormal()
             self.y = ms.Parameter(
                 ms.Tensor(
