@@ -11,7 +11,7 @@ dynamic_methodlist = (
     ["GDA", "NGD", "DI"],
     ["DI", "NGD", "GDA"],
 )
-dynamic_method_dm = (["NGD", "DM"], ["NGD", "DM", "GDA"])
+dynamic_method_dm = (["DM"], [ "DM", "GDA"])
 hyper_methodlist = (
     ["CG"],
     ["CG", "PTT"],
@@ -31,8 +31,7 @@ fogm_method = (["VSM"], ["VFM"], ["MESM"], ["PGDM"])
 # m='Darts_W_RHG'
 folder = "C:/Users/ASUS/Documents/GitHub/BOAT/data_hyper_cleaning"
 folder = os.path.join(folder, args, t0)
-# folder = 'data_hyper_cleaning'
-# folder = os.path.join(args, t0)
+
 print(folder)
 if not os.path.exists(folder):
     os.makedirs(folder)

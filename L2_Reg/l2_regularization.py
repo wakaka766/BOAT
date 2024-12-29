@@ -212,9 +212,9 @@ def main():
     boat_config["upper_level_model"] = upper_model
     boat_config["lower_level_var"] = lower_model.parameters()
     boat_config["upper_level_var"] = upper_model.parameters()
-    b_optimizer = boat.Problem(boat_config, loss_config)
-    b_optimizer.build_ll_solver(lower_opt)
-    b_optimizer.build_ul_solver(upper_opt)
+    b_optimizer = boat.Problem(boat_config, loss_config, lower_opt, upper_opt)
+    b_optimizer.build_ll_solver()
+    b_optimizer.build_ul_solver()
 
     ul_feed_dict = {"data": trainset[0].to(device), "target": trainset[1].to(device)}
     ll_feed_dict = {"data": valset[0].to(device), "target": valset[1].to(device)}

@@ -42,7 +42,7 @@ class Problem:
     Enhanced bi-level optimization problem class supporting flexible loss functions and operation configurations.
     """
 
-    def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any]):
+    def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any], lower_opt: Optimizer, upper_opt: Optimizer):
         """
         Initialize the Problem instance.
 
@@ -80,19 +80,19 @@ class Problem:
             if "GDA" in config["dynamic_op"]
             else None
         )
+        self._lower_opt = lower_opt
+        self._upper_opt = upper_opt
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
         self._ll_solver = None
         self._ul_solver = None
-        self._lower_opt = None
-        self._upper_opt = None
         self._lower_init_opt = None
         self._fo_gm_solver = None
         self._lower_loop = None
         self._log_results_dict = {}
         self._device = torch.device(config["device"])
 
-    def build_ll_solver(self, lower_opt: Optimizer):
+    def build_ll_solver(self):
         """
         Configure the lower-level solver.
 
@@ -105,9 +105,6 @@ class Problem:
             assert (self.boat_configs["dynamic_op"] is not None) and (
                 self.boat_configs["hyper_op"] is not None
             ), "Set 'dynamic_op' and 'hyper_op' properly."
-            sorted_ops = sorted([op.upper() for op in self._dynamic_op])
-            dynamic_ol = "_".join(sorted_ops)
-            self._lower_opt = lower_opt
             self.boat_configs["ll_opt"] = self._lower_opt
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
@@ -120,16 +117,27 @@ class Problem:
                     self.boat_configs["DM"]["auxiliary_v"],
                     lr=self.boat_configs["DM"]["auxiliary_v_lr"],
                 )
-            self._ll_solver = getattr(ll_grads, "%s" % dynamic_ol)(
+            sorted_ops = sorted([op.upper() for op in self._dynamic_op])
+            self._ll_solver = ll_grads.makes_functional_dynamical_system(
+                custom_order=sorted_ops,
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
                 ll_model=self._ll_model,
                 ul_model=self._ul_model,
                 lower_loop=self._lower_loop,
-                solver_config=self.boat_configs,
-            )
+                solver_config=self.boat_configs)
+            # if "DM" in self._dynamic_op:
+            #     setattr(self._ll_solver, "ul_opt", upper_opt)
+            #     setattr(self._ll_solver, "ul_lr", upper_opt.defaults["lr"])
+            if "DI" in self.boat_configs["dynamic_op"]:
+                self._lower_init_opt = copy.deepcopy(self._lower_opt)
+                for _ in range(len(self._lower_init_opt.param_groups)):
+                    self._lower_init_opt.param_groups[_]["params"] = (
+                        self._lower_opt.param_groups[_]["params"]
+                    )
+                    self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs["DI"]["lr"]
+
         else:
-            self._lower_opt = lower_opt
             self.boat_configs["ll_opt"] = self._lower_opt
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
@@ -145,7 +153,7 @@ class Problem:
             )
         return self
 
-    def build_ul_solver(self, upper_opt: Optimizer):
+    def build_ul_solver(self):
         """
         Configure the lower-level solver.
 
@@ -154,23 +162,11 @@ class Problem:
 
         :returns: None
         """
-        self._upper_opt = upper_opt
         if self.boat_configs["fo_gm"] is None:
-            if "DM" in self._dynamic_op:
-                setattr(self._ll_solver, "ul_opt", upper_opt)  # 设置 new_attribute 属性
-                setattr(self._ll_solver, "ul_lr", upper_opt.defaults["lr"])
-            if "DI" in self.boat_configs["dynamic_op"]:
-                self._lower_init_opt = copy.deepcopy(self._lower_opt)
-                for _ in range(len(self._lower_init_opt.param_groups)):
-                    self._lower_init_opt.param_groups[_]["params"] = (
-                        self._lower_opt.param_groups[_]["params"]
-                    )
-                    self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs[
-                        "DI"
-                    ]["lr"]
             assert (
                 self.boat_configs["hyper_op"] is not None
-            ), "Choose FOGM based methods from ['VSM'],['VFM'],['MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
+            ), ("Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or "
+                "set 'dynamic_ol' and 'hyper_ol' properly.")
             sorted_ops = sorted([op.upper() for op in self._hyper_op])
             self._ul_solver = ul_grads.makes_functional_hyper_operation(
                 custom_order=sorted_ops,
@@ -184,7 +180,8 @@ class Problem:
         else:
             assert (
                 self.boat_configs["fo_gm"] is not None
-            ), "Choose FOGM based methods from ['VSM','VFM','MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
+            ), ("Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or "
+                "set 'dynamic_ol' and 'hyper_ol' properly.")
 
         return self
 
@@ -244,13 +241,14 @@ class Problem:
                         self._ll_model, self._lower_opt, copy_initial_weights=False
                     ) as (auxiliary_model, auxiliary_opt):
                         forward_time = time.perf_counter()
-                        max_loss_iter = self._ll_solver.optimize(
-                            batch_ll_feed_dict,
-                            batch_ul_feed_dict,
-                            auxiliary_model,
-                            auxiliary_opt,
-                            current_iter,
-                        )
+                        dynamic_results = self._ll_solver.optimize(
+                            ll_feed_dict=batch_ll_feed_dict,
+                            ul_feed_dict=batch_ul_feed_dict,
+                            auxiliary_model=auxiliary_model,
+                            auxiliary_opt=auxiliary_opt,
+                            current_iter=current_iter,
+                        )0 
+                        max_loss_iter = list(dynamic_results[-1].values())[-1]
                         forward_time = time.perf_counter() - forward_time
                         backward_time = time.perf_counter()
                         self._log_results_dict["upper_loss"].append(
@@ -269,13 +267,14 @@ class Problem:
                     self._ll_model, self._lower_opt, copy_initial_weights=True
                 ) as (auxiliary_model, auxiliary_opt):
                     forward_time = time.perf_counter()
-                    max_loss_iter = self._ll_solver.optimize(
-                        ll_feed_dict,
-                        ul_feed_dict,
-                        auxiliary_model,
-                        auxiliary_opt,
-                        current_iter,
+                    dynamic_results = self._ll_solver.optimize(
+                        ll_feed_dict=ll_feed_dict,
+                        ul_feed_dict=ul_feed_dict,
+                        auxiliary_model=auxiliary_model,
+                        auxiliary_opt=auxiliary_opt,
+                        current_iter=current_iter
                     )
+                    max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
                     backward_time = time.time()
                     if "DM" not in self._dynamic_op:

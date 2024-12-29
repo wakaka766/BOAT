@@ -1,7 +1,77 @@
 import torch
 from torch import Tensor
-from typing import List, Callable
+from typing import List, Callable, Dict
 from torch.autograd import grad as torch_grad
+
+
+class ResultStore:
+    """
+    A simple class to store and manage intermediate results of hyper-gradient computation.
+    """
+    def __init__(self):
+        self.results = []
+
+    def add(self, name: str, result: Dict):
+        """
+        Add a result to the store.
+
+        :param name: The name of the result (e.g., 'gradient_operator_results_0').
+        :type name: str
+        :param result: The result dictionary to store.
+        :type result: Dict
+        """
+        self.results.append({name: result})
+
+    def clear(self):
+        """Clear all stored results."""
+        self.results = []
+
+    def get_results(self) -> List[Dict]:
+        """Retrieve all stored results."""
+        return self.results
+
+
+
+class DynamicalSystemRules:
+    """
+    A class to store and manage gradient operator rules.
+    """
+    # Default static gradient operator order
+    _gradient_order = [
+        ["GDA", "DI"],
+        ["DM", "NGD"],
+    ]
+
+    @staticmethod
+    def get_gradient_order() -> List[List[str]]:
+        """
+        Get the current gradient operator order.
+
+        Returns
+        -------
+        List[List[str]]
+            The current gradient operator order.
+        """
+        return DynamicalSystemRules._gradient_order
+
+    @staticmethod
+    def set_gradient_order(new_order: List[List[str]]):
+        """
+        Set a new gradient operator order.
+
+        Parameters
+        ----------
+        new_order : List[List[str]]
+            The new gradient operator order to set.
+
+        Raises
+        ------
+        ValueError
+            If the new order is invalid.
+        """
+        if not isinstance(new_order, list) or not all(isinstance(group, list) for group in new_order):
+            raise ValueError("Gradient order must be a list of lists.")
+        DynamicalSystemRules._gradient_order = new_order
 
 
 class HyperGradientRules:

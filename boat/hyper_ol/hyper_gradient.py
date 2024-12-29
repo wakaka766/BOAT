@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from typing import Type, List, Dict
-from boat.utils import HyperGradientRules
+from boat.utils import HyperGradientRules, ResultStore
 
 importlib = __import__("importlib")
 
@@ -23,34 +23,7 @@ class HyperGradient(object):
         raise NotImplementedError("You should implement this!")
 
 
-class ResultStore:
-    """
-    A simple class to store and manage intermediate results of hyper-gradient computation.
-    """
-    def __init__(self):
-        self.results = []
-
-    def add(self, name: str, result: Dict):
-        """
-        Add a result to the store.
-
-        :param name: The name of the result (e.g., 'gradient_operator_results_0').
-        :type name: str
-        :param result: The result dictionary to store.
-        :type result: Dict
-        """
-        self.results.append({name: result})
-
-    def clear(self):
-        """Clear all stored results."""
-        self.results = []
-
-    def get_results(self) -> List[Dict]:
-        """Retrieve all stored results."""
-        return self.results
-
-
-class SequentialHyperGradient:
+class SequentialHG:
     """
     A dynamically created class for sequential hyper-gradient operations.
     """
@@ -85,7 +58,7 @@ class SequentialHyperGradient:
 def makes_functional_hyper_operation(
         custom_order: List[str],
         **kwargs
-) -> SequentialHyperGradient:
+) -> SequentialHG:
     """
     Dynamically create a SequentialHyperGradient object with ordered gradient operators.
 
@@ -96,7 +69,7 @@ def makes_functional_hyper_operation(
 
     Returns
     -------
-    SequentialHyperGradient
+    SequentialHG
         An instance with ordered gradient operators and result management.
     """
     # Load the predefined gradient order
@@ -115,7 +88,7 @@ def makes_functional_hyper_operation(
     ordered_instances = [gradient_classes[op](**kwargs) for op in adjusted_order]
 
     # Return the enhanced sequential hyper-gradient class
-    return SequentialHyperGradient(ordered_instances, custom_order)
+    return SequentialHG(ordered_instances, custom_order)
 
 
 def validate_and_adjust_order(custom_order: List[str], gradient_order: List[List[str]]) -> List[str]:
