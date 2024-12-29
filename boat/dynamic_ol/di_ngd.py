@@ -119,4 +119,4 @@ class DI_NGD(DynamicalSystem):
         for lower_iter in range(self.lower_loop - self.truncate_iters):
             lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
             auxiliary_opt.step(lower_loss)
-        return self.lower_loop
+        return self.lower_loop - self.truncate_iters

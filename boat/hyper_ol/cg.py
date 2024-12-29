@@ -33,20 +33,19 @@ class CG(HyperGradient):
     """
 
     def __init__(
-        self,
-        ll_objective: Callable,
-        ul_objective: Callable,
-        ll_model: Module,
-        ul_model: Module,
-        ll_var: List,
-        ul_var: List,
-        solver_config: Dict,
+            self,
+            ll_objective: Callable,
+            ul_objective: Callable,
+            ll_model: Module,
+            ul_model: Module,
+            ll_var: List,
+            ul_var: List,
+            solver_config: Dict,
     ):
-        super(CG, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
+        super(CG, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
 
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
         self.ll_lr = solver_config["ll_opt"].defaults["lr"]
-        self.ll_objective = ll_objective
         self.tolerance = solver_config["CG"]["tolerance"]
         self.K = solver_config["CG"]["k"]
         self.alpha = solver_config["GDA"]["alpha_init"]
@@ -54,11 +53,14 @@ class CG(HyperGradient):
         self.gda_loss = solver_config["gda_loss"]
 
     def compute_gradients(
-        self,
-        ll_feed_dict: Dict,
-        ul_feed_dict: Dict,
-        auxiliary_model: _MonkeyPatchBase,
-        max_loss_iter: int = 0,
+            self,
+            ll_feed_dict: Dict,
+            ul_feed_dict: Dict,
+            auxiliary_model: _MonkeyPatchBase,
+            max_loss_iter: int = 0,
+            hyper_gradient_finished: bool = False,
+            next_operation: str = None,
+            **kwargs
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -78,10 +80,17 @@ class CG(HyperGradient):
         :param max_loss_iter: The number of iteration used for backpropagation.
         :type max_loss_iter: int
 
+        :param next_operation: The next operator for the calculation of the hypergradient.
+        :type next_operation: str
+
+        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
+        :type  hyper_gradient_finished: bool
+
         :returns: the current upper-level objective
         """
-
-        hparams = list(self.ul_var)
+        assert not hyper_gradient_finished, "CG does not support multiple hypergradient computation"
+        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+        hparams = kwargs.get("hparams", list(self.ul_var))
 
         def fp_map(params, loss_f):
             lower_grads = list(torch.autograd.grad(loss_f, params, create_graph=True))
@@ -90,16 +99,13 @@ class CG(HyperGradient):
                 updated_params.append(params[i] - self.ll_lr * lower_grads[i])
             return updated_params
 
-        lower_model_params = list(auxiliary_model.parameters())
-
         if self.gda_loss is not None:
-            ll_feed_dict["alpha"] = self.alpha * self.alpha_decay**max_loss_iter
+            ll_feed_dict["alpha"] = self.alpha * self.alpha_decay ** max_loss_iter
             lower_loss = self.gda_loss(
-                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
-            )
+                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model,params=lower_model_params)
         else:
-            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
         if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(
                 upper_loss, list(auxiliary_model.parameters(time=0)), retain_graph=True
@@ -117,4 +123,4 @@ class CG(HyperGradient):
 
         update_tensor_grads(self.ul_var, upper_grads)
 
-        return upper_loss
+        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}

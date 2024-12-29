@@ -4,6 +4,49 @@ from typing import List, Callable
 from torch.autograd import grad as torch_grad
 
 
+class HyperGradientRules:
+    """
+    A class to store and manage gradient operator rules.
+    """
+    # Default static gradient operator order
+    _gradient_order = [
+        ["PTT", "FOA", "RGT"],
+        ["IAD", "RAD", "FD", "IGA"],
+        ["CG", "NS"],
+    ]
+
+    @staticmethod
+    def get_gradient_order() -> List[List[str]]:
+        """
+        Get the current gradient operator order.
+
+        Returns
+        -------
+        List[List[str]]
+            The current gradient operator order.
+        """
+        return HyperGradientRules._gradient_order
+
+    @staticmethod
+    def set_gradient_order(new_order: List[List[str]]):
+        """
+        Set a new gradient operator order.
+
+        Parameters
+        ----------
+        new_order : List[List[str]]
+            The new gradient operator order to set.
+
+        Raises
+        ------
+        ValueError
+            If the new order is invalid.
+        """
+        if not isinstance(new_order, list) or not all(isinstance(group, list) for group in new_order):
+            raise ValueError("Gradient order must be a list of lists.")
+        HyperGradientRules._gradient_order = new_order
+
+
 def l2_reg(parameters):
     loss = 0
     for w in parameters:

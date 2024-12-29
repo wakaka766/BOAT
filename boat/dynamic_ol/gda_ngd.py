@@ -7,7 +7,7 @@ from typing import Callable
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import stop_grads
+from boat.utils.op_utils import stop_grads
 
 
 class GDA_NGD(DynamicalSystem):
@@ -155,7 +155,6 @@ class GDA_NGD(DynamicalSystem):
             loss_f = self.gda_loss(
                 ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
             )
-            auxiliary_opt.step(loss_f)
             alpha = alpha * self.alpha_decay
             auxiliary_opt.step(loss_f, grad_callback=stop_grads if self.foa else None)
         return self.lower_loop - self.truncate_iters

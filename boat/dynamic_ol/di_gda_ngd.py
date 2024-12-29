@@ -3,6 +3,7 @@ from torch.nn import Module
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
+from boat.utils.op_utils import stop_grads
 
 
 class DI_GDA_NGD(DynamicalSystem):
@@ -56,6 +57,7 @@ class DI_GDA_NGD(DynamicalSystem):
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
         self.ll_opt = solver_config["ll_opt"]
         self.gda_loss = solver_config["gda_loss"]
+        self.foa = "FOA" in solver_config["hyper_op"]
 
     def optimize(
         self,
@@ -153,7 +155,7 @@ class DI_GDA_NGD(DynamicalSystem):
             loss_f = self.gda_loss(
                 ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
             )
-            auxiliary_opt.step(loss_f)
+            auxiliary_opt.step(loss_f, grad_callback=stop_grads if self.foa else None)
             alpha = alpha * self.alpha_decay
 
-        return self.lower_loop
+        return self.lower_loop - self.truncate_iters

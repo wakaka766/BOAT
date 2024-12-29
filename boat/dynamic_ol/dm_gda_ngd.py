@@ -71,6 +71,7 @@ class DM_GDA_NGD(DynamicalSystem):
         self.eta = solver_config["DM"]["eta0"]
         self.strategy = solver_config["DM"]["strategy"]
         self.hyper_op = solver_config["hyper_op"]
+        self.gda_loss = solver_config["gda_loss"]
 
     def optimize(
         self,
@@ -148,12 +149,20 @@ class DM_GDA_NGD(DynamicalSystem):
         #############
         self.ll_opt.zero_grad()
         self.auxiliary_v_opt.zero_grad()
-        loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+        # loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         assert (self.alpha > 0) and (
             self.alpha < 1
         ), "Set the coefficient alpha properly in (0,1)."
-        loss_full = (1.0 - self.alpha) * loss_f + self.alpha * upper_loss
+        # loss_full = (1.0 - self.alpha) * loss_f + self.alpha * upper_loss
+        assert (
+                self.gda_loss is not None
+        ), "Define the gda_loss properly in loss_func.py."
+        ll_feed_dict["alpha"] = self.alpha
+        loss_full = self.gda_loss(
+            ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
+        )
+
         grad_y_temp = torch.autograd.grad(
             loss_full, auxiliary_model.parameters(), retain_graph=True
         )

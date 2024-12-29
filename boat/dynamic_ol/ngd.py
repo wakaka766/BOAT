@@ -3,8 +3,6 @@ import torch.autograd
 from .dynamical_system import DynamicalSystem
 
 from torch.nn import Module
-from torch import Tensor
-from typing import Callable
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
