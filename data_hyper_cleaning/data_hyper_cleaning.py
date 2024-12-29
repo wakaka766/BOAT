@@ -7,6 +7,7 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 from util_file import data_splitting, initialize
+from boat.utils import HyperGradientRules
 from torchvision.datasets import MNIST
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
@@ -115,11 +116,15 @@ def main():
     b_optimizer.build_ul_solver(x_opt)
     ul_feed_dict = {"data": val.data.to(device), "target": val.clean_target.to(device)}
     ll_feed_dict = {"data": tr.data.to(device), "target": tr.dirty_target.to(device)}
-
+    HyperGradientRules.set_gradient_order([
+        ["PTT","RGT", "FOA"],
+        ["IAD", "RAD", "FD", "IGA"],
+        ["CG", "NS"],])
     if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
         iterations = 3
     else:
         iterations = 1
+        b_optimizer.boat_configs["return_grad"] = True
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
             b_optimizer._ll_solver.strategy = "s" + str(x_itr + 1)
