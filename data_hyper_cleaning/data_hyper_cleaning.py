@@ -125,6 +125,9 @@ def main():
     else:
         iterations = 1
         b_optimizer.boat_configs["return_grad"] = True
+    if "PGDM" in boat_config["fogm"]:
+        b_optimizer.boat_configs["PGDM"]["gamma_init"] = b_optimizer.boat_configs["PGDM"]["gamma_max"]+0.1
+
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
             b_optimizer._ll_solver.strategy = "s" + str(x_itr + 1)
