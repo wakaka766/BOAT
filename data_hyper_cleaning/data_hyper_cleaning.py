@@ -125,7 +125,7 @@ def main():
     else:
         iterations = 1
         b_optimizer.boat_configs["return_grad"] = True
-    if "PGDM" in boat_config["fogm"]:
+    if "PGDM" in boat_config["fo_gm"]:
         b_optimizer.boat_configs["PGDM"]["gamma_init"] = b_optimizer.boat_configs["PGDM"]["gamma_max"]+0.1
 
     for x_itr in range(iterations):
