@@ -101,11 +101,12 @@ class Problem:
 
         :returns: None
         """
+        self.boat_configs["ll_opt"] = self._lower_opt
+        self.boat_configs["ul_opt"] = self._upper_opt
         if self.boat_configs["fo_gm"] is None:
             assert (self.boat_configs["dynamic_op"] is not None) and (
                 self.boat_configs["hyper_op"] is not None
             ), "Set 'dynamic_op' and 'hyper_op' properly."
-            self.boat_configs["ll_opt"] = self._lower_opt
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
             if "DM" in self._dynamic_op:
@@ -138,7 +139,6 @@ class Problem:
                     self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs["DI"]["lr"]
 
         else:
-            self.boat_configs["ll_opt"] = self._lower_opt
             self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
                 ll_objective=self._ll_loss,

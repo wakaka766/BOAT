@@ -153,6 +153,7 @@ class DM(DynamicalSystem):
             for params in self.ul_opt.param_groups:
                 params["lr"] = x_lr
         else:
+            gda_loss = None
             assert (
                     self.strategy == "s1"
             ), "Only 's1' strategy is supported for DM without GDA operation."
