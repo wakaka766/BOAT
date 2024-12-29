@@ -93,9 +93,7 @@ class VSM(DynamicalSystem):
             loss_z = loss_z_ + loss_l2_z
             grads = grad_unused_zero(loss_z, list(self.ll_model.parameters()))
             update_grads(grads, self.ll_model)
-            # self.ll_opt.step()
             manual_update(self.ll_opt, list(self.ll_model.parameters()))
-        # self.ll_opt.zero_grad()
 
         auxiliary_model = copy.deepcopy(self.ll_model)
         auxiliary_opt = jit.nn.SGD(auxiliary_model.parameters(), lr=self.z_lr)
@@ -106,7 +104,6 @@ class VSM(DynamicalSystem):
             loss_z = loss_z_ + loss_l2_z
 
         for y_idx in range(self.y_loop):
-            # auxiliary_opt.zero_grad()
             loss_y_f_ = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
             loss_y_ = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
             loss_l2_y = l2_reg(auxiliary_model.parameters())
@@ -116,7 +113,6 @@ class VSM(DynamicalSystem):
             loss_y = loss_y_ - loss_ln + loss_l2_y
             grads = jit.grad(loss_y, auxiliary_model.parameters())
             update_grads(grads, auxiliary_model)
-            # auxiliary_opt.step()
             manual_update(auxiliary_opt, list(auxiliary_model.parameters()))
 
         with jit.no_grad():

@@ -4,8 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a984744-f2d8-4a38-9331-41b2fc344059" name="Changes" comment="">
+    <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/BOAT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/BOAT.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/boat_opt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg_iad.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg_iad_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa_iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa_iad_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad_ns.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad_ns_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ns_ptt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt_rad.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt_rad_rgt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/rgt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/rad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/rad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/rad_rgt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +49,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
+  "associatedIndex": 5
 }]]></component>
-  <component name="ProjectId" id="2qkn43sRypHW4HmiPvO9IW8OXid" />
+  <component name="ProjectId" id="2qsMfvtumLT4M0Ms1ektX4luFJS" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -32,31 +62,33 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "boat__jit",
+    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/boat_jit/hyper_ol",
     "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\hyper_ol" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9a984744-f2d8-4a38-9331-41b2fc344059" name="Changes" comment="" />
-      <created>1735215248218</created>
+      <changelist id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="" />
+      <created>1735446935796</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1735215248218</updated>
-      <workItem from="1735215249252" duration="1593000" />
+      <updated>1735446935796</updated>
+      <workItem from="1735446936875" duration="1957000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backbone_py$l2_regularization__1_.coverage" NAME="l2_regularization (1) Coverage Results" MODIFIED="1734747674125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/L2_Reg" />
@@ -70,8 +102,8 @@
     <SUITE FILE_PATH="coverage/backbone_py$scripts_metacleaning_loss_24_1_26.coverage" NAME="scripts_metalearning_loss_24_1_26 Coverage Results" MODIFIED="1733835898477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/meta_learning" />
     <SUITE FILE_PATH="coverage/backbone_py$l2_regularization_local__1_.coverage" NAME="l2_regularization_local Coverage Results" MODIFIED="1734964675134" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/L2_Reg" />
     <SUITE FILE_PATH="coverage/backbone_py$dm_ngd.coverage" NAME="dm_ngd Coverage Results" MODIFIED="1732976904000" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat/dynamic_ol" />
-    <SUITE FILE_PATH="coverage/backbone_py$meta_learning_local.coverage" NAME="meta_learning_local Coverage Results" MODIFIED="1735095621269" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\meta_learning" />
-    <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning.coverage" NAME="data_hyper_cleaning Coverage Results" MODIFIED="1734103232701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/backbone_py$meta_learning_local.coverage" NAME="meta_learning_local Coverage Results" MODIFIED="1735444024570" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/meta_learning" />
+    <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning.coverage" NAME="data_hyper_cleaning Coverage Results" MODIFIED="1735445453988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\data_hyper_cleaning" />
     <SUITE FILE_PATH="coverage/backbone_py$.coverage" NAME=" Coverage Results" MODIFIED="1735099040388" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_hyper_cleaning" />
     <SUITE FILE_PATH="coverage/backbone_py$boat_opt.coverage" NAME="boat_opt Coverage Results" MODIFIED="1734103223518" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat" />
     <SUITE FILE_PATH="coverage/backbone_py$vsm.coverage" NAME="vsm Coverage Results" MODIFIED="1734951345594" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat_ms/fogm" />
@@ -83,12 +115,12 @@
     <SUITE FILE_PATH="coverage/backbone_py$code_cov_test.coverage" NAME="code_cov_test Coverage Results" MODIFIED="1733837719367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/backbone_py$neural_architecture_search__1_.coverage" NAME="neural_architecture_search (1) Coverage Results" MODIFIED="1733300048430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/neural_architecture_search" />
     <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning__1_.coverage" NAME="data_hyper_cleaning Coverage Results" MODIFIED="1733811074122" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\data_hyper_cleaning" />
-    <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning_local.coverage" NAME="data_hyper_cleaning_local Coverage Results" MODIFIED="1734851864320" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\data_hyper_cleaning" />
+    <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning_local.coverage" NAME="data_hyper_cleaning_local Coverage Results" MODIFIED="1735445462944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_hyper_cleaning" />
     <SUITE FILE_PATH="coverage/backbone_py$boat_opt__1_.coverage" NAME="boat_opt (1) Coverage Results" MODIFIED="1733040370045" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat" />
     <SUITE FILE_PATH="coverage/backbone_py$l2reg.coverage" NAME="l2reg Coverage Results" MODIFIED="1734351660945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/L2_Reg" />
     <SUITE FILE_PATH="coverage/backbone_py$test_meta_learning.coverage" NAME="test_meta_learning Coverage Results" MODIFIED="1734078564938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/meta_learning" />
     <SUITE FILE_PATH="coverage/backbone_py$l2_regularization.coverage" NAME="l2_regularization Coverage Results" MODIFIED="1735015450085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\L2_Reg_ms" />
-    <SUITE FILE_PATH="coverage/backbone_py$meta_learning.coverage" NAME="meta_learning Coverage Results" MODIFIED="1733833575948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/backbone_py$meta_learning.coverage" NAME="meta_learning Coverage Results" MODIFIED="1735409657655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning_local__1_.coverage" NAME="data_hyper_cleaning_local (1) Coverage Results" MODIFIED="1734101911145" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_hyper_cleaning" />
   </component>
 </project>

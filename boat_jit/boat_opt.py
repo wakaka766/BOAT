@@ -157,11 +157,6 @@ class Problem:
         """
         self._upper_opt = upper_opt
         if self.boat_configs["fo_gm"] is None:
-            assert (
-                self.boat_configs["hyper_op"] is not None
-            ), "Choose FOGM based methods from ['VSM'],['VFM'],['MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
-            sorted_ops = sorted([op.upper() for op in self._hyper_op])
-            hyper_op = "_".join(sorted_ops)
             if "DM" in self._dynamic_op:
                 setattr(self._ll_solver, "ul_opt", upper_opt)  # 设置 new_attribute 属性
                 setattr(self._ll_solver, "ul_lr", upper_opt.defaults["lr"])
@@ -174,7 +169,12 @@ class Problem:
                     self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs[
                         "DI"
                     ]["lr"]
-            self._ul_solver = getattr(ul_grads, "%s" % hyper_op)(
+            assert (
+                self.boat_configs["hyper_op"] is not None
+            ), "Choose FOGM based methods from ['VSM'],['VFM'],['MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
+            sorted_ops = sorted([op.upper() for op in self._hyper_op])
+            self._ul_solver = ul_grads.makes_functional_hyper_operation(
+                custom_order=sorted_ops,
                 ul_objective=self._ul_loss,
                 ll_objective=self._ll_loss,
                 ll_model=self._ll_model,
@@ -247,20 +247,20 @@ class Problem:
                     ) as (auxiliary_model, auxiliary_opt):
                         forward_time = time.perf_counter()
                         max_loss_iter = self._ll_solver.optimize(
-                            batch_ll_feed_dict,
-                            batch_ul_feed_dict,
-                            auxiliary_model,
-                            auxiliary_opt,
-                            current_iter,
+                            ll_feed_dict=batch_ll_feed_dict,
+                            ul_feed_dict=batch_ul_feed_dict,
+                            auxiliary_model=auxiliary_model,
+                            auxiliary_opt=auxiliary_opt,
+                            current_iter=current_iter
                         )
                         forward_time = time.perf_counter() - forward_time
                         backward_time = time.perf_counter()
                         self._log_results_dict["upper_loss"].append(
                             self._ul_solver.compute_gradients(
-                                batch_ll_feed_dict,
-                                batch_ul_feed_dict,
-                                auxiliary_model,
-                                max_loss_iter,
+                                ll_feed_dict=batch_ll_feed_dict,
+                                ul_feed_dict=batch_ll_feed_dict,
+                                auxiliary_model=auxiliary_model,
+                                max_loss_iter=max_loss_iter
                             )
                         )
                         backward_time = time.perf_counter() - backward_time
@@ -283,10 +283,10 @@ class Problem:
                     if "DM" not in self._dynamic_op:
                         self._log_results_dict["upper_loss"].append(
                             self._ul_solver.compute_gradients(
-                                ll_feed_dict,
-                                ul_feed_dict,
-                                auxiliary_model,
-                                max_loss_iter,
+                                ll_feed_dict=ll_feed_dict,
+                                ul_feed_dict=ul_feed_dict,
+                                auxiliary_model=auxiliary_model,
+                                max_loss_iter=max_loss_iter,
                             )
                         )
                     else:
@@ -305,15 +305,11 @@ class Problem:
                         )
                 # update the dynamic initialization of lower-level variables
                 if "DI" in self.boat_configs["dynamic_op"]:
-                    # self._lower_init_opt.step()
-                    # self._lower_init_opt.zero_grad()
                     manual_update(
                         self._lower_init_opt, self._lower_opt.param_groups[0]["params"]
                     )
                 run_time = forward_time + backward_time
         if not self.boat_configs["return_grad"]:
-            # self._upper_opt.step()
-            # self._upper_opt.zero_grad()
             manual_update(self._upper_opt, self._ul_var)
         else:
             return [var._custom_grad for var in list(self._ul_var)], run_time

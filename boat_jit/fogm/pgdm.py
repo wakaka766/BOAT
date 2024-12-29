@@ -95,14 +95,11 @@ class PGDM(DynamicalSystem):
         lr_decay = min(1 / (self.gam + 1e-8), 1)
         require_model_grad(y_hat)
         for y_itr in range(self.lower_loop):
-            # y_hat_opt.zero_grad()
             tr_loss = self.ll_objective(ll_feed_dict, self.ul_model, y_hat)
             grads_hat = grad_unused_zero(tr_loss, y_hat.parameters())
             update_tensor_grads(list(y_hat.parameters()), grads_hat)
-            # y_hat_opt.step()
             manual_update(y_hat_opt, list(y_hat.parameters()))
 
-        # self.ll_opt.zero_grad()
         F_y = self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model)
         loss = lr_decay * (
             F_y
@@ -112,13 +109,11 @@ class PGDM(DynamicalSystem):
                 - self.ll_objective(ll_feed_dict, self.ul_model, y_hat)
             )
         )
-        # loss.backward()
         grads_lower = grad_unused_zero(loss, self.ll_var)
         update_tensor_grads(self.ll_var, grads_lower)
         grads_upper = grad_unused_zero(loss, self.ul_var)
         update_tensor_grads(self.ul_var, grads_upper)
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
-        # self.ll_opt.step()
         manual_update(self.ll_opt, list(self.ll_var))
         return F_y

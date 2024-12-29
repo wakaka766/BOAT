@@ -42,7 +42,7 @@ class RAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(RAD, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
+        super(RAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
     def compute_gradients(
@@ -51,6 +51,8 @@ class RAD(HyperGradient):
         ul_feed_dict: Dict,
         auxiliary_model: _MonkeyPatchBase,
         max_loss_iter: int = 0,
+        next_operation: str = None,
+        **kwargs
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -70,14 +72,21 @@ class RAD(HyperGradient):
         :param max_loss_iter: The number of iteration used for backpropagation.
         :type max_loss_iter: int
 
+        :param next_operation: The next operator for the calculation of the hypergradient.
+        :type next_operation: str
+
+        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
+        :type  hyper_gradient_finished: bool
+
         :returns: the current upper-level objective
         """
-
+        assert next_operation is None, "RAD does not support any further operations."
+        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
         upper_loss = self.ul_objective(
             ul_feed_dict,
             self.ul_model,
             auxiliary_model,
-            params=auxiliary_model.parameters(time=max_loss_iter),
+            params=lower_model_params
         )
         grads_upper = jit.grad(
             upper_loss, self.ul_var, retain_graph=self.dynamic_initialization
@@ -88,4 +97,4 @@ class RAD(HyperGradient):
             grads_lower = jit.grad(upper_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ll_var, grads_lower)
 
-        return upper_loss
+        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}

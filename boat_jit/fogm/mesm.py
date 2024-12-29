@@ -99,7 +99,6 @@ class MESM(DynamicalSystem):
             theta_loss, list(self.y_hat.parameters())
         )
 
-        ## some convert
         errs = []
         for a, b in zip(
             list(self.y_hat.parameters()), list(self.ll_model.parameters())
@@ -117,7 +116,6 @@ class MESM(DynamicalSystem):
         reg = 0
         for param1, param2 in zip(list(self.ll_model.parameters()), vs_param):
             diff = param1 - param2
-            # result_params.append(diff)
             reg += (diff**2).sum()  # Jittor-compatible L2 norm calculation
         lower_loss = (
             (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model)
@@ -125,14 +123,12 @@ class MESM(DynamicalSystem):
             - 0.5 * self.gamma_1 * reg
         )
 
-        # self.ll_opt.zero_grad()
         grad_y_parmaters = grad_unused_zero(
             lower_loss, list(self.ll_model.parameters())
         )
 
         update_tensor_grads(self.ll_var, grad_y_parmaters)
 
-        # self.ll_opt.step()
         manual_update(self.ll_opt, self.ll_var)
         upper_loss = (
             (1 / ck) * self.ul_objective(ul_feed_dict, self.ul_model, self.ll_model)

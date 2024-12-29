@@ -2,7 +2,7 @@ import jittor as jit
 from .hyper_gradient import HyperGradient
 from jittor import Module
 from typing import List, Callable, Dict
-from ..higher_jit.patch import _MonkeyPatchBase
+from boat_jit.higher_jit.patch import _MonkeyPatchBase
 from boat_jit.utils.op_utils import update_tensor_grads
 
 
@@ -43,7 +43,7 @@ class IAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IAD, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
+        super(IAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
 
     def compute_gradients(
         self,
@@ -51,6 +51,9 @@ class IAD(HyperGradient):
         ul_feed_dict: Dict,
         auxiliary_model: _MonkeyPatchBase,
         max_loss_iter: int = 0,
+        hyper_gradient_finished: bool = False,
+        next_operation: str = None,
+        **kwargs
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -70,11 +73,24 @@ class IAD(HyperGradient):
         :param max_loss_iter: The number of iteration used for backpropagation.
         :type max_loss_iter: int
 
+        :param next_operation: The next operator for the calculation of the hypergradient.
+        :type next_operation: str
+
+        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
+        :type  hyper_gradient_finished: bool
+
         :returns: the current upper-level objective
         """
 
-        ul_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        grads_upper = jit.grad(ul_loss, list(auxiliary_model.parameters(time=0)))
-        update_tensor_grads(self.ul_var, grads_upper)
-
-        return ul_loss
+        if next_operation is not None:
+            lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+            hparams = list(auxiliary_model.parameters(time=0))
+            return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
+                    'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': hyper_gradient_finished,
+                    'hparams': hparams, 'lower_model_params': lower_model_params, **kwargs}
+        else:
+            lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+            ul_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+            grads_upper = jit.grad(ul_loss, list(auxiliary_model.parameters(time=0)))
+            update_tensor_grads(self.ul_var, grads_upper)
+            return {'upper_loss': ul_loss, 'hyper_gradient_finished': True}

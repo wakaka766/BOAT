@@ -114,14 +114,6 @@ class VFM(DynamicalSystem):
         grad_F_x = grad_unused_zero(F_y, list(self.ul_model.parameters()))
         stop_model_grad(y_hat)
         loss, gy, gx_minus_gx_k = g_x_xhat_w(self.ll_model, y_hat, self.ul_model)
-        # delta_F[:n_params_y].update(jit.concat([fc_param.flatten().clone() for fc_param in grad_F_y]).flatten().clone())
-        # delta_f[:n_params_y].update(jit.concat([fc_param.flatten().clone() for fc_param in gy]).flatten().clone())
-        # delta_F[n_params_y:].update(jit.concat([fc_param.flatten().clone() for fc_param in grad_F_x]).flatten().clone())
-        # delta_f[n_params_y:].update(jit.concat([fc_param.flatten().clone() for fc_param in gx_minus_gx_k]).flatten().clone())
-        # norm_dq = delta_f.norm().pow(2)
-        # dot = delta_F.dot(delta_f)
-        # d = delta_F + jit.nn.relu((self.u1 * loss - dot) / (norm_dq + 1e-8)) * delta_f
-        # Update delta_F[:n_params_y] and delta_f[:n_params_y]
         delta_F[:n_params_y].update(
             jit.concat([fc_param.flatten().clone() for fc_param in grad_F_y])
         )
@@ -129,7 +121,6 @@ class VFM(DynamicalSystem):
             jit.concat([fc_param.flatten().clone() for fc_param in gy])
         )
 
-        # Update delta_F[n_params_y:] and delta_f[n_params_y:]
         delta_F[n_params_y:].update(
             jit.concat([fc_param.flatten().clone() for fc_param in grad_F_x])
         )
@@ -138,10 +129,10 @@ class VFM(DynamicalSystem):
         )
 
         # Compute squared norm of delta_f
-        norm_dq = (delta_f * delta_f).sum()  # 手动计算平方范数
+        norm_dq = (delta_f * delta_f).sum()
 
         # Compute dot product
-        dot = (delta_F * delta_f).sum()  # Jittor 不支持 .dot，改为逐元素乘积求和
+        dot = (delta_F * delta_f).sum()
 
         # Update delta_F with ReLU activation
         scaling_factor = jit.nn.relu(
@@ -152,27 +143,19 @@ class VFM(DynamicalSystem):
         y_grad = []
         x_grad = []
         all_numel = 0
-        # for _, param in enumerate(self.ll_model.parameters()):
-        #     y_grad.append((d[all_numel:all_numel + param.numel()]).data.view(tuple(param.shape)).clone())
-        #     all_numel = all_numel + param.numel()
-        # for _, param in enumerate(self.ul_model.parameters()):
-        #     x_grad.append((d[all_numel:all_numel + param.numel()]).data.view(tuple(param.shape)).clone())
-        #     all_numel = all_numel + param.numel()
-
         for _, param in enumerate(self.ll_model.parameters()):
             sliced = d[all_numel : all_numel + param.numel()]
-            reshaped = sliced.reshape(tuple(param.shape))  # 重塑为参数的形状
-            y_grad.append(reshaped.clone())  # 添加克隆的结果到 y_grad
-            all_numel += param.numel()  # 更新索引
+            reshaped = sliced.reshape(tuple(param.shape))
+            y_grad.append(reshaped.clone())
+            all_numel += param.numel()
 
         for _, param in enumerate(self.ul_model.parameters()):
             sliced = d[all_numel : all_numel + param.numel()]
-            reshaped = sliced.reshape(tuple(param.shape))  # 重塑为参数的形状
-            x_grad.append(reshaped.clone())  # 添加克隆的结果到 x_grad
-            all_numel += param.numel()  # 更新索引
+            reshaped = sliced.reshape(tuple(param.shape))
+            x_grad.append(reshaped.clone())
+            all_numel += param.numel()
 
         update_tensor_grads(self.ll_var, y_grad)
         update_tensor_grads(self.ul_var, x_grad)
-        # self.ll_opt.step()
         manual_update(self.ll_opt, list(self.ll_var))
         return F_y

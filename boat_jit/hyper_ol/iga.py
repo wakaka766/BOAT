@@ -43,8 +43,7 @@ class IGA(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IGA, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
-        self.ll_objective = ll_objective
+        super(IGA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.gda_loss = solver_config["gda_loss"]
@@ -56,6 +55,9 @@ class IGA(HyperGradient):
         ul_feed_dict: Dict,
         auxiliary_model: _MonkeyPatchBase,
         max_loss_iter: int = 0,
+        hyper_gradient_finished: bool = False,
+        next_operation: str = None,
+        **kwargs
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -75,23 +77,30 @@ class IGA(HyperGradient):
         :param max_loss_iter: The number of iteration used for backpropagation.
         :type max_loss_iter: int
 
+        :param next_operation: The next operator for the calculation of the hypergradient.
+        :type next_operation: str
+
+        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
+        :type  hyper_gradient_finished: bool
+
         :returns: the current upper-level objective
         """
-
+        assert next_operation is None, "FD does not support next_operation"
+        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha * self.alpha_decay**max_loss_iter
             lower_loss = self.gda_loss(
-                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
+                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
             )
         else:
-            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
         dfy = jit.grad(
-            lower_loss, list(auxiliary_model.parameters()), retain_graph=True
+            lower_loss, lower_model_params, retain_graph=True
         )
 
-        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
+        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
         dFy = jit.grad(
-            upper_loss, list(auxiliary_model.parameters()), retain_graph=True
+            upper_loss, lower_model_params, retain_graph=True
         )
 
         # calculate GN loss
@@ -112,4 +121,4 @@ class IGA(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return upper_loss
+        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}
