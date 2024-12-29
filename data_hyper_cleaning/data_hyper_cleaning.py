@@ -111,6 +111,8 @@ def main():
     boat_config["lower_level_var"] = y.parameters()
     boat_config["upper_level_var"] = x.parameters()
     b_optimizer = boat.Problem(boat_config, loss_config)
+    if boat_config["fo_gm"] is not None and ("PGDM" in boat_config["fo_gm"]):
+        boat_config["PGDM"]["gamma_init"] = boat_config["PGDM"]["gamma_max"]+0.1
 
     b_optimizer.build_ll_solver(y_opt)
     b_optimizer.build_ul_solver(x_opt)
@@ -125,8 +127,6 @@ def main():
     else:
         iterations = 1
         b_optimizer.boat_configs["return_grad"] = True
-    if boat_config["fo_gm"] is not None and ("PGDM" in boat_config["fo_gm"]):
-        b_optimizer.boat_configs["PGDM"]["gamma_init"] = b_optimizer.boat_configs["PGDM"]["gamma_max"]+0.1
 
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
