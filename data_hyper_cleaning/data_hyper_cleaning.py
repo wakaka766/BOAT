@@ -7,7 +7,7 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 from util_file import data_splitting, initialize
-from boat.utils import HyperGradientRules
+from boat.utils import HyperGradientRules,DynamicalSystemRules
 from torchvision.datasets import MNIST
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
@@ -122,6 +122,10 @@ def main():
         ["PTT","RGT", "FOA"],
         ["IAD", "RAD", "FD", "IGA"],
         ["CG", "NS"],])
+    DynamicalSystemRules.set_gradient_order([
+        ["GDA", "DI"],
+        ["DM", "NGD"],
+    ])
     if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
         iterations = 3
     else:
@@ -130,7 +134,7 @@ def main():
 
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
-            b_optimizer._ll_solver.strategy = "s" + str(x_itr + 1)
+            b_optimizer._ll_solver.gradient_instances[-1].strategy = "s" + str(x_itr + 1)
         loss, run_time = b_optimizer.run_iter(
             ll_feed_dict, ul_feed_dict, current_iter=x_itr
         )
