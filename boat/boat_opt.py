@@ -247,7 +247,7 @@ class Problem:
                             auxiliary_model=auxiliary_model,
                             auxiliary_opt=auxiliary_opt,
                             current_iter=current_iter,
-                        )0 
+                        )
                         max_loss_iter = list(dynamic_results[-1].values())[-1]
                         forward_time = time.perf_counter() - forward_time
                         backward_time = time.perf_counter()
