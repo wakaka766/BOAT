@@ -21,6 +21,7 @@ hyper_methodlist = (
     ["NS"],
     ["NS", "PTT"],
     ["IGA"],
+    ["IGA","PTT"],
 )
 dynamic_method_dm = (["NGD", "DM"], ["NGD", "DM", "GDA"])
 hyper_method_dm = (["RAD"], ["CG"])
