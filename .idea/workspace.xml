@@ -5,37 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/BOAT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/BOAT.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/boat_opt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg_iad.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg_iad_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa_iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa_iad_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad_ns.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad_ns_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ns_ptt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt_rad.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt_rad_rgt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/rgt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/rad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/rad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/rad_rgt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/data/20news-bydate_py3.pkz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/data/20newsgroup_vectorized_py3.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/data/l2reg.pt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +55,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1735446935796</updated>
-      <workItem from="1735446936875" duration="1957000" />
+      <workItem from="1735446936875" duration="2029000" />
     </task>
     <servers />
   </component>
