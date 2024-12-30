@@ -276,11 +276,11 @@ def main():
         iterations = 2
     for x_itr in range(iterations):
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
-            b_optimizer._ll_solver.strategy = "s" + str(x_itr % 3 + 1)
+            b_optimizer._ll_solver.gradient_instances[-1].strategy = "s" + str(x_itr % 3 + 1)
         elif "DM" in boat_config["dynamic_op"] and (
             not ("GDA" in boat_config["dynamic_op"])
         ):
-            b_optimizer._ll_solver.strategy = "s" + str(1)
+            b_optimizer._ll_solver.gradient_instances[-1].strategy = "s" + str(1)
         loss, run_time = b_optimizer.run_iter(
             ll_feed_dict, ul_feed_dict, current_iter=x_itr
         )
