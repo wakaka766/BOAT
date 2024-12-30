@@ -253,29 +253,18 @@ def conjugate_gradient(
     K: int,
     fp_map: Callable[[List[Tensor], List[Tensor]], List[Tensor]],
     tol=1e-10,
-    stochastic=False,
 ) -> List[Tensor]:
     grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
 
-    if not stochastic:
-        w_mapped = fp_map(params, lower_loss)
+    w_mapped = fp_map(params, lower_loss)
 
     def dfp_map_dw(xs):
-        if stochastic:
-            w_mapped_in = fp_map(params, lower_loss)
-            Jfp_mapTv = torch_grad(
-                w_mapped_in, params, grad_outputs=xs, retain_graph=False
-            )
-        else:
-            Jfp_mapTv = torch_grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
+        Jfp_mapTv = torch_grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
         return [v - j for v, j in zip(xs, Jfp_mapTv)]
 
     vs = cg_step(
         dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol
     )  # K steps of conjugate gradient
-
-    if stochastic:
-        w_mapped = fp_map(params, lower_loss)
 
     grads = torch_grad(w_mapped, hparams, grad_outputs=vs)
     grads = [g + v for g, v in zip(grads, grad_outer_hparams)]

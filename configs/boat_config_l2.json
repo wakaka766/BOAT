@@ -8,7 +8,7 @@
     "accumulate_grad": false,
     "DI":{"lr": 0.1},
     "GDA":{"alpha_init": 0.5,"alpha_decay": 0.9},
-    "DM":{"auxiliary_v_lr": 0.1,"tau":0.01, "p": 100,"mu0": 0.9,"eta0": 0.5,  "strategy": "s3"},
+    "DM":{"auxiliary_v_lr": 0.1,"tau":0.01, "p": 100,"mu0": 0.9,"eta0": 0.5,  "strategy": "s1"},
     "RGT":{"truncate_iter": 0},
     "CG":{"k": 10, "tolerance": 1e-10},
     "FD":{"r": 1e-2},

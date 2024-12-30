@@ -8,6 +8,7 @@ import numpy as np
 import torch.nn.functional as F
 from util_file import data_splitting, initialize
 from boat.utils import HyperGradientRules,DynamicalSystemRules
+from boat import DynamicalSystem
 from torchvision.datasets import MNIST
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
@@ -96,6 +97,8 @@ def main():
         default=None,
         help="convnet for 4 convs or resnet for Residual blocks",
     )
+    test_boat = DynamicalSystem()
+    test_boat.optimize()
     args = parser.parse_args()
     dynamic_method = args.dynamic_method.split(",") if args.dynamic_method else []
     hyper_method = args.hyper_method.split(",") if args.hyper_method else []
@@ -129,7 +132,7 @@ def main():
     if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
         iterations = 3
     else:
-        iterations = 1
+        iterations = 2
         b_optimizer.boat_configs["return_grad"] = True
 
     for x_itr in range(iterations):
