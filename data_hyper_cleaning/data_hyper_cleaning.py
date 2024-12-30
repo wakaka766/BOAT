@@ -110,9 +110,11 @@ def main():
     boat_config["fo_gm"] = args.fo_gm
     boat_config["lower_level_model"] = y
     boat_config["upper_level_model"] = x
+    boat_config["lower_level_opt"] = y_opt
+    boat_config["upper_level_opt"] = x_opt
     boat_config["lower_level_var"] = y.parameters()
     boat_config["upper_level_var"] = x.parameters()
-    b_optimizer = boat.Problem(boat_config, loss_config, y_opt, x_opt)
+    b_optimizer = boat.Problem(boat_config, loss_config)
     if boat_config["fo_gm"] is not None and ("PGDM" in boat_config["fo_gm"]):
         boat_config["PGDM"]["gamma_init"] = boat_config["PGDM"]["gamma_max"]+0.1
 

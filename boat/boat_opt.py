@@ -42,7 +42,7 @@ class Problem:
     Enhanced bi-level optimization problem class supporting flexible loss functions and operation configurations.
     """
 
-    def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any], lower_opt: Optimizer, upper_opt: Optimizer):
+    def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any]):
         """
         Initialize the Problem instance.
 
