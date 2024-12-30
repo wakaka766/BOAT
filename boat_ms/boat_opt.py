@@ -75,15 +75,15 @@ class Problem:
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
         self._ll_solver = None
         self._ul_solver = None
-        self._lower_opt = None
-        self._upper_opt = None
+        self._lower_opt = config["lower_level_opt"]
+        self._upper_opt = config["upper_level_opt"]
         self._lower_init_opt = None
         self._fo_gm_solver = None
         self._lower_loop = None
         self._log_results_dict = {}
         self._device = ms.context.get_context("device_target")
 
-    def build_ll_solver(self, lower_opt: Optimizer):
+    def build_ll_solver(self):
         """
         Configure the lower-level solver.
 
@@ -92,7 +92,6 @@ class Problem:
 
         :returns: None
         """
-        self._lower_opt = lower_opt
         self.boat_configs["ll_opt"] = self._lower_opt
         self._lower_loop = self.boat_configs.get("lower_iters", 10)
         self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
@@ -101,14 +100,13 @@ class Problem:
             ll_model=self._ll_model,
             ul_model=self._ul_model,
             lower_loop=self._lower_loop,
-            ll_opt=self._lower_opt,
             ll_var=self._ll_var,
             ul_var=self._ul_var,
             solver_config=self.boat_configs,
         )
         return self
 
-    def build_ul_solver(self, upper_opt: Optimizer):
+    def build_ul_solver(self):
         """
         Configure the lower-level solver.
 
@@ -117,8 +115,6 @@ class Problem:
 
         :returns: None
         """
-        self._upper_opt = upper_opt
-        setattr(self._fo_gm_solver, "ul_opt", upper_opt)
         assert (
             self.boat_configs["fo_gm"] is not None
         ), "Choose FOGM based methods from ['VSM','VFM','MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."

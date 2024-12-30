@@ -1,4 +1,4 @@
-from ..dynamic_ol.dynamical_system import DynamicalSystem
+from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 from boat_ms.utils.op_utils import require_model_grad
 
 import mindspore as ms
@@ -47,8 +47,8 @@ class PGDM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(PGDM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
-        self.ul_objective = ul_objective
+        super(PGDM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        self.ll_opt = solver_config["lower_level_opt"]
         self.ll_opt = ll_opt
         self.ll_var = ll_var
         self.ul_var = ul_var

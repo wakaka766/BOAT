@@ -1,5 +1,4 @@
 from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
-
 import mindspore as ms
 from mindspore import nn, ops, numpy as mnp
 from typing import Dict, Any, Callable, List
@@ -43,14 +42,12 @@ class VFM(DynamicalSystem):
         ul_model: nn.Cell,
         ul_objective: Callable,
         ll_model: nn.Cell,
-        ll_opt: nn.Optimizer,
         ll_var: List,
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VFM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
-        self.ul_objective = ul_objective
-        self.ll_opt = ll_opt
+        super(VFM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
         self.y_hat_lr = float(solver_config["VFM"]["y_hat_lr"])
