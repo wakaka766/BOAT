@@ -144,7 +144,9 @@ def main():
     boat_config["upper_level_model"] = meta_model
     boat_config["lower_level_var"] = meta_model.parameters()
     boat_config["upper_level_var"] = meta_model.parameters()
-    b_optimizer = boat.Problem(boat_config, loss_config, inner_opt, outer_opt)
+    boat_config["lower_level_opt"] = inner_opt
+    boat_config["upper_level_opt"] = outer_opt
+    b_optimizer = boat.Problem(boat_config, loss_config)
     b_optimizer.build_ll_solver()
     b_optimizer.build_ul_solver()
 
