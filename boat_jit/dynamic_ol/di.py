@@ -4,7 +4,6 @@ from typing import Callable
 from ..higher_jit.patch import _MonkeyPatchBase
 from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import stop_grads
 
 
 class DI(DynamicalSystem):

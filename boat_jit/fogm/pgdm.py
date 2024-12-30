@@ -55,7 +55,7 @@ class PGDM(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
         super(PGDM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
-        self.ll_opt = ll_opt
+        self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
         self.y_hat_lr = float(solver_config["PGDM"]["y_hat_lr"])

@@ -45,7 +45,7 @@ class NGD(DynamicalSystem):
         super(NGD, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
-        self.ll_opt = solver_config["ll_opt"]
+        self.ll_opt = solver_config["lower_level_opt"]
         self.foa = "FOA" in solver_config["hyper_op"]
 
     def optimize(
