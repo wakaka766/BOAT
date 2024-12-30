@@ -57,7 +57,6 @@ class DM(DynamicalSystem):
 
         super(DM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
-        self.ul_objective = ul_objective
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
