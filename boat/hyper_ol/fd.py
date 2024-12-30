@@ -44,7 +44,7 @@ class FD(HyperGradient):
         solver_config: Dict,
     ):
         super(FD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
-        self.ll_lr = solver_config["ll_opt"].defaults["lr"]
+        self.ll_lr = solver_config["lower_level_opt"].defaults["lr"]
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
         self._r = solver_config["FD"]["r"]
         self.alpha = solver_config["GDA"]["alpha_init"]
