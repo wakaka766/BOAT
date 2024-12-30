@@ -65,6 +65,12 @@ class Problem:
             - "GDA_loss": Configuration for GDA loss function (optional).
         :type loss_config: Dict[str, Any]
 
+        :param lower_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
+        :type lower_opt: Optimizer
+
+        :param upper_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
+        :type upper_opt: Optimizer
+
         :returns: None
         """
         self._fo_gm = config["fo_gm"]
@@ -95,10 +101,7 @@ class Problem:
     def build_ll_solver(self):
         """
         Configure the lower-level solver.
-
-        :param lower_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type lower_opt: Optimizer
-
+        
         :returns: None
         """
         self.boat_configs["ll_opt"] = self._lower_opt
@@ -156,9 +159,6 @@ class Problem:
     def build_ul_solver(self):
         """
         Configure the lower-level solver.
-
-        :param upper_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type upper_opt: Optimizer
 
         :returns: None
         """
