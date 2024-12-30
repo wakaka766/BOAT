@@ -97,7 +97,8 @@ def main():
         default=None,
         help="convnet for 4 convs or resnet for Residual blocks",
     )
-
+    test_boat = DynamicalSystem()
+    test_boat.optimize()
     args = parser.parse_args()
     dynamic_method = args.dynamic_method.split(",") if args.dynamic_method else []
     hyper_method = args.hyper_method.split(",") if args.hyper_method else []

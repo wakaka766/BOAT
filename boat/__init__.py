@@ -1,6 +1,5 @@
-from boat.boat_opt import Problem
-import boat.boat_opt
-import boat.utils
-import boat.dynamic_ol
-import boat.hyper_ol
-import boat.fogm
+from boat.boat_opt import *
+from boat.utils import *
+from boat.dynamic_ol import *
+from boat.hyper_ol import *
+from boat.fogm import *
