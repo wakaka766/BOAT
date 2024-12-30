@@ -7,23 +7,8 @@
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/boat_opt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/di_gda_ngd.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/di_ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm_gda_ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm_ngd.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda_ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,20 +29,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "boat__jit",
-    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/boat_jit/dynamic_ol",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;boat__jit&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ASUS/Documents/GitHub/BOAT/boat_jit/dynamic_ol&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\dynamic_ol" />
@@ -103,6 +88,7 @@
       <updated>1735446935796</updated>
       <workItem from="1735446936875" duration="2029000" />
       <workItem from="1735531820622" duration="5225000" />
+      <workItem from="1735550330496" duration="235000" />
     </task>
     <servers />
   </component>

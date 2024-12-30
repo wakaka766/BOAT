@@ -49,7 +49,6 @@ class PGDM(DynamicalSystem):
         ul_model: Module,
         ul_objective: Callable,
         ll_model: Module,
-        ll_opt: Optimizer,
         ll_var: List,
         ul_var: List,
         solver_config: Dict[str, Any],

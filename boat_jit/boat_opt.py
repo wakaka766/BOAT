@@ -46,7 +46,7 @@ class Problem:
     Enhanced bi-level optimization problem class supporting flexible loss functions and operation configurations.
     """
 
-    def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any], lower_opt: Optimizer, upper_opt: Optimizer):
+    def __init__(self, config: Dict[str, Any], loss_config: Dict[str, Any]):
         """
         Initialize the Problem instance.
 
@@ -68,12 +68,6 @@ class Problem:
             - "GDA_loss": Configuration for GDA loss function (optional).
         :type loss_config: Dict[str, Any]
 
-        :param lower_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type lower_opt: Optimizer
-
-        :param upper_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type upper_opt: Optimizer
-
         :returns: None
         """
         self._fo_gm = config["fo_gm"]
@@ -89,8 +83,8 @@ class Problem:
             if "GDA" in config["dynamic_op"]
             else None
         )
-        self.boat_configs["ll_opt"] = self._lower_opt = lower_opt
-        self.boat_configs["ul_opt"] = self._upper_opt = upper_opt
+        self._lower_opt = self.boat_configs["lower_level_opt"]
+        self._upper_opt = self.boat_configs["upper_level_opt"]
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
         self._ll_solver = None
