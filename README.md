@@ -94,7 +94,7 @@ Modify the boat_config to include your dynamic and hyper-gradient methods, as we
 
 ```python
 # Example dynamic and hyper-gradient methods Combination.
-dynamic_method = ["NGD","DI", "GDA"]  # Dynamic Methods (Demo Only)
+dynamic_method = ["NGD", "DI", "GDA"]  # Dynamic Methods (Demo Only)
 hyper_method = ["RGT","RAD"]          # Hyper-Gradient Methods (Demo Only)
 
 # Add methods and model details to the configuration
@@ -102,6 +102,8 @@ boat_config["dynamic_op"] = dynamic_method
 boat_config["hyper_op"] = hyper_method
 boat_config["lower_level_model"] = lower_model
 boat_config["upper_level_model"] = upper_model
+boat_config["lower_level_opt"] = lower_opt
+boat_config["upper_level_opt"] = upper_opt
 boat_config["lower_level_var"] = lower_model.parameters()
 boat_config["upper_level_var"] = upper_model.parameters()
 ```
@@ -114,8 +116,8 @@ Modify the boat_config to include your dynamic and hyper-gradient methods, as we
 b_optimizer = boat.Problem(boat_config, loss_config)
 
 # Build solvers for lower and upper levels
-b_optimizer.build_ll_solver(lower_opt)  # Lower-level solver
-b_optimizer.build_ul_solver(upper_opt)  # Upper-level solver
+b_optimizer.build_ll_solver()  # Lower-level solver
+b_optimizer.build_ul_solver()  # Upper-level solver
 ```
 
 ### **5. Define Data Feeds**

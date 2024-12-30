@@ -52,14 +52,12 @@ class VFM(DynamicalSystem):
         ul_model: Module,
         ul_objective: Callable,
         ll_model: Module,
-        ll_opt: Optimizer,
         ll_var: List,
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
         super(VFM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
-        self.ul_objective = ul_objective
-        self.ll_opt = ll_opt
+        self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
         self.y_hat_lr = float(solver_config["VFM"]["y_hat_lr"])

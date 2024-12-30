@@ -86,8 +86,8 @@ class Problem:
             if "GDA" in config["dynamic_op"]
             else None
         )
-        self._lower_opt = lower_opt
-        self._upper_opt = upper_opt
+        self._lower_opt = config["lower_level_opt"]
+        self._upper_opt = config["upper_level_opt"]
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
         self._ll_solver = None
@@ -104,8 +104,6 @@ class Problem:
         
         :returns: None
         """
-        self.boat_configs["ll_opt"] = self._lower_opt
-        self.boat_configs["ul_opt"] = self._upper_opt
         if self.boat_configs["fo_gm"] is None:
             assert (self.boat_configs["dynamic_op"] is not None) and (
                 self.boat_configs["hyper_op"] is not None
@@ -130,9 +128,6 @@ class Problem:
                 ul_model=self._ul_model,
                 lower_loop=self._lower_loop,
                 solver_config=self.boat_configs)
-            # if "DM" in self._dynamic_op:
-            #     setattr(self._ll_solver, "ul_opt", upper_opt)
-            #     setattr(self._ll_solver, "ul_lr", upper_opt.defaults["lr"])
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
                 for _ in range(len(self._lower_init_opt.param_groups)):
@@ -149,7 +144,6 @@ class Problem:
                 ll_model=self._ll_model,
                 ul_model=self._ul_model,
                 lower_loop=self._lower_loop,
-                ll_opt=self._lower_opt,
                 ll_var=self._ll_var,
                 ul_var=self._ul_var,
                 solver_config=self.boat_configs,
