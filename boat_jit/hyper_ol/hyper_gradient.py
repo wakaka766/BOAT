@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import List, Dict
 from boat_jit.utils import HyperGradientRules
-
+importlib = __import__("importlib")
 
 class HyperGradient(object):
     def __init__(self, ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config):
@@ -105,7 +105,7 @@ def makes_functional_hyper_operation(
 
     # Dynamically load classes
     gradient_classes = {}
-    module = importlib.import_module("boat.hyper_ol")
+    module = importlib.import_module("boat_jit.hyper_ol")
     for op in custom_order:
         gradient_classes[op] = getattr(module, op)
 

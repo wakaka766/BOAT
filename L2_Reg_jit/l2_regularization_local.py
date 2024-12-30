@@ -13,7 +13,7 @@ dynamic_methodlist = (
     ["GDA", "NGD", "DI"],
     ["DI", "NGD", "GDA"],
 )
-dynamic_method_dm = (["NGD", "DM"], ["NGD", "DM", "GDA"])
+dynamic_method_dm = (["DM"], ["DM", "GDA"])
 hyper_methodlist = (
     ["CG"],
     ["CG", "PTT"],

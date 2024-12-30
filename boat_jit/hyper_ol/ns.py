@@ -43,7 +43,7 @@ class NS(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(NS, self).__init__(ul_objective, ul_model, ll_model, ll_var, ul_var)
+        super(NS, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
         self.ll_lr = solver_config["ll_opt"].defaults["lr"]

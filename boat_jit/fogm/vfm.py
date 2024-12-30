@@ -56,8 +56,7 @@ class VFM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VFM, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
-        self.ul_objective = ul_objective
+        super(VFM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
         self.ll_opt = ll_opt
         self.ll_var = ll_var
         self.ul_var = ul_var

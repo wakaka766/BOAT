@@ -1,14 +1,15 @@
 from .dynamical_system import DynamicalSystem
 from jittor import Module
+from typing import Callable
 from ..higher_jit.patch import _MonkeyPatchBase
 from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
+from ..utils.op_utils import stop_grads
 
 
-class DI_NGD(DynamicalSystem):
+class DI(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) _`[1]`
-    and Dynamic Initialization (DI) _`[3]`.
+    Implements the lower-level optimization procedure of the Dynamic Initialization (DI) _`[1]`.
 
     Parameters
     ----------
@@ -28,28 +29,21 @@ class DI_NGD(DynamicalSystem):
 
     References
     ----------
-    _`[1]` L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
-     programming for hyperparameter optimization and meta-learning", in ICML, 2018.
-
-    _`[2]` R. Liu, Y. Liu, S. Zeng, and J. Zhang, "Towards Gradient-based Bilevel
+    _`[1]` R. Liu, Y. Liu, S. Zeng, and J. Zhang, "Towards Gradient-based Bilevel
      Optimization with Non-convex Followers and Beyond", in NeurIPS, 2021.
     """
 
     def __init__(
         self,
         ll_objective: Callable,
-        lower_loop: int,
-        ul_model: Module,
-        ll_model: Module,
         ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        lower_loop: int,
         solver_config: Dict[str, Any],
     ):
 
-        super(DI_NGD, self).__init__(ll_objective, lower_loop, ul_model, ll_model)
-        self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
-        self.ul_objective = ul_objective
-        self.truncate_iters = solver_config["RGT"]["truncate_iter"]
-        self.ll_opt = solver_config["ll_opt"]
+        super(DI, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
 
     def optimize(
         self,
@@ -58,6 +52,8 @@ class DI_NGD(DynamicalSystem):
         auxiliary_model: _MonkeyPatchBase,
         auxiliary_opt: DifferentiableOptimizer,
         current_iter: int,
+        next_operation: str = None,
+        **kwargs
     ):
         """
         Execute the lower-level optimization procedure with the data from feed_dict and patched models.
@@ -81,40 +77,14 @@ class DI_NGD(DynamicalSystem):
         :param current_iter: The current iteration number of the optimization process.
         :type current_iter: int
 
+        :param next_operation: The next operation to be executed in the optimization process.
+        :type next_operation: str
+
+        :param kwargs: Additional arguments for the optimization process.
+        :type kwargs: dict
+
         :returns: None
         """
-
-        if self.truncate_iters > 0:
-            ll_backup = [x.clone().stop_grad() for x in self.ll_model.parameters()]
-
-            for _ in range(self.truncate_iters):
-                lower_loss = self.ll_objective(
-                    ll_feed_dict, self.ul_model, self.ll_model
-                )
-                self.ll_opt.step(lower_loss)
-
-            for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
-                y.update(x.clone())
-
-            for x, y in zip(ll_backup, self.ll_model.parameters()):
-                y.update(x.clone())
-
-        # truncate with PTT method
-        if self.truncate_max_loss_iter:
-            ul_loss_list = []
-            for _ in range(self.lower_loop):
-                lower_loss = self.ll_objective(
-                    ll_feed_dict, self.ul_model, auxiliary_model
-                )
-                auxiliary_opt.step(lower_loss)
-                upper_loss = self.ul_objective(
-                    ul_feed_dict, self.ul_model, auxiliary_model
-                )
-                ul_loss_list.append(upper_loss.item())
-            ll_step_with_max_ul_loss = ul_loss_list.index(max(ul_loss_list))
-            return ll_step_with_max_ul_loss + 1
-
-        for _ in range(self.lower_loop - self.truncate_iters):
-            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
-            auxiliary_opt.step(lower_loss)
-        return self.lower_loop
+        assert next_operation is not None, "Next operation should be defined."
+        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
+                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, **kwargs}
