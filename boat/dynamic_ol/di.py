@@ -51,6 +51,7 @@ class DI(DynamicalSystem):
     ):
 
         super(DI, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        self.solver_config["copy_last_param"] = False
 
     def optimize(
         self,

@@ -44,6 +44,7 @@ class IAD(HyperGradient):
             solver_config: Dict,
     ):
         super(IAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        self.solver_config['copy_last_param'] = False
 
     def compute_gradients(
             self,

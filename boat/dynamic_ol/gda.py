@@ -96,5 +96,7 @@ class GDA(DynamicalSystem):
         assert (
                 self.gda_loss is not None
         ), "Define the gda_loss properly in loss_func.py."
+
         return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, "gda_loss": self.gda_loss, 'alpha': self.alpha,"alpha_decay": self.alpha_decay, **kwargs}
+                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, "gda_loss": self.gda_loss,
+                'alpha': self.alpha, "alpha_decay": self.alpha_decay, **kwargs}

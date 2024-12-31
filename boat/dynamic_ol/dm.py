@@ -56,14 +56,16 @@ class DM(DynamicalSystem):
     ):
 
         super(DM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        self.solver_config['copy_last_param'] = False
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
         self.ll_opt = solver_config["lower_level_opt"]
         self.ul_opt = solver_config["upper_level_opt"]
-        self.auxiliary_v = solver_config["DM"]["auxiliary_v"]
-        self.auxiliary_v_opt = solver_config["DM"]["auxiliary_v_opt"]
+        self.auxiliary_v = [torch.zeros_like(param) for param in solver_config['lower_level_var']]
+        self.auxiliary_v_opt = torch.optim.SGD(self.auxiliary_v,
+                                               lr=solver_config["DM"]["auxiliary_v_lr"])
         self.auxiliary_v_lr = solver_config["DM"]["auxiliary_v_lr"]
         self.tau = solver_config["DM"]["tau"]
         self.p = solver_config["DM"]["p"]
@@ -269,5 +271,6 @@ class DM(DynamicalSystem):
                 for g, v in zip(grads, grad_outer_hparams)
             ]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
+
 
         return -1

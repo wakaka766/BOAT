@@ -65,12 +65,6 @@ class Problem:
             - "GDA_loss": Configuration for GDA loss function (optional).
         :type loss_config: Dict[str, Any]
 
-        :param lower_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type lower_opt: Optimizer
-
-        :param upper_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type upper_opt: Optimizer
-
         :returns: None
         """
         self._fo_gm = config["fo_gm"]
@@ -94,8 +88,8 @@ class Problem:
         self._ul_solver = None
         self._lower_init_opt = None
         self._fo_gm_solver = None
-        self._lower_loop = None
-        self._log_results_dict = {}
+        self._lower_loop = config.get("lower_iters", 10)
+        self._log_results = []
         self._device = torch.device(config["device"])
 
     def build_ll_solver(self):
@@ -108,17 +102,7 @@ class Problem:
             assert (self.boat_configs["dynamic_op"] is not None) and (
                 self.boat_configs["hyper_op"] is not None
             ), "Set 'dynamic_op' and 'hyper_op' properly."
-            self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
-            if "DM" in self._dynamic_op:
-                print("right!")
-                self.boat_configs["DM"]["auxiliary_v"] = [
-                    torch.zeros_like(param) for param in self._ll_var
-                ]
-                self.boat_configs["DM"]["auxiliary_v_opt"] = torch.optim.SGD(
-                    self.boat_configs["DM"]["auxiliary_v"],
-                    lr=self.boat_configs["DM"]["auxiliary_v_lr"],
-                )
             sorted_ops = sorted([op.upper() for op in self._dynamic_op])
             self._ll_solver = ll_grads.makes_functional_dynamical_system(
                 custom_order=sorted_ops,
@@ -137,7 +121,6 @@ class Problem:
                     self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs["DI"]["lr"]
 
         else:
-            self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
@@ -156,12 +139,9 @@ class Problem:
 
         :returns: None
         """
-        if self.boat_configs["fo_gm"] is None:
-            assert (
-                self.boat_configs["hyper_op"] is not None
-            ), ("Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or "
-                "set 'dynamic_ol' and 'hyper_ol' properly.")
-            sorted_ops = sorted([op.upper() for op in self._hyper_op])
+        assert ((self.boat_configs["fo_gm"] is None) and (self.boat_configs["hyper_op"] is not None)), ("Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or set 'dynamic_ol' and 'hyper_ol' properly.")
+        sorted_ops = sorted([op.upper() for op in self._hyper_op])
+        if "DM" not in self._dynamic_op:
             self._ul_solver = ul_grads.makes_functional_hyper_operation(
                 custom_order=sorted_ops,
                 ul_objective=self._ul_loss,
@@ -172,11 +152,7 @@ class Problem:
                 ul_var=self._ul_var,
                 solver_config=self.boat_configs)
         else:
-            assert (
-                self.boat_configs["fo_gm"] is not None
-            ), ("Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or "
-                "set 'dynamic_ol' and 'hyper_ol' properly.")
-
+            self._ul_solver = None
         return self
 
     def run_iter(
@@ -218,10 +194,9 @@ class Problem:
             - run_time (float): The total time taken for the iteration.
         :rtype: tuple
         """
-        self._log_results_dict["upper_loss"] = []
         if self.boat_configs["fo_gm"] is not None:
             start_time = time.perf_counter()
-            self._log_results_dict["upper_loss"].append(
+            self._log_results.append(
                 self._fo_gm_solver.optimize(ll_feed_dict, ul_feed_dict, current_iter)
             )
             run_time = time.perf_counter() - start_time
@@ -242,10 +217,11 @@ class Problem:
                             auxiliary_opt=auxiliary_opt,
                             current_iter=current_iter,
                         )
+                        self._log_results.append(dynamic_results)
                         max_loss_iter = list(dynamic_results[-1].values())[-1]
                         forward_time = time.perf_counter() - forward_time
                         backward_time = time.perf_counter()
-                        self._log_results_dict["upper_loss"].append(
+                        self._log_results.append(
                             self._ul_solver.compute_gradients(
                                 ll_feed_dict=batch_ll_feed_dict,
                                 ul_feed_dict=batch_ll_feed_dict,
@@ -271,8 +247,8 @@ class Problem:
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
                     backward_time = time.time()
-                    if "DM" not in self._dynamic_op:
-                        self._log_results_dict["upper_loss"].append(
+                    if self._ul_solver is not None:
+                        self._log_results.append(
                             self._ul_solver.compute_gradients(
                                 ll_feed_dict=ll_feed_dict,
                                 ul_feed_dict=ul_feed_dict,
@@ -280,21 +256,9 @@ class Problem:
                                 max_loss_iter=max_loss_iter,
                             )
                         )
-                    else:
-                        self._log_results_dict["upper_loss"].append(
-                            self._ul_loss(ul_feed_dict, self._ul_model, auxiliary_model)
-                        )
                     backward_time = time.perf_counter() - backward_time
-                    if (
-                        ("DM" not in self._dynamic_op)
-                        and ("DI" not in self._dynamic_op)
-                        and ("IAD" not in self._hyper_op)
-                    ):
-                        copy_parameter_from_list(
-                            self._ll_model,
-                            list(auxiliary_model.parameters(time=max_loss_iter)),
-                        )
-                # update the dynamic initialization of lower-level variables
+                    if self.boat_configs['copy_last_param']:
+                        copy_parameter_from_list(self._ll_model, list(auxiliary_model.parameters(time=max_loss_iter)))
                 if "DI" in self.boat_configs["dynamic_op"]:
                     self._lower_init_opt.step()
                     self._lower_init_opt.zero_grad()
