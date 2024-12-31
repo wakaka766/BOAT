@@ -50,7 +50,9 @@ class GDA(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(GDA, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(GDA, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.gda_loss = solver_config["gda_loss"]
@@ -91,12 +93,20 @@ class GDA(DynamicalSystem):
         """
         assert next_operation is not None, "Next operation should be defined."
         assert (self.alpha > 0) and (
-                self.alpha < 1
+            self.alpha < 1
         ), "Set the coefficient alpha properly in (0,1)."
         assert (
-                self.gda_loss is not None
+            self.gda_loss is not None
         ), "Define the gda_loss properly in loss_func.py."
 
-        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, "gda_loss": self.gda_loss,
-                'alpha': self.alpha, "alpha_decay": self.alpha_decay, **kwargs}
+        return {
+            "ll_feed_dict": ll_feed_dict,
+            "ul_feed_dict": ul_feed_dict,
+            "auxiliary_model": auxiliary_model,
+            "auxiliary_opt": auxiliary_opt,
+            "current_iter": current_iter,
+            "gda_loss": self.gda_loss,
+            "alpha": self.alpha,
+            "alpha_decay": self.alpha_decay,
+            **kwargs,
+        }

@@ -134,8 +134,8 @@ def main():
     )
     args = parser.parse_args()
 
-    dynamic_method = args.dynamic_method.split(",") if args.dynamic_method else []
-    hyper_method = args.hyper_method.split(",") if args.hyper_method else []
+    dynamic_method = args.dynamic_method.split(",") if args.dynamic_method else None
+    hyper_method = args.hyper_method.split(",") if args.hyper_method else None
     print(args.dynamic_method)
     print(args.hyper_method)
     boat_config["dynamic_op"] = dynamic_method

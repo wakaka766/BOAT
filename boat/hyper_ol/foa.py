@@ -36,26 +36,34 @@ class FOA(HyperGradient):
     """
 
     def __init__(
-            self,
-            ll_objective: Callable,
-            ul_objective: Callable,
-            ll_model: Module,
-            ul_model: Module,
-            ll_var: List,
-            ul_var: List,
-            solver_config: Dict,
+        self,
+        ll_objective: Callable,
+        ul_objective: Callable,
+        ll_model: Module,
+        ul_model: Module,
+        ll_var: List,
+        ul_var: List,
+        solver_config: Dict,
     ):
-        super(FOA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(FOA, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
 
     def compute_gradients(
-            self,
-            ll_feed_dict: Dict,
-            ul_feed_dict: Dict,
-            auxiliary_model: _MonkeyPatchBase,
-            max_loss_iter: int = 0,
-            hyper_gradient_finished: bool = False,
-            next_operation: str = None,
-            **kwargs
+        self,
+        ll_feed_dict: Dict,
+        ul_feed_dict: Dict,
+        auxiliary_model: _MonkeyPatchBase,
+        max_loss_iter: int = 0,
+        hyper_gradient_finished: bool = False,
+        next_operation: str = None,
+        **kwargs
     ):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
@@ -84,6 +92,14 @@ class FOA(HyperGradient):
         :returns: the current upper-level objective
         """
         assert next_operation is not None, "Next operation should be defined"
-        assert hyper_gradient_finished is False, "Hypergradient computation should not be finished"
-        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': False, **kwargs}
+        assert (
+            hyper_gradient_finished is False
+        ), "Hypergradient computation should not be finished"
+        return {
+            "ll_feed_dict": ll_feed_dict,
+            "ul_feed_dict": ul_feed_dict,
+            "auxiliary_model": auxiliary_model,
+            "max_loss_iter": max_loss_iter,
+            "hyper_gradient_finished": False,
+            **kwargs,
+        }

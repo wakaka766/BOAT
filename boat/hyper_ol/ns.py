@@ -43,7 +43,15 @@ class NS(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(NS, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(NS, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
         self.ll_lr = solver_config["lower_level_opt"].defaults["lr"]
@@ -53,7 +61,7 @@ class NS(HyperGradient):
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config["gda_loss"]
+        self.gda_loss = solver_config.get("gda_loss", None)
 
     def compute_gradients(
         self,
@@ -92,8 +100,12 @@ class NS(HyperGradient):
         :returns: the current upper-level objective
         """
 
-        assert not hyper_gradient_finished, "CG does not support multiple hypergradient computation"
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+        assert (
+            not hyper_gradient_finished
+        ), "CG does not support multiple hypergradient computation"
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
         hparams = kwargs.get("hparams", list(self.ul_var))
 
         def fp_map(params, loss_f):
@@ -106,10 +118,19 @@ class NS(HyperGradient):
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha * self.alpha_decay**max_loss_iter
             lower_loss = self.gda_loss(
-                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model,params=lower_model_params)
+                ll_feed_dict,
+                ul_feed_dict,
+                self.ul_model,
+                auxiliary_model,
+                params=lower_model_params,
+            )
         else:
-            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model,params=lower_model_params)
-        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model,params=lower_model_params)
+            lower_loss = self.ll_objective(
+                ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            )
+        upper_loss = self.ul_objective(
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+        )
 
         if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(
@@ -129,4 +150,4 @@ class NS(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}

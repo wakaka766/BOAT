@@ -44,7 +44,9 @@ class NGD(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(NGD, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(NGD, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
         self.ll_opt = solver_config["lower_level_opt"]
@@ -104,7 +106,9 @@ class NGD(DynamicalSystem):
                     )
                     alpha = alpha * alpha_decay
                 else:
-                    loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+                    loss_f = self.ll_objective(
+                        ll_feed_dict, self.ul_model, auxiliary_model
+                    )
 
                 loss_f.backward()
                 self.ll_opt.step()
@@ -126,7 +130,9 @@ class NGD(DynamicalSystem):
                     )
                     alpha = alpha * alpha_decay
                 else:
-                    loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+                    loss_f = self.ll_objective(
+                        ll_feed_dict, self.ul_model, auxiliary_model
+                    )
                 auxiliary_opt.step(loss_f)
 
                 upper_loss = self.ul_objective(

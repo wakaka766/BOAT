@@ -5,7 +5,6 @@ from boat.utils.op_utils import copy_parameter_from_list, average_grad
 
 import torch
 from torch import Tensor
-from torch.optim import Optimizer
 import higher
 
 importlib = __import__("importlib")
@@ -72,18 +71,14 @@ class Problem:
         self._hyper_op = config["hyper_op"]
         self._ll_model = config["lower_level_model"]
         self._ul_model = config["upper_level_model"]
-        self._ll_var = list(config["lower_level_var"])
-        self._ul_var = list(config["upper_level_var"])
-        self.boat_configs = config
-        self.boat_configs["gda_loss"] = (
-            _load_loss_function(loss_config["gda_loss"])
-            if "GDA" in config["dynamic_op"]
-            else None
-        )
+        self._ll_var = config["lower_level_var"]
+        self._ul_var = config["upper_level_var"]
+
         self._lower_opt = config["lower_level_opt"]
         self._upper_opt = config["upper_level_opt"]
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
+        self.boat_configs = config
         self._ll_solver = None
         self._ul_solver = None
         self._lower_init_opt = None
@@ -91,11 +86,15 @@ class Problem:
         self._lower_loop = config.get("lower_iters", 10)
         self._log_results = []
         self._device = torch.device(config["device"])
+        if config["dynamic_op"] is not None:
+            if "GDA" in config["dynamic_op"]:
+                assert loss_config.get("gda_loss", None) is not None, "Set the 'gda_loss' in loss_config properly."
+                self.boat_configs["gda_loss"] = _load_loss_function(loss_config["gda_loss"])
 
     def build_ll_solver(self):
         """
         Configure the lower-level solver.
-        
+
         :returns: None
         """
         if self.boat_configs["fo_gm"] is None:
@@ -111,14 +110,17 @@ class Problem:
                 ll_model=self._ll_model,
                 ul_model=self._ul_model,
                 lower_loop=self._lower_loop,
-                solver_config=self.boat_configs)
+                solver_config=self.boat_configs,
+            )
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
                 for _ in range(len(self._lower_init_opt.param_groups)):
                     self._lower_init_opt.param_groups[_]["params"] = (
                         self._lower_opt.param_groups[_]["params"]
                     )
-                    self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs["DI"]["lr"]
+                    self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs[
+                        "DI"
+                    ]["lr"]
 
         else:
             self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
@@ -139,19 +141,26 @@ class Problem:
 
         :returns: None
         """
-        assert ((self.boat_configs["fo_gm"] is None) and (self.boat_configs["hyper_op"] is not None)), ("Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or set 'dynamic_ol' and 'hyper_ol' properly.")
-        sorted_ops = sorted([op.upper() for op in self._hyper_op])
-        if "DM" not in self._dynamic_op:
-            self._ul_solver = ul_grads.makes_functional_hyper_operation(
-                custom_order=sorted_ops,
-                ul_objective=self._ul_loss,
-                ll_objective=self._ll_loss,
-                ll_model=self._ll_model,
-                ul_model=self._ul_model,
-                ll_var=self._ll_var,
-                ul_var=self._ul_var,
-                solver_config=self.boat_configs)
+        if self.boat_configs["fo_gm"] is None:
+            assert (
+                self.boat_configs["hyper_op"] is not None
+            ), "Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or set 'dynamic_ol' and 'hyper_ol' properly. Currently, fo_gm ={} is not None".format(self.boat_configs["fo_gm"])
+            sorted_ops = sorted([op.upper() for op in self._hyper_op])
+            if "DM" not in self._dynamic_op:
+                self._ul_solver = ul_grads.makes_functional_hyper_operation(
+                    custom_order=sorted_ops,
+                    ul_objective=self._ul_loss,
+                    ll_objective=self._ll_loss,
+                    ll_model=self._ll_model,
+                    ul_model=self._ul_model,
+                    ll_var=self._ll_var,
+                    ul_var=self._ul_var,
+                    solver_config=self.boat_configs,
+                )
         else:
+            assert (
+                self.boat_configs["hyper_op"] is None
+            ), "Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or set 'dynamic_ol' and 'hyper_ol' properly. Currently, hyper_op ={} is not None".format(self.boat_configs["hyper_op"])
             self._ul_solver = None
         return self
 
@@ -164,7 +173,8 @@ class Problem:
         """
         Run a single iteration of the bi-level optimization process.
 
-        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the lower-level (LL) objective.
+        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of
+        the lower-level (LL) objective.
             Example:
                 {
                     "image": train_images,
@@ -242,7 +252,7 @@ class Problem:
                         ul_feed_dict=ul_feed_dict,
                         auxiliary_model=auxiliary_model,
                         auxiliary_opt=auxiliary_opt,
-                        current_iter=current_iter
+                        current_iter=current_iter,
                     )
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
@@ -257,8 +267,11 @@ class Problem:
                             )
                         )
                     backward_time = time.perf_counter() - backward_time
-                    if self.boat_configs['copy_last_param']:
-                        copy_parameter_from_list(self._ll_model, list(auxiliary_model.parameters(time=max_loss_iter)))
+                    if self.boat_configs["copy_last_param"]:
+                        copy_parameter_from_list(
+                            self._ll_model,
+                            list(auxiliary_model.parameters(time=max_loss_iter)),
+                        )
                 if "DI" in self.boat_configs["dynamic_op"]:
                     self._lower_init_opt.step()
                     self._lower_init_opt.zero_grad()
@@ -269,7 +282,7 @@ class Problem:
         else:
             return [var.grad for var in list(self._ul_var)], run_time
 
-        return self._log_results_dict["upper_loss"], run_time
+        return self._log_results, run_time
 
     def check_status(self):
 

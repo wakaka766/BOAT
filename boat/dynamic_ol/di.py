@@ -50,7 +50,9 @@ class DI(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(DI, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(DI, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.solver_config["copy_last_param"] = False
 
     def optimize(
@@ -88,5 +90,11 @@ class DI(DynamicalSystem):
         :returns: None
         """
         assert next_operation is not None, "Next operation should be defined."
-        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, **kwargs}
+        return {
+            "ll_feed_dict": ll_feed_dict,
+            "ul_feed_dict": ul_feed_dict,
+            "auxiliary_model": auxiliary_model,
+            "auxiliary_opt": auxiliary_opt,
+            "current_iter": current_iter,
+            **kwargs,
+        }

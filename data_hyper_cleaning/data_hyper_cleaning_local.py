@@ -70,7 +70,6 @@ with open(batfolder, "w") as f:
         print("Comb.{}:".format(k))
         print("hyper_method:", hyper_method)
         f.write("python data_hyper_cleaning.py --fo_gm {} \n".format(hyper_method[0]))
-print("right!")
 # os.chdir(folder)
 os.system(batfolder)
 

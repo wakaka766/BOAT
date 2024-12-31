@@ -42,7 +42,15 @@ class RAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(RAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(RAD, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
     def compute_gradients(
@@ -81,7 +89,9 @@ class RAD(HyperGradient):
         :returns: the current upper-level objective
         """
         assert next_operation is None, "RAD does not support any further operations."
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
         upper_loss = self.ul_objective(
             ul_feed_dict,
             self.ul_model,
@@ -102,4 +112,4 @@ class RAD(HyperGradient):
             )
             update_tensor_grads(self.ll_var, grads_lower)
 
-        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}

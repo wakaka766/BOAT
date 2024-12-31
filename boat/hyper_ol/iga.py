@@ -43,10 +43,18 @@ class IGA(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IGA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(IGA, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config["gda_loss"]
+        self.gda_loss = solver_config.get("gda_loss", None)
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
     def compute_gradients(
@@ -86,22 +94,26 @@ class IGA(HyperGradient):
         :returns: the current upper-level objective
         """
         assert next_operation is None, "FD does not support next_operation"
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha * self.alpha_decay**max_loss_iter
             lower_loss = self.gda_loss(
-                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+                ll_feed_dict,
+                ul_feed_dict,
+                self.ul_model,
+                auxiliary_model,
+                params=lower_model_params,
             )
         else:
-            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
-        dfy = torch.autograd.grad(
-            lower_loss, lower_model_params, retain_graph=True
-        )
+            lower_loss = self.ll_objective(
+                ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            )
+        dfy = torch.autograd.grad(lower_loss, lower_model_params, retain_graph=True)
 
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
-        dFy = torch.autograd.grad(
-            upper_loss, lower_model_params, retain_graph=True
-        )
+        dFy = torch.autograd.grad(upper_loss, lower_model_params, retain_graph=True)
 
         # calculate GN loss
         gFyfy = 0
@@ -120,4 +132,4 @@ class IGA(HyperGradient):
         grads_upper = torch.autograd.grad(GN_loss + upper_loss, list(self.ul_var))
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}

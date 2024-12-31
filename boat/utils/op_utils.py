@@ -8,6 +8,7 @@ class ResultStore:
     """
     A simple class to store and manage intermediate results of hyper-gradient computation.
     """
+
     def __init__(self):
         self.results = []
 
@@ -31,11 +32,11 @@ class ResultStore:
         return self.results
 
 
-
 class DynamicalSystemRules:
     """
     A class to store and manage gradient operator rules.
     """
+
     # Default static gradient operator order
     _gradient_order = [
         ["GDA", "DI"],
@@ -69,7 +70,9 @@ class DynamicalSystemRules:
         ValueError
             If the new order is invalid.
         """
-        if not isinstance(new_order, list) or not all(isinstance(group, list) for group in new_order):
+        if not isinstance(new_order, list) or not all(
+            isinstance(group, list) for group in new_order
+        ):
             raise ValueError("Gradient order must be a list of lists.")
         DynamicalSystemRules._gradient_order = new_order
 
@@ -78,6 +81,7 @@ class HyperGradientRules:
     """
     A class to store and manage gradient operator rules.
     """
+
     # Default static gradient operator order
     _gradient_order = [
         ["PTT", "FOA", "RGT"],
@@ -112,7 +116,9 @@ class HyperGradientRules:
         ValueError
             If the new order is invalid.
         """
-        if not isinstance(new_order, list) or not all(isinstance(group, list) for group in new_order):
+        if not isinstance(new_order, list) or not all(
+            isinstance(group, list) for group in new_order
+        ):
             raise ValueError("Gradient order must be a list of lists.")
         HyperGradientRules._gradient_order = new_order
 

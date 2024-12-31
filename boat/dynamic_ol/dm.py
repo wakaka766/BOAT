@@ -55,17 +55,22 @@ class DM(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(DM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
-        self.solver_config['copy_last_param'] = False
+        super(DM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
+        self.solver_config["copy_last_param"] = False
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
         self.ll_opt = solver_config["lower_level_opt"]
         self.ul_opt = solver_config["upper_level_opt"]
-        self.auxiliary_v = [torch.zeros_like(param) for param in solver_config['lower_level_var']]
-        self.auxiliary_v_opt = torch.optim.SGD(self.auxiliary_v,
-                                               lr=solver_config["DM"]["auxiliary_v_lr"])
+        self.auxiliary_v = [
+            torch.zeros_like(param) for param in list(solver_config["lower_level_var"])
+        ]
+        self.auxiliary_v_opt = torch.optim.SGD(
+            self.auxiliary_v, lr=solver_config["DM"]["auxiliary_v_lr"]
+        )
         self.auxiliary_v_lr = solver_config["DM"]["auxiliary_v_lr"]
         self.tau = solver_config["DM"]["tau"]
         self.p = solver_config["DM"]["p"]
@@ -73,7 +78,7 @@ class DM(DynamicalSystem):
         self.eta = solver_config["DM"]["eta0"]
         self.strategy = solver_config["DM"]["strategy"]
         self.hyper_op = solver_config["hyper_op"]
-        self.gda_loss = solver_config["gda_loss"]
+        self.gda_loss = solver_config.get("gda_loss",None)
 
     def optimize(
         self,
@@ -143,9 +148,9 @@ class DM(DynamicalSystem):
                 )
             elif self.strategy == "s3":
                 self.alpha = self.mu0 * 1 / (current_iter + 1) ** (1 / self.p)
-                self.eta = (current_iter + 1) ** (-0.5 * self.tau) * self.ll_opt.defaults[
-                    "lr"
-                ]
+                self.eta = (current_iter + 1) ** (
+                    -0.5 * self.tau
+                ) * self.ll_opt.defaults["lr"]
                 x_lr = (
                     (current_iter + 1) ** (-1.5 * self.tau)
                     * self.alpha**3
@@ -156,16 +161,18 @@ class DM(DynamicalSystem):
         else:
             gda_loss = None
             assert (
-                    self.strategy == "s1"
+                self.strategy == "s1"
             ), "Only 's1' strategy is supported for DM without GDA operation."
 
             x_lr = (
-                    self.ul_opt.defaults["lr"] * (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults["lr"]
+                self.ul_opt.defaults["lr"]
+                * (current_iter + 1) ** (-self.tau)
+                * self.ll_opt.defaults["lr"]
             )
             eta = (
-                    self.eta
-                    * (current_iter + 1) ** (-0.5 * self.tau)
-                    * self.ll_opt.defaults["lr"]
+                self.eta
+                * (current_iter + 1) ** (-0.5 * self.tau)
+                * self.ll_opt.defaults["lr"]
             )
             for params in self.auxiliary_v_opt.param_groups:
                 params["lr"] = eta
@@ -182,8 +189,7 @@ class DM(DynamicalSystem):
                 ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
             )
         else:
-            loss_full = self.ll_objective(ll_feed_dict,self.ul_model, auxiliary_model
-            )
+            loss_full = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
         grad_y_temp = torch.autograd.grad(
             loss_full, auxiliary_model.parameters(), retain_graph=True
         )
@@ -271,6 +277,5 @@ class DM(DynamicalSystem):
                 for g, v in zip(grads, grad_outer_hparams)
             ]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
-
 
         return -1
