@@ -10,33 +10,42 @@ from typing import Dict, Any, Callable, List
 
 class VSM(DynamicalSystem):
     """
-    Implements the optimization procedure of Value-function based Sequential (VSM) [1].
+    Implements the optimization procedure of Value-function based Sequential Method (VSM) [1].
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective of the BLO problem.
-    :type ll_objective: callable
-    :param ul_objective: The upper-level objective of the BLO problem.
-    :type ul_objective: callable
+    :param ll_objective: The lower-level objective function of the BLO problem.
+    :type ll_objective: Callable
+    :param ul_objective: The upper-level objective function of the BLO problem.
+    :type ul_objective: Callable
     :param ll_model: The lower-level model of the BLO problem.
     :type ll_model: torch.nn.Module
     :param ul_model: The upper-level model of the BLO problem.
     :type ul_model: torch.nn.Module
-    :param ll_var: The list of lower-level variables of the BLO problem.
-    :type ll_var: List
-    :param ul_var: The list of upper-level variables of the BLO problem.
-    :type ul_var: List
-    :param lower_loop: Number of iterations for lower-level optimization.
+    :param ll_var: A list of lower-level variables of the BLO problem.
+    :type ll_var: List[torch.Tensor]
+    :param ul_var: A list of upper-level variables of the BLO problem.
+    :type ul_var: List[torch.Tensor]
+    :param lower_loop: The number of iterations for lower-level optimization.
     :type lower_loop: int
-    :param solver_config: Dictionary containing solver configurations.
-    :type solver_config: dict
-
+    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+        - "lower_level_opt" (torch.optim.Optimizer): Optimizer for the lower-level model.
+        - "VSM" (Dict): Configuration for the VSM algorithm:
+            - "z_loop" (int): Number of iterations for optimizing the auxiliary variable `z`.
+            - "ll_l2_reg" (float): L2 regularization coefficient for the lower-level model.
+            - "ul_l2_reg" (float): L2 regularization coefficient for the upper-level model.
+            - "ul_ln_reg" (float): Logarithmic regularization coefficient for the upper-level model.
+            - "reg_decay" (float): Decay rate for the regularization coefficients.
+            - "z_lr" (float): Learning rate for optimizing the auxiliary variable `z`.
+        - "device" (str): Device on which computations are performed, e.g., "cpu" or "cuda".
+    :type solver_config: Dict[str, Any]
 
     References
     ----------
-    [1] Liu B, Ye M, Wright S, et al. Bome! bilevel optimization made easy: A simple first-order approach[C].
-    In NeurIPS, 2022.
+    [1] Liu B, Ye M, Wright S, et al. "BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach," 
+        in NeurIPS, 2022.
     """
+
 
     def __init__(
         self,

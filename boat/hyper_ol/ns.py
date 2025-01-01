@@ -8,29 +8,36 @@ from boat.utils.op_utils import update_tensor_grads, neumann
 
 class NS(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Neumann Series (NS) [1].
+    Computes the hyper-gradient of the upper-level variables using Neumann Series (NS) [1].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: torch.nn.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: torch.nn.Module
-        :param ll_var: List of variables optimized with the lower-level objective.
-        :type ll_var: List
-        :param ul_var:  of variables optimized with the upper-level objective.
-        :type ul_var: List
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        List of variables optimized with the lower-level objective.
+    ul_var : List[torch.Tensor]
+        List of variables optimized with the upper-level objective.
+    solver_config : Dict[str, Any]
+        Dictionary containing solver configurations, including:
+        - `dynamic_op` (str): Indicates dynamic initialization type (e.g., "DI").
+        - `lower_level_opt` (Optimizer): Lower-level optimizer configuration.
+        - `CG` (Dict): Conjugate Gradient-specific parameters:
+            - `tolerance` (float): Tolerance for convergence.
+            - `k` (int): Number of iterations for Neumann approximation.
+        - GDA-specific parameters, such as `alpha_init` and `alpha_decay`.
+        - `gda_loss` (Callable, optional): Custom loss function for GDA.
 
     References
     ----------
-    [1] J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
-     hyperparameters by implicit differentiation", in AISTATS, 2020.
+    [1] J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of hyperparameters
+        by implicit differentiation," in AISTATS, 2020.
     """
 
     def __init__(
@@ -76,28 +83,28 @@ class NS(HyperGradient):
         """
         Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization.
             It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
-
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization.
             It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
-
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower model wrapped by the `higher` library.
             It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        max_loss_iter : int, optional
+            The number of iterations used for backpropagation. Defaults to 0.
+        next_operation : str, optional
+            The next operator for the calculation of the hypergradient. Defaults to None.
+        hyper_gradient_finished : bool, optional
+            A boolean flag indicating whether the hypergradient computation is finished. Defaults to False.
 
-        :param max_loss_iter: The number of iteration used for backpropagation.
-        :type max_loss_iter: int
-
-        :param next_operation: The next operator for the calculation of the hypergradient.
-        :type next_operation: str
-
-        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
-        :type  hyper_gradient_finished: bool
-
-        :returns: the current upper-level objective
+        Returns
+        -------
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         assert (

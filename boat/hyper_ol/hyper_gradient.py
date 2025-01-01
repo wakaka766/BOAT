@@ -6,6 +6,41 @@ importlib = __import__("importlib")
 
 
 class HyperGradient(object):
+    """
+    Base class for computing hyper-gradients of upper-level variables in bilevel optimization problems.
+
+    This class provides an abstract interface for hyper-gradient computation that can be extended
+    for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.
+
+    Parameters
+    ----------
+    ll_objective : callable
+        The lower-level objective function of the bilevel optimization problem.
+
+    ul_objective : callable
+        The upper-level objective function of the bilevel optimization problem.
+
+    ul_model : torch.nn.Module
+        The upper-level model of the bilevel optimization problem.
+
+    ll_model : torch.nn.Module
+        The lower-level model of the bilevel optimization problem.
+
+    ll_var : List[torch.Tensor]
+        A list of variables optimized with the lower-level objective.
+
+    ul_var : List[torch.Tensor]
+        A list of variables optimized with the upper-level objective.
+
+    solver_config : dict
+        Dictionary containing configurations for the solver.
+
+    Methods
+    -------
+    compute_gradients(**kwargs)
+        Abstract method for computing hyper-gradients of the upper-level variables.
+        Must be implemented in derived classes.
+    """
     def __init__(
         self,
         ll_objective,
@@ -34,7 +69,23 @@ class HyperGradient(object):
 
 class SequentialHG:
     """
-    A dynamically created class for sequential hyper-gradient operations.
+    A class for managing sequential hyper-gradient operations.
+
+    This class dynamically organizes and executes a sequence of hyper-gradient computations
+    using user-defined and validated orders of gradient operators.
+
+    Parameters
+    ----------
+    ordered_instances : List[object]
+        A list of instantiated gradient operator objects, ordered as per the adjusted sequence.
+
+    custom_order : List[str]
+        The user-defined order of gradient operators.
+
+    Methods
+    -------
+    compute_gradients(**kwargs) -> List[Dict]
+        Compute hyper-gradients sequentially using the ordered instances.
     """
 
     def __init__(self, ordered_instances: List[object], custom_order: List[str]):
@@ -44,10 +95,20 @@ class SequentialHG:
 
     def compute_gradients(self, **kwargs) -> List[Dict]:
         """
-        Compute gradients sequentially using the ordered instances.
+        Compute hyper-gradients sequentially using the ordered instances.
 
-        :param kwargs: Arguments required for gradient computations.
-        :return: A list of dictionaries containing results for each gradient operator.
+        This method processes the hyper-gradients in the defined order, passing intermediate
+        results between consecutive gradient operators.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Additional arguments required for gradient computations.
+
+        Returns
+        -------
+        List[Dict]
+            A list of dictionaries containing results for each gradient operator.
         """
         self.result_store.clear()  # Reset the result store
         intermediate_result = None
@@ -71,17 +132,23 @@ class SequentialHG:
 
 def makes_functional_hyper_operation(custom_order: List[str], **kwargs) -> SequentialHG:
     """
-    Dynamically create a SequentialHyperGradient object with ordered gradient operators.
+    Dynamically create a SequentialHG object with ordered gradient operators.
+
+    This function validates the user-defined operator order, adjusts it to conform
+    with predefined gradient rules, and dynamically loads the corresponding operator classes.
 
     Parameters
     ----------
     custom_order : List[str]
-        User-defined operator order.
+        The user-defined order of gradient operators.
+
+    **kwargs : dict
+        Additional arguments required for initializing gradient operator instances.
 
     Returns
     -------
     SequentialHG
-        An instance with ordered gradient operators and result management.
+        An instance of SequentialHG containing the ordered gradient operators and result management.
     """
     # Load the predefined gradient order
     gradient_order = HyperGradientRules.get_gradient_order()
@@ -108,10 +175,14 @@ def validate_and_adjust_order(
     """
     Validate and adjust the custom order to match the predefined gradient order.
 
+    This function ensures that the user-defined order adheres to the predefined grouping
+    rules and adjusts it accordingly.
+
     Parameters
     ----------
     custom_order : List[str]
         The user-provided order of gradient operators.
+
     gradient_order : List[List[str]]
         The predefined order of gradient operator groups.
 

@@ -11,28 +11,44 @@ from ..utils.op_utils import stop_grads
 
 class NGD(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) [1].
+    Implements the optimization procedure of the Naive Gradient Descent (NGD) [1].
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective of the BLO problem.
-    :type ll_objective: callable
-    :param ul_objective: The upper-level objective of the BLO problem.
-    :type ul_objective: callable
+    :param ll_objective: The lower-level objective function of the BLO problem.
+    :type ll_objective: Callable
+    :param ul_objective: The upper-level objective function of the BLO problem.
+    :type ul_objective: Callable
     :param ll_model: The lower-level model of the BLO problem.
     :type ll_model: torch.nn.Module
     :param ul_model: The upper-level model of the BLO problem.
     :type ul_model: torch.nn.Module
-    :param lower_loop: Number of iterations for lower-level optimization.
+    :param lower_loop: The number of iterations for lower-level optimization.
     :type lower_loop: int
-    :param solver_config: Dictionary containing solver configurations.
-    :type solver_config: dict
+    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+        - "lower_level_opt" (torch.optim.Optimizer): The optimizer for the lower-level model.
+        - "hyper_op" (List[str]): A list of hyper-gradient operations to apply, such as "PTT" or "FOA".
+        - "RGT" (Dict): Configuration for Truncated Gradient Iteration (RGT):
+            - "truncate_iter" (int): The number of iterations to truncate the gradient computation.
+    :type solver_config: Dict[str, Any]
+
+    Attributes
+    ----------
+    :attribute truncate_max_loss_iter: Whether to truncate based on a maximum loss iteration (enabled if "PTT" is in `hyper_op`).
+    :type truncate_max_loss_iter: bool
+    :attribute truncate_iters: Number of iterations for gradient truncation, derived from `solver_config["RGT"]["truncate_iter"]`.
+    :type truncate_iters: int
+    :attribute ll_opt: The optimizer used for the lower-level model.
+    :type ll_opt: torch.optim.Optimizer
+    :attribute foa: Whether First-Order Approximation (FOA) is applied, based on `hyper_op` configuration.
+    :type foa: bool
 
     References
     ----------
     [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
         programming for hyperparameter optimization and meta-learning", in ICML, 2018.
     """
+
 
     def __init__(
         self,
@@ -63,29 +79,34 @@ class NGD(DynamicalSystem):
         **kwargs
     ):
         """
-        Execute the lower-level optimization procedure with the data from feed_dict and patched models.
+        Execute the lower-level optimization procedure using data, models, and patched optimizers.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization.
+            Typically includes training data, targets, and other information required to compute the lower-level (LL) objective.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization.
+            Typically includes validation data, targets, and other information required to compute the upper-level (UL) objective.
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower-level model wrapped by the `higher` library.
+            Used for differentiable optimization in the lower-level procedure.
 
-        :param auxiliary_opt: A patched optimizer for the lower-level model,
-            wrapped by the `higher` library. This optimizer allows for differentiable optimization.
-        :type auxiliary_opt: DifferentiableOptimizer
+        auxiliary_opt : DifferentiableOptimizer
+            A patched optimizer for the lower-level model, wrapped by the `higher` library.
+            Enables differentiable optimization.
 
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
+        current_iter : int
+            The current iteration number of the optimization process.
 
-        :returns: None
+        Returns
+        -------
+        None
         """
+        
         assert next_operation is None, "NGD does not support next_operation"
         if "gda_loss" in kwargs:
             gda_loss = kwargs["gda_loss"]

@@ -8,30 +8,45 @@ from boat.utils.op_utils import update_tensor_grads
 
 class IAD(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Initialization-based Auto Differentiation (IAD) [1].
+    Implements the optimization procedure of the Naive Gradient Descent (NGD) [1].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: torch.nn.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: torch.nn.Module
-        :param ll_var: List of variables optimized with the lower-level objective.
-        :type ll_var: List
-        :param ul_var:  of variables optimized with the upper-level objective.
-        :type ul_var: List
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
+    :param ll_objective: The lower-level objective function of the BLO problem.
+    :type ll_objective: Callable
+    :param ul_objective: The upper-level objective function of the BLO problem.
+    :type ul_objective: Callable
+    :param ll_model: The lower-level model of the BLO problem.
+    :type ll_model: torch.nn.Module
+    :param ul_model: The upper-level model of the BLO problem.
+    :type ul_model: torch.nn.Module
+    :param lower_loop: The number of iterations for lower-level optimization.
+    :type lower_loop: int
+    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+        - "lower_level_opt" (torch.optim.Optimizer): The optimizer for the lower-level model.
+        - "hyper_op" (List[str]): A list of hyper-gradient operations to apply, such as "PTT" or "FOA".
+        - "RGT" (Dict): Configuration for Truncated Gradient Iteration (RGT):
+            - "truncate_iter" (int): The number of iterations to truncate the gradient computation.
+    :type solver_config: Dict[str, Any]
+
+    Attributes
+    ----------
+    :attribute truncate_max_loss_iter: Indicates whether to truncate based on a maximum loss iteration 
+        (enabled if "PTT" is in `hyper_op`).
+    :type truncate_max_loss_iter: bool
+    :attribute truncate_iters: The number of iterations for gradient truncation, derived from `solver_config["RGT"]["truncate_iter"]`.
+    :type truncate_iters: int
+    :attribute ll_opt: The optimizer used for the lower-level model.
+    :type ll_opt: torch.optim.Optimizer
+    :attribute foa: Indicates whether First-Order Approximation (FOA) is applied, based on `hyper_op` configuration.
+    :type foa: bool
 
     References
     ----------
-    [1] Finn C, Abbeel P, Levine S. Model-agnostic meta-learning for fast
-    adaptation of deep networks[C]. in ICML, 2017.
+    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
+        programming for hyperparameter optimization and meta-learning", in ICML, 2018.
     """
+
 
     def __init__(
         self,

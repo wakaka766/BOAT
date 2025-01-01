@@ -12,32 +12,34 @@ from boat.utils.op_utils import stop_grads
 
 class GDA(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) [1] and
-    Gradient Descent Aggregation (GDA) [2].
+    Implements the optimization procedure of the Gradient Descent Aggregation (GDA) [1].
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective of the BLO problem.
-    :type ll_objective: callable
-    :param ul_objective: The upper-level objective of the BLO problem.
-    :type ul_objective: callable
+    :param ll_objective: The lower-level objective function of the BLO problem.
+    :type ll_objective: Callable
+    :param ul_objective: The upper-level objective function of the BLO problem.
+    :type ul_objective: Callable
     :param ll_model: The lower-level model of the BLO problem.
     :type ll_model: torch.nn.Module
     :param ul_model: The upper-level model of the BLO problem.
     :type ul_model: torch.nn.Module
-    :param lower_loop: Number of iterations for lower-level optimization.
+    :param lower_loop: The number of iterations for lower-level optimization.
     :type lower_loop: int
-    :param solver_config: Dictionary containing solver configurations.
-    :type solver_config: dict
+    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+        - "GDA" (Dict): Configuration for the GDA algorithm:
+            - "alpha_init" (float): Initial learning rate for the GDA updates.
+            - "alpha_decay" (float): Decay rate for the learning rate.
+        - "gda_loss" (Callable): The loss function used in the GDA optimization.
+    :type solver_config: Dict[str, Any]
 
     References
     ----------
-    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for
-        hyperparameter optimization and meta-learning", in ICML, 2018.
-
-    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework
+    [1] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework
         for bi-level programming beyond lower-level singleton", in ICML, 2020.
     """
+
+
 
     def __init__(
         self,
@@ -67,28 +69,62 @@ class GDA(DynamicalSystem):
         **kwargs
     ):
         """
-        Execute the lower-level optimization procedure with the data from feed_dict and patched models.
+        Execute the lower-level optimization procedure using provided data, models, and patched optimizers.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. 
+            Typically includes training data, targets, and other information required to compute the LL objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. 
+            Typically includes validation data, targets, and other information required to compute the UL objective.
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower model wrapped by the `higher` library. 
+            This model is used for differentiable optimization in the lower-level procedure.
+        auxiliary_opt : DifferentiableOptimizer
+            A patched optimizer for the lower-level model, wrapped by the `higher` library. 
+            Allows differentiable optimization.
+        current_iter : int
+            The current iteration number of the optimization process.
+        next_operation : str, optional
+            Specifies the next operation to be executed in the optimization pipeline. 
+            Default is None.
+        **kwargs : dict
+            Additional parameters required for the optimization procedure.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        Returns
+        -------
+        dict
+            A dictionary containing:
+                - "ll_feed_dict" : Dict
+                    Lower-level feed dictionary.
+                - "ul_feed_dict" : Dict
+                    Upper-level feed dictionary.
+                - "auxiliary_model" : _MonkeyPatchBase
+                    Patched lower-level model.
+                - "auxiliary_opt" : DifferentiableOptimizer
+                    Patched lower-level optimizer.
+                - "current_iter" : int
+                    Current iteration number.
+                - "gda_loss" : callable
+                    Gradient Descent Aggregation (GDA) loss function.
+                - "alpha" : float
+                    Coefficient used in the GDA operation, typically in (0, 1).
+                - "alpha_decay" : float
+                    Decay factor for the coefficient `alpha`.
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        Raises
+        ------
+        AssertionError
+            If `next_operation` is not defined.
+            If `alpha` is not in the range (0, 1).
+            If `gda_loss` is not properly defined.
 
-        :param auxiliary_opt: A patched optimizer for the lower-level model,
-            wrapped by the `higher` library. This optimizer allows for differentiable optimization.
-        :type auxiliary_opt: DifferentiableOptimizer
-
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
-
-        :returns: None
+        Notes
+        -----
+        - The method assumes that `gda_loss` is defined and accessible from the instance attributes.
+        - The coefficient `alpha` and its decay rate `alpha_decay` must be properly configured.
         """
         assert next_operation is not None, "Next operation should be defined."
         assert (self.alpha > 0) and (

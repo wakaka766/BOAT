@@ -20,26 +20,33 @@ class MESM(DynamicalSystem):
     Parameters
     ----------
     :param ll_objective: The lower-level objective of the BLO problem.
-    :type ll_objective: callable
+    :type ll_objective: Callable
     :param ul_objective: The upper-level objective of the BLO problem.
-    :type ul_objective: callable
+    :type ul_objective: Callable
     :param ll_model: The lower-level model of the BLO problem.
     :type ll_model: torch.nn.Module
     :param ul_model: The upper-level model of the BLO problem.
     :type ul_model: torch.nn.Module
     :param ll_var: The list of lower-level variables of the BLO problem.
-    :type ll_var: List
+    :type ll_var: List[torch.Tensor]
     :param ul_var: The list of upper-level variables of the BLO problem.
-    :type ul_var: List
+    :type ul_var: List[torch.Tensor]
     :param lower_loop: Number of iterations for lower-level optimization.
     :type lower_loop: int
-    :param solver_config: Dictionary containing solver configurations.
-    :type solver_config: dict
+    :param solver_config: A dictionary containing solver configurations.
+        Expected keys include:
+            - "lower_level_opt": The optimizer for the lower-level model.
+            - "MESM": A dictionary containing the following keys:
+                - "eta": Learning rate for the MESM optimization procedure.
+                - "gamma_1": Regularization parameter for the MESM algorithm.
+                - "c0": Initial constant for the update steps.
+                - "y_hat_lr": Learning rate for optimizing the surrogate variable `y_hat`.
+    :type solver_config: Dict[str, Any]
 
     References
     ----------
-    [1] Liu R, Liu Z, Yao W, et al. Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and
-        Hessian-free Solution Strategy[J]. ICML, 2024.
+    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization:
+        A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
     """
 
     def __init__(
@@ -70,20 +77,25 @@ class MESM(DynamicalSystem):
 
     def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
-        Execute the optimization procedure with the data from feed_dict.
+        Execute the optimization procedure using the provided data and model configurations.
 
+        Parameters
+        ----------
         :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
+            Typically includes training data, targets, and other information required to compute the LL objective.
         :type ll_feed_dict: Dict
 
         :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
+            Typically includes validation data, targets, and other information required to compute the UL objective.
         :type ul_feed_dict: Dict
 
         :param current_iter: The current iteration number of the optimization process.
         :type current_iter: int
 
-        :returns: None
+        Returns
+        -------
+        :return: The upper-level loss value for the current iteration.
+        :rtype: torch.Tensor
         """
 
         if current_iter == 0:
