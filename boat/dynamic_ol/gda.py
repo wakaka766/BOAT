@@ -1,13 +1,9 @@
 from .dynamical_system import DynamicalSystem
 
 from torch.nn import Module
-from torch.optim import Optimizer
-from torch import Tensor
-from typing import Callable
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from boat.utils.op_utils import stop_grads
 
 
 class GDA(DynamicalSystem):
@@ -16,30 +12,29 @@ class GDA(DynamicalSystem):
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective function of the BLO problem.
-    :type ll_objective: Callable
-    :param ul_objective: The upper-level objective function of the BLO problem.
-    :type ul_objective: Callable
-    :param ll_model: The lower-level model of the BLO problem.
-    :type ll_model: torch.nn.Module
-    :param ul_model: The upper-level model of the BLO problem.
-    :type ul_model: torch.nn.Module
-    :param lower_loop: The number of iterations for lower-level optimization.
-    :type lower_loop: int
-    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    lower_loop : int
+        The number of iterations for lower-level optimization.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the solver. Expected keys include:
+
         - "GDA" (Dict): Configuration for the GDA algorithm:
             - "alpha_init" (float): Initial learning rate for the GDA updates.
             - "alpha_decay" (float): Decay rate for the learning rate.
         - "gda_loss" (Callable): The loss function used in the GDA optimization.
-    :type solver_config: Dict[str, Any]
 
     References
     ----------
     [1] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework
         for bi-level programming beyond lower-level singleton", in ICML, 2020.
     """
-
-
 
     def __init__(
         self,

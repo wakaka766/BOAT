@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads, neumann
 
 class NS(HyperGradient):
     """
-    Computes the hyper-gradient of the upper-level variables using Neumann Series (NS) [1].
+    Calculation of the hyper gradient of the upper-level variables with Neumann Series (NS) [1].
 
     Parameters
     ----------
@@ -26,6 +26,7 @@ class NS(HyperGradient):
         List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations, including:
+
         - `dynamic_op` (str): Indicates dynamic initialization type (e.g., "DI").
         - `lower_level_opt` (Optimizer): Lower-level optimizer configuration.
         - `CG` (Dict): Conjugate Gradient-specific parameters:

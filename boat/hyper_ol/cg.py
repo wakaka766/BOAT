@@ -26,6 +26,7 @@ class CG(HyperGradient):
         List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations. Expected keys include:
+
         - `r` (float): Perturbation radius for finite differences.
         - `lower_level_opt` (torch.optim.Optimizer): Lower-level optimizer configuration.
         - `dynamic_op` (str): Indicates dynamic initialization type (e.g., "DI").

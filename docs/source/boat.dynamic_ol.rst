@@ -44,6 +44,14 @@ boat.dynamic\_ol.ngd module
    :undoc-members:
    :show-inheritance:
 
+boat.dynamic\_ol.sequential\_ds module
+--------------------------------------
+
+.. automodule:: boat.dynamic_ol.sequential_ds
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

@@ -15,40 +15,29 @@ class NGD(DynamicalSystem):
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective function of the BLO problem.
-    :type ll_objective: Callable
-    :param ul_objective: The upper-level objective function of the BLO problem.
-    :type ul_objective: Callable
-    :param ll_model: The lower-level model of the BLO problem.
-    :type ll_model: torch.nn.Module
-    :param ul_model: The upper-level model of the BLO problem.
-    :type ul_model: torch.nn.Module
-    :param lower_loop: The number of iterations for lower-level optimization.
-    :type lower_loop: int
-    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    lower_loop : int
+        The number of iterations for lower-level optimization.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the solver. Expected keys include:
+
         - "lower_level_opt" (torch.optim.Optimizer): The optimizer for the lower-level model.
         - "hyper_op" (List[str]): A list of hyper-gradient operations to apply, such as "PTT" or "FOA".
         - "RGT" (Dict): Configuration for Truncated Gradient Iteration (RGT):
             - "truncate_iter" (int): The number of iterations to truncate the gradient computation.
-    :type solver_config: Dict[str, Any]
-
-    Attributes
-    ----------
-    :attribute truncate_max_loss_iter: Whether to truncate based on a maximum loss iteration (enabled if "PTT" is in `hyper_op`).
-    :type truncate_max_loss_iter: bool
-    :attribute truncate_iters: Number of iterations for gradient truncation, derived from `solver_config["RGT"]["truncate_iter"]`.
-    :type truncate_iters: int
-    :attribute ll_opt: The optimizer used for the lower-level model.
-    :type ll_opt: torch.optim.Optimizer
-    :attribute foa: Whether First-Order Approximation (FOA) is applied, based on `hyper_op` configuration.
-    :type foa: bool
 
     References
     ----------
     [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
         programming for hyperparameter optimization and meta-learning", in ICML, 2018.
     """
-
 
     def __init__(
         self,

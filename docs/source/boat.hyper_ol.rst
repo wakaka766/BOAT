@@ -84,6 +84,14 @@ boat.hyper\_ol.rgt module
    :undoc-members:
    :show-inheritance:
 
+boat.hyper\_ol.sequential\_hg module
+------------------------------------
+
+.. automodule:: boat.hyper_ol.sequential_hg
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

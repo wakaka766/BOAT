@@ -26,6 +26,7 @@ class IGA(HyperGradient):
         List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations, including:
+
         - `alpha_init` (float): Initial learning rate for GDA.
         - `alpha_decay` (float): Decay factor for the GDA learning rate.
         - Optional `gda_loss` (Callable): Custom loss function for GDA, if applicable.
@@ -103,6 +104,7 @@ class IGA(HyperGradient):
             The next operator for hypergradient calculation. Not supported in this implementation, by default None.
         **kwargs : dict
             Additional arguments, such as:
+
             - `lower_model_params` : List[torch.nn.Parameter]
                 List of parameters for the lower-level model.
 
@@ -110,6 +112,7 @@ class IGA(HyperGradient):
         -------
         Dict
             A dictionary containing:
+
             - `upper_loss` : torch.Tensor
                 The upper-level objective value after optimization.
             - `hyper_gradient_finished` : bool
@@ -126,6 +129,7 @@ class IGA(HyperGradient):
         AssertionError
             If `next_operation` is not None, as this implementation does not support additional operations.
         """
+
         assert next_operation is None, "FD does not support next_operation"
         lower_model_params = kwargs.get(
             "lower_model_params", list(auxiliary_model.parameters())

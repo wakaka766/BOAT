@@ -3,42 +3,33 @@ from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
-from boat.utils.op_utils import update_tensor_grads
 
 
 class FOA(HyperGradient):
     """
-    Computes the hyper-gradient of the upper-level variables using First-Order Approximation (FOA) [1],
-    leveraging Initialization-based Auto Differentiation (IAD) [2].
+    Computes the hyper-gradient of the upper-level variables using First-Order Approximation (FOA) [1], leveraging Initialization-based Auto Differentiation (IAD) [2].
 
     Parameters
     ----------
     ll_objective : Callable
         The lower-level objective function of the BLO problem.
-
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-
     ll_model : torch.nn.Module
         The lower-level model of the BLO problem.
-
     ul_model : torch.nn.Module
         The upper-level model of the BLO problem.
-
     ll_var : List[torch.Tensor]
         List of variables optimized with the lower-level objective.
-
     ul_var : List[torch.Tensor]
         List of variables optimized with the upper-level objective.
-
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations.
 
     References
     ----------
     [1] Nichol A., "On first-order meta-learning algorithms," arXiv preprint arXiv:1803.02999, 2018.
-    [2] Finn C., Abbeel P., Levine S., "Model-agnostic meta-learning for fast adaptation of deep networks,"
-        in ICML, 2017.
+    [2] Finn C., Abbeel P., Levine S., "Model-agnostic meta-learning for fast adaptation of deep networks", in ICML, 2017.
     """
 
     def __init__(

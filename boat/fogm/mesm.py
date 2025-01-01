@@ -19,29 +19,29 @@ class MESM(DynamicalSystem):
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective of the BLO problem.
-    :type ll_objective: Callable
-    :param ul_objective: The upper-level objective of the BLO problem.
-    :type ul_objective: Callable
-    :param ll_model: The lower-level model of the BLO problem.
-    :type ll_model: torch.nn.Module
-    :param ul_model: The upper-level model of the BLO problem.
-    :type ul_model: torch.nn.Module
-    :param ll_var: The list of lower-level variables of the BLO problem.
-    :type ll_var: List[torch.Tensor]
-    :param ul_var: The list of upper-level variables of the BLO problem.
-    :type ul_var: List[torch.Tensor]
-    :param lower_loop: Number of iterations for lower-level optimization.
-    :type lower_loop: int
-    :param solver_config: A dictionary containing solver configurations.
-        Expected keys include:
-            - "lower_level_opt": The optimizer for the lower-level model.
-            - "MESM": A dictionary containing the following keys:
-                - "eta": Learning rate for the MESM optimization procedure.
-                - "gamma_1": Regularization parameter for the MESM algorithm.
-                - "c0": Initial constant for the update steps.
-                - "y_hat_lr": Learning rate for optimizing the surrogate variable `y_hat`.
-    :type solver_config: Dict[str, Any]
+    ll_objective : Callable
+        The lower-level objective of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        The list of lower-level variables of the BLO problem.
+    ul_var : List[torch.Tensor]
+        The list of upper-level variables of the BLO problem.
+    lower_loop : int
+        Number of iterations for lower-level optimization.
+    solver_config : Dict[str, Any]
+        A dictionary containing solver configurations. Expected keys include:
+
+        - "lower_level_opt": The optimizer for the lower-level model.
+        - "MESM" (Dict): A dictionary containing the following keys:
+            - "eta": Learning rate for the MESM optimization procedure.
+            - "gamma_1": Regularization parameter for the MESM algorithm.
+            - "c0": Initial constant for the update steps.
+            - "y_hat_lr": Learning rate for optimizing the surrogate variable `y_hat`.
 
     References
     ----------

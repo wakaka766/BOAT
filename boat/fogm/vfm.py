@@ -21,28 +21,29 @@ class VFM(DynamicalSystem):
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective function of the BLO problem.
-    :type ll_objective: Callable
-    :param ul_objective: The upper-level objective function of the BLO problem.
-    :type ul_objective: Callable
-    :param ll_model: The lower-level model of the BLO problem.
-    :type ll_model: torch.nn.Module
-    :param ul_model: The upper-level model of the BLO problem.
-    :type ul_model: torch.nn.Module
-    :param ll_var: A list of lower-level variables of the BLO problem.
-    :type ll_var: List[torch.Tensor]
-    :param ul_var: A list of upper-level variables of the BLO problem.
-    :type ul_var: List[torch.Tensor]
-    :param lower_loop: The number of iterations for lower-level optimization.
-    :type lower_loop: int
-    :param solver_config: A dictionary containing configurations for the solver. Expected keys include:
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        A list of lower-level variables of the BLO problem.
+    ul_var : List[torch.Tensor]
+        A list of upper-level variables of the BLO problem.
+    lower_loop : int
+        The number of iterations for lower-level optimization.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the solver. Expected keys include:
+
         - "lower_level_opt" (torch.optim.Optimizer): Optimizer for the lower-level model.
         - "VFM" (Dict): Configuration for the VFM algorithm:
             - "y_hat_lr" (float): Learning rate for optimizing the surrogate variable `y_hat`.
             - "eta" (float): Step size for value-function updates.
             - "u1" (float): Hyperparameter controlling the penalty in the value function.
         - "device" (str): Device on which computations are performed, e.g., "cpu" or "cuda".
-    :type solver_config: Dict[str, Any]
 
     References
     ----------
