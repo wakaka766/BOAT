@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads
 
 class FD(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Finite Differentiation (FD) _`[1]`.
+    Calculation of the hyper gradient of the upper-level variables with Finite Differentiation (FD) [1].
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ class FD(HyperGradient):
 
     References
     ----------
-    _`[1]` H. Liu, K. Simonyan, Y. Yang, "DARTS: Differentiable Architecture Search",
+    [1] H. Liu, K. Simonyan, Y. Yang, "DARTS: Differentiable Architecture Search",
      in ICLR, 2019.
     """
 

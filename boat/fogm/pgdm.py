@@ -15,7 +15,7 @@ from typing import Dict, Any, Callable, List
 
 class PGDM(DynamicalSystem):
     """
-    Implements the optimization procedure of Penalty based Gradient Descent Method (PGDM) _`[1]`.
+    Implements the optimization procedure of Penalty based Gradient Descent Method (PGDM) [1].
 
     Parameters
     ----------
@@ -39,7 +39,7 @@ class PGDM(DynamicalSystem):
 
     References
     ----------
-    _`[1]` Shen H, Chen T. On penalty-based bilevel gradient descent method[C]. In ICML, 2023.
+    [1] Shen H, Chen T. On penalty-based bilevel gradient descent method[C]. In ICML, 2023.
     """
 
     def __init__(

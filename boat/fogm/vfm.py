@@ -17,7 +17,7 @@ from typing import Dict, Any, Callable, List
 
 class VFM(DynamicalSystem):
     """
-    Implements the optimization procedure of Value-function based First-Order Method (VFM) _`[1]`.
+    Implements the optimization procedure of Value-function based First-Order Method (VFM) [1].
 
     Parameters
     ----------
@@ -41,7 +41,7 @@ class VFM(DynamicalSystem):
 
     References
     ----------
-    _`[1]` R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based
+    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based
     Interior-point Method for Non-convex Bi-level Optimization", in ICML, 2021.
     """
 

@@ -8,8 +8,8 @@ from boat.utils.op_utils import update_tensor_grads
 
 class FOA(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with First-Order Approximation (FOA) _`[1]`
-    based on the Initialization-based Auto Differentiation (IAD) _`[2]`.
+    Calculation of the hyper gradient of the upper-level variables with First-Order Approximation (FOA) [1]
+    based on the Initialization-based Auto Differentiation (IAD) [2].
 
     Parameters
     ----------
@@ -30,8 +30,8 @@ class FOA(HyperGradient):
 
     References
     ----------
-    _`[1]` Nichol A. On first-order meta-learning algorithms[J]. arXiv preprint arXiv:1803.02999, 2018.
-    _`[2]` Finn C, Abbeel P, Levine S. Model-agnostic meta-learning for fast
+    [1] Nichol A. On first-order meta-learning algorithms[J]. arXiv preprint arXiv:1803.02999, 2018.
+    [2] Finn C, Abbeel P, Levine S. Model-agnostic meta-learning for fast
     adaptation of deep networks[C]. in ICML, 2017.
     """
 

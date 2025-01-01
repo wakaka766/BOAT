@@ -165,45 +165,56 @@ class Problem:
         return self
 
     def run_iter(
-        self,
-        ll_feed_dict: Dict[str, Tensor],
-        ul_feed_dict: Dict[str, Tensor],
-        current_iter: int,
+            self,
+            ll_feed_dict: Dict[str, Tensor],
+            ul_feed_dict: Dict[str, Tensor],
+            current_iter: int,
     ) -> tuple:
         """
         Run a single iteration of the bi-level optimization process.
 
-        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of
-        the lower-level (LL) objective.
-            Example:
+        :param ll_feed_dict: Dictionary containing the real-time data and parameters
+            fed for the construction of the lower-level (LL) objective.
+
+            Example::
+
                 {
                     "image": train_images,
                     "text": train_texts,
                     "target": train_labels  # Optional
                 }
+
         :type ll_feed_dict: Dict[str, Tensor]
 
-        :param ul_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the upper-level (UL) objective.
-            Example:
+        :param ul_feed_dict: Dictionary containing the real-time data and parameters
+            fed for the construction of the upper-level (UL) objective.
+
+            Example::
+
                 {
                     "image": val_images,
                     "text": val_texts,
                     "target": val_labels  # Optional
                 }
+
         :type ul_feed_dict: Dict[str, Tensor]
 
         :param current_iter: The current iteration number.
         :type current_iter: int
 
         :notes:
-            - When `accumulate_grad` is set to True, you need to pack the data of each batch based on the format above.
-            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of dictionaries, i.e., `[Dict[str, Tensor]]`.
+            - When `accumulate_grad` is set to True, you need to pack the data of
+              each batch based on the format above.
+            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of
+              dictionaries, i.e., `[Dict[str, Tensor]]`.
 
         :returns: A tuple containing:
-            - loss (float): The loss value for the current iteration.
-            - run_time (float): The total time taken for the iteration.
+            - **loss** (*float*): The loss value for the current iteration.
+            - **run_time** (*float*): The total time taken for the iteration.
+
         :rtype: tuple
         """
+
         if self.boat_configs["fo_gm"] is not None:
             start_time = time.perf_counter()
             self._log_results.append(

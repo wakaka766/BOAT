@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads
 
 class PTT(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Pessimistic Trajectory Truncation (PTT) _`[1]`.
+    Calculation of the hyper gradient of the upper-level variables with Pessimistic Trajectory Truncation (PTT) [1].
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ class PTT(HyperGradient):
 
     References
     ----------
-    _`[1]` Liu R, Liu Y, Zeng S, et al. Towards gradient-based bilevel optimization
+    [1] Liu R, Liu Y, Zeng S, et al. Towards gradient-based bilevel optimization
      with non-convex followers and beyond[C]. In NeurIPS, 2021.
     """
 

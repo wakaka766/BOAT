@@ -11,27 +11,27 @@ from ..utils.op_utils import stop_grads
 
 class NGD(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) _`[1]`.
+    Implements the lower-level optimization procedure of the Naive Gradient Descent (NGD) [1].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: torch.nn.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: torch.nn.Module
-        :param lower_loop: Number of iterations for lower-level optimization.
-        :type lower_loop: int
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
+    :param ll_objective: The lower-level objective of the BLO problem.
+    :type ll_objective: callable
+    :param ul_objective: The upper-level objective of the BLO problem.
+    :type ul_objective: callable
+    :param ll_model: The lower-level model of the BLO problem.
+    :type ll_model: torch.nn.Module
+    :param ul_model: The upper-level model of the BLO problem.
+    :type ul_model: torch.nn.Module
+    :param lower_loop: Number of iterations for lower-level optimization.
+    :type lower_loop: int
+    :param solver_config: Dictionary containing solver configurations.
+    :type solver_config: dict
 
     References
     ----------
-    _`[1]` L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
-     programming for hyperparameter optimization and meta-learning", in ICML, 2018.
+    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
+        programming for hyperparameter optimization and meta-learning", in ICML, 2018.
     """
 
     def __init__(

@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads
 
 class RGT(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Reverse Gradient Truncation (RGT) _`[1]`.
+    Calculation of the hyper gradient of the upper-level variables with Reverse Gradient Truncation (RGT) [1].
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ class RGT(HyperGradient):
 
     References
     ----------
-    _`[1]` Shaban A, Cheng C A, Hatch N, et al. Truncated back-propagation for bilevel optimization[C]. In AISTATS,2019.
+    [1] Shaban A, Cheng C A, Hatch N, et al. Truncated back-propagation for bilevel optimization[C]. In AISTATS,2019.
     """
 
     def __init__(

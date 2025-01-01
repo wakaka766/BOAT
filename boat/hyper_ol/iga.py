@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads
 
 class IGA(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with  Implicit Gradient Approximation (IGA) _`[1]`.
+    Calculation of the hyper gradient of the upper-level variables with  Implicit Gradient Approximation (IGA) [1].
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ class IGA(HyperGradient):
 
     References
     ----------
-    _`[1]` Liu R, Gao J, Liu X, et al. Learning with constraint learning: New perspective, solution strategy and
+    [1] Liu R, Gao J, Liu X, et al. Learning with constraint learning: New perspective, solution strategy and
     various applications[J]. IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.
     """
 

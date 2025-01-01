@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads
 
 class IAD(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Initialization-based Auto Differentiation (IAD) _`[1]``.
+    Calculation of the hyper gradient of the upper-level variables with Initialization-based Auto Differentiation (IAD) [1].
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ class IAD(HyperGradient):
 
     References
     ----------
-    _`[1]` Finn C, Abbeel P, Levine S. Model-agnostic meta-learning for fast
+    [1] Finn C, Abbeel P, Levine S. Model-agnostic meta-learning for fast
     adaptation of deep networks[C]. in ICML, 2017.
     """
 

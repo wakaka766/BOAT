@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads
 
 class RAD(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Reverse Auto Differentiation (RAD) _`[1]`.
+    Calculation of the hyper gradient of the upper-level variables with Reverse Auto Differentiation (RAD) [1].
 
     Parameters
     ----------

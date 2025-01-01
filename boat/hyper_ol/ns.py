@@ -8,7 +8,7 @@ from boat.utils.op_utils import update_tensor_grads, neumann
 
 class NS(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Neumann Series (NS) _`[1]`.
+    Calculation of the hyper gradient of the upper-level variables with Neumann Series (NS) [1].
 
     Parameters
     ----------
@@ -29,7 +29,7 @@ class NS(HyperGradient):
 
     References
     ----------
-    _`[1]` J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
+    [1] J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of
      hyperparameters by implicit differentiation", in AISTATS, 2020.
     """
 

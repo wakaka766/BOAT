@@ -7,7 +7,7 @@ from boat.utils.op_utils import update_tensor_grads, conjugate_gradient
 
 
 class CG(HyperGradient):
-    """Calculation of the hyper gradient of the upper-level variables with Conjugate Gradient (CG)`[1]`.
+    """Calculation of the hyper gradient of the upper-level variables with Conjugate Gradient (CG) [1].
 
     Parameters
     ----------
@@ -28,7 +28,7 @@ class CG(HyperGradient):
 
     References
     ----------
-    _`[1]` A. Rajeswaran, C. Finn, S. M. Kakade, and S. Levine, "Meta-learning
+    [1] A. Rajeswaran, C. Finn, S. M. Kakade, and S. Levine, "Meta-learning
      with implicit gradients", in NeurIPS, 2019.
     """
 

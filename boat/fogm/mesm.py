@@ -15,7 +15,7 @@ from typing import Dict, Any, Callable, List
 
 class MESM(DynamicalSystem):
     """
-    Implements the optimization procedure of Moreau Envelop based Single-loop Method (MESM).
+    Implements the optimization procedure of Moreau Envelope based Single-loop Method (MESM) [1].
 
     Parameters
     ----------
@@ -36,11 +36,10 @@ class MESM(DynamicalSystem):
     :param solver_config: Dictionary containing solver configurations.
     :type solver_config: dict
 
-
     References
     ----------
-    _`[1]` Liu R, Liu Z, Yao W, et al. Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and
-    Hessian-free Solution Strategy[J]. ICML, 2024.
+    [1] Liu R, Liu Z, Yao W, et al. Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and
+        Hessian-free Solution Strategy[J]. ICML, 2024.
     """
 
     def __init__(

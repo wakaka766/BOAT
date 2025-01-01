@@ -10,7 +10,7 @@ from typing import Dict, Any, Callable, List
 
 class VSM(DynamicalSystem):
     """
-    Implements the optimization procedure of Value-function based Sequential (VSM) _`[1]`.
+    Implements the optimization procedure of Value-function based Sequential (VSM) [1].
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ class VSM(DynamicalSystem):
 
     References
     ----------
-    _`[1]` Liu B, Ye M, Wright S, et al. Bome! bilevel optimization made easy: A simple first-order approach[C].
+    [1] Liu B, Ye M, Wright S, et al. Bome! bilevel optimization made easy: A simple first-order approach[C].
     In NeurIPS, 2022.
     """
 
