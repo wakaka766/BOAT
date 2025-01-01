@@ -28,6 +28,5 @@ sphinx:
 #    - requirements: docs/requirements.txt
 
 python:
-  version: 3.9  # 指定 Python 版本
   install:
     - requirements: docs/requirements.txt  # 指定 requirements.txt 文件路径
