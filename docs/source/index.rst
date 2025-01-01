@@ -16,7 +16,6 @@ documentation for details.
    :caption: Contents:
 
    boat
-   modules
 
 Indices and tables
 ==================
