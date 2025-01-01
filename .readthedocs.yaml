@@ -7,13 +7,9 @@ version: 2
 
 # Set the OS, Python version and other tools you might need
 build:
-  os: ubuntu-24.04
+  os: ubuntu-20.04  # 可用版本：ubuntu-20.04 或 ubuntu-22.04
   tools:
-    python: "3.13"
-    # You can also specify other tool versions:
-    # nodejs: "23"
-    # rust: "1.82"
-    # golang: "1.23"
+    python: "3.9"  # 指定 Python 版本
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
