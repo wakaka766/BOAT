@@ -22,7 +22,7 @@ class HyperGradient(object):
         self.ll_model = ll_model
         self.ll_var = ll_var
         self.ul_var = ul_var
-        self.solver_configs = solver_config
+        self.solver_config = solver_config
 
     @abstractmethod
     def compute_gradients(self, **kwargs):
