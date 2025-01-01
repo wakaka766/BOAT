@@ -58,7 +58,7 @@ class CG(HyperGradient):
         self.K = solver_config["CG"]["k"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config.get("gda_loss", None)
+        self.gda_loss = solver_config.get("gda_loss", None) if "GDA" in solver_config["dynamic_op"] else None
 
     def compute_gradients(
         self,

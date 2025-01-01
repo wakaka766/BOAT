@@ -142,8 +142,8 @@ def main():
     boat_config["hyper_op"] = hyper_method
     boat_config["lower_level_model"] = meta_model
     boat_config["upper_level_model"] = meta_model
-    boat_config["lower_level_var"] = list(meta_model.parameters())
-    boat_config["upper_level_var"] = list(meta_model.parameters())
+    boat_config["lower_level_var"] = meta_model.parameters()
+    boat_config["upper_level_var"] = meta_model.parameters()
     boat_config["lower_level_opt"] = inner_opt
     boat_config["upper_level_opt"] = outer_opt
     b_optimizer = boat.Problem(boat_config, loss_config)
