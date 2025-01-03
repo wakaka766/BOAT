@@ -1,8 +1,8 @@
-boat package
-============
+Package Documentation
+=====================
 
-Subpackages
------------
+Main packages
+-------------
 
 .. toctree::
    :maxdepth: 4
@@ -12,21 +12,13 @@ Subpackages
    boat.hyper_ol
    boat.utils
 
-Submodules
-----------
+Main modules
+------------
 
 boat.boat\_opt module
 ---------------------
 
 .. automodule:: boat.boat_opt
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: boat
    :members:
    :undoc-members:
    :show-inheritance:

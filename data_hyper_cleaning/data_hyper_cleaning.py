@@ -1,14 +1,12 @@
-import os
 import sys
-
+import os
+import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import boat
 import torch
-import numpy as np
 import torch.nn.functional as F
-from util_file import data_splitting, initialize
+from .util_file import data_splitting, initialize, accuary, Binarization
 from boat.utils import HyperGradientRules,DynamicalSystemRules
-from boat import DynamicalSystem
 from torchvision.datasets import MNIST
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
@@ -20,25 +18,8 @@ tr.data_flatten()
 val.data_flatten()
 test.data_flatten()
 
-
-def accuary(out, target):
-    pred = out.argmax(dim=1, keepdim=True)
-    # print(pred)# get the index of the max log-probability
-    acc = pred.eq(target.view_as(pred)).sum().item() / len(target)
-    return acc
-
-
-def Binarization(x):
-    x_bi = np.zeros_like(x)
-    for i in range(x.shape[0]):
-        # print(x[i])
-        x_bi[i] = 1 if x[i] >= 0 else 0
-    return x_bi
-
-
 print(torch.cuda.is_available())
 device = torch.device("cpu")
-
 
 class Net_x(torch.nn.Module):
     def __init__(self, tr):
@@ -57,15 +38,8 @@ x = Net_x(tr)
 y = torch.nn.Sequential(torch.nn.Linear(28**2, 10)).to(device)
 x_opt = torch.optim.Adam(x.parameters(), lr=0.01)
 y_opt = torch.optim.SGD(y.parameters(), lr=0.01)
-###
 initialize(x)
 initialize(y)
-###
-
-import os
-import json
-
-# base_folder = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(parent_folder, "configs/boat_config_dhl.json"), "r") as f:
     boat_config = json.load(f)

@@ -7,7 +7,7 @@ import os
 import time
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+
 import torchvision.transforms as transforms
 
 from sklearn.model_selection import train_test_split

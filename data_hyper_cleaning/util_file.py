@@ -6,6 +6,17 @@ import torch
 import math
 from torch import nn
 
+def accuary(out, target):
+    pred = out.argmax(dim=1, keepdim=True)
+    acc = pred.eq(target.view_as(pred)).sum().item() / len(target)
+    return acc
+
+
+def Binarization(x):
+    x_bi = np.zeros_like(x)
+    for i in range(x.shape[0]):
+        x_bi[i] = 1 if x[i] >= 0 else 0
+    return x_bi
 
 class Dataset:
     def __init__(self, data, target, polluted=False, rho=0.0):
