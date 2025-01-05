@@ -118,8 +118,8 @@ boat_config["lower_level_model"] = lower_model
 boat_config["upper_level_model"] = upper_model
 boat_config["lower_level_opt"] = lower_opt
 boat_config["upper_level_opt"] = upper_opt
-boat_config["lower_level_var"] = lower_model.parameters()
-boat_config["upper_level_var"] = upper_model.parameters()
+boat_config["lower_level_var"] = list(lower_model.parameters())
+boat_config["upper_level_var"] = list(upper_model.parameters())
 ```
 
 ### **4. Initialize the BOAT Problem**

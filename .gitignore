@@ -1,1 +1,4 @@
 docs/build/
+data_hyper_cleaning/data_hyper_cleaning_local.py
+meta_learning/meta_learning_local.py
+L2_Reg/l2_regularization_local.py

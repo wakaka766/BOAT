@@ -14,7 +14,7 @@ from torch import nn
 from torchmeta.toy.helpers import sinusoid
 from torchmeta.utils.data import BatchMetaDataLoader
 from tqdm import tqdm
-from meta_learning.util_ml import get_sinuoid
+from examples.meta_learning.util_ml import get_sinuoid
 ```
 
 ### Explanation:
