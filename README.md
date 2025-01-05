@@ -1,5 +1,13 @@
 
-# BOAT --- Task-Agnostic Operation Toolbox for Gradient-based Bilevel Optimization
+<h1 align="center">BOAT</h1>
+<p align="center">
+  Task-Agnostic Operation Toolbox for Gradient-based Bilevel Optimization<br>
+  <a href="https://boat.readthedocs.io/en/latest/install_guide.html#installation">Installation</a> |
+  <a href="https://boat.readthedocs.io/en/latest/boat.html">Docs</a> |
+  <a href="https://boat.readthedocs.io/en/latest/install_guide.html#how-to-use-boat">Tutorials</a> |
+  <a href="https://boat.readthedocs.io/en/latest/index.html#running-example">Examples</a> |
+</p>
+
 [![PyPI version](https://badge.fury.io/py/boml.svg)](https://badge.fury.io/py/boml)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/callous-youth/BOAT/workflow.yml)
 [![codecov](https://codecov.io/github/callous-youth/BOAT/graph/badge.svg?token=0MKAOQ9KL3)](https://codecov.io/github/callous-youth/BOAT)
@@ -18,6 +26,12 @@ To enhance flexibility and efficiency, BOAT incorporates the **Dynamic Operation
 - **[Jittor-based](https://github.com/callous-youth/BOAT/tree/boat_jit)**: An accelerated version for high-performance tasks.
 - **[MindSpore-based](https://github.com/callous-youth/BOAT/tree/boat_ms)**: Incorporating the latest first-order optimization strategies to support emerging application scenarios.
 
+
+<p align="center">
+  <a href="your_project_documentation_link">
+    <img src="your_logo_path" alt="Project Logo" width="40%" align="top">
+  </a>
+</p>
 
 BOAT is designed to offer robust computational support for a broad spectrum of BLO research and applications, enabling innovation and efficiency in machine learning and computer vision.
 
