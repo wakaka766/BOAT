@@ -45,7 +45,7 @@ with open(script_file, "w") as f:
         for hyper_method in hyper_methodlist:
             k += 1
             f.write(
-                f'python /home/runner/work/BOAT/BOAT/meta_learning/meta_learning.py --dynamic_method {",".join(dynamic_method)} --hyper_method {",".join(hyper_method)} \n'
+                f'python /home/runner/work/BOAT/BOAT/examples/meta_learning/meta_learning.py --dynamic_method {",".join(dynamic_method)} --hyper_method {",".join(hyper_method)} \n'
             )
 
 # 如果是 Ubuntu 系统, 使得脚本具有执行权限
@@ -66,7 +66,7 @@ def test_combination_dynamic_hyper_method(dynamic_method, hyper_method):
     # 构建命令
     command = [
         "python",
-        "/home/runner/work/BOAT/BOAT/meta_learning/meta_learning.py",
+        "/home/runner/work/BOAT/BOAT/examples/meta_learning/meta_learning.py",
         "--dynamic_method",
         ",".join(dynamic_method),
         "--hyper_method",
