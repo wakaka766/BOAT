@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import boat
 import torch
 import torch.nn.functional as F
-from .util_file import data_splitting, initialize, accuary, Binarization
+from data_hyper_cleaning.util_file import data_splitting, initialize, accuary, Binarization
 from boat.utils import HyperGradientRules,DynamicalSystemRules
 from torchvision.datasets import MNIST
 
@@ -20,6 +20,7 @@ test.data_flatten()
 
 print(torch.cuda.is_available())
 device = torch.device("cpu")
+
 
 class Net_x(torch.nn.Module):
     def __init__(self, tr):
