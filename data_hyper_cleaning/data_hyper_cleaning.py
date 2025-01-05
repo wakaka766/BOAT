@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import boat
 import torch
 import torch.nn.functional as F
-from data_hyper_cleaning.util_file import data_splitting, initialize, accuary, Binarization
+from util_file import data_splitting, initialize, accuary, Binarization
 from boat.utils import HyperGradientRules,DynamicalSystemRules
 from torchvision.datasets import MNIST
 
