@@ -102,10 +102,10 @@ import json
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
 parent_folder = os.path.dirname(base_folder)
-with open(os.path.join(parent_folder, "configs/boat_config_ml.json"), "r") as f:
+with open(os.path.join(base_folder, "configs/boat_config_ml.json"), "r") as f:
     boat_config = json.load(f)
 
-with open(os.path.join(parent_folder, "configs/loss_config_ml.json"), "r") as f:
+with open(os.path.join(base_folder, "configs/loss_config_ml.json"), "r") as f:
     loss_config = json.load(f)
 
 
