@@ -1,6 +1,4 @@
-from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat.utils.op_utils import (
-    update_grads,
     grad_unused_zero,
     update_tensor_grads,
     copy_parameter_from_list,
@@ -8,11 +6,13 @@ from boat.utils.op_utils import (
 import numpy
 import torch
 from torch.nn import Module
-from torch.optim import Optimizer
 import copy
 from typing import Dict, Any, Callable, List
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class MESM(DynamicalSystem):
     """
     Implements the optimization procedure of Moreau Envelope based Single-loop Method (MESM) [1].
@@ -111,7 +111,7 @@ class MESM(DynamicalSystem):
 
         errs = []
         for a, b in zip(
-            list(self.y_hat.parameters()), list(self.ll_model.parameters())
+            list(self.y_hat.parameters()), list(self.ll_var)
         ):
             diff = a - b
             errs.append(diff)
@@ -124,7 +124,7 @@ class MESM(DynamicalSystem):
         copy_parameter_from_list(self.y_hat, vs_param)
 
         reg = 0
-        for param1, param2 in zip(list(self.ll_model.parameters()), vs_param):
+        for param1, param2 in zip(list(self.ll_var), vs_param):
             diff = param1 - param2
             # result_params.append(diff)
             reg += torch.norm(diff, p=2) ** 2
@@ -136,7 +136,7 @@ class MESM(DynamicalSystem):
 
         self.ll_opt.zero_grad()
         grad_y_parmaters = grad_unused_zero(
-            lower_loss, list(self.ll_model.parameters())
+            lower_loss, list(self.ll_var)
         )
 
         update_tensor_grads(self.ll_var, grad_y_parmaters)
@@ -149,8 +149,8 @@ class MESM(DynamicalSystem):
             - self.ll_objective(ll_feed_dict, self.ul_model, self.y_hat)
         )
         grad_x_parmaters = grad_unused_zero(
-            upper_loss, list(self.ul_model.parameters())
+            upper_loss, self.ul_var
         )
         update_tensor_grads(self.ul_var, grad_x_parmaters)
 
-        return upper_loss
+        return upper_loss.item()

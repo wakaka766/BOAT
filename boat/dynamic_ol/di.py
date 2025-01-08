@@ -1,15 +1,12 @@
-from .dynamical_system import DynamicalSystem
-
-from torch.nn import Module
-from torch.optim import Optimizer
-from torch import Tensor
-from typing import Callable
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from boat.utils.op_utils import stop_grads
+
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class DI(DynamicalSystem):
     """
     Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1]

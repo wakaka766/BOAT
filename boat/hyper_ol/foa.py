@@ -1,10 +1,12 @@
 import torch
-from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 
+from boat.dynamic_class_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+@register_class
 class FOA(HyperGradient):
     """
     Computes the hyper-gradient of the upper-level variables using First-Order Approximation (FOA) [1], leveraging Initialization-based Auto Differentiation (IAD) [2].

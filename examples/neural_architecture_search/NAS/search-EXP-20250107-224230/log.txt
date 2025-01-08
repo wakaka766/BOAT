@@ -1,0 +1,27 @@
+2025-01-07 22:42:31,225 gpu device = 0
+2025-01-07 22:42:31,225 args = Namespace(data='/data', batch_size=32, learning_rate=0.025, learning_rate_min=0.001, momentum=0.9, weight_decay=0.0003, report_freq=50, gpu=0, epochs=3, init_channels=16, layers=3, model_path='saved_models', cutout=False, load=False, load_iter=0, cutout_length=16, drop_path_prob=0.3, save='NAS\\search-EXP-20250107-224230', seed=2, grad_clip=5, train_portion=0.5, inner_loop=1, unrolled=False, arch_learning_rate=0.0003, arch_weight_decay=0.001)
+2025-01-07 22:42:32,037 param size = 0.673850MB
+2025-01-07 22:42:32,658 epoch 0 lr 1.900000e-02
+2025-01-07 22:42:32,659 genotype = Genotype(normal=[('dil_conv_3x3', 0), ('max_pool_3x3', 1), ('sep_conv_5x5', 0), ('sep_conv_5x5', 2), ('avg_pool_3x3', 3), ('max_pool_3x3', 2), ('max_pool_3x3', 3), ('max_pool_3x3', 2)], normal_concat=range(2, 6), reduce=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('sep_conv_5x5', 2), ('dil_conv_3x3', 0), ('max_pool_3x3', 2), ('avg_pool_3x3', 1), ('dil_conv_5x5', 4), ('max_pool_3x3', 3)], reduce_concat=range(2, 6))
+2025-01-07 22:42:38,774 train 000 loss: 2.110962e+00 top1: 28.125000 top5: 78.125000 runtime: 5.830806
+2025-01-07 22:45:24,941 train 050 loss: 1.941497e+00 top1: 31.127451 top5: 84.497549 runtime: 3.120729
+2025-01-07 22:48:11,052 train 100 loss: 1.872572e+00 top1: 33.353960 top5: 85.952970 runtime: 3.094171
+2025-01-07 22:50:57,133 train 150 loss: 1.807988e+00 top1: 36.196192 top5: 87.044702 runtime: 3.084803
+2025-01-07 22:53:43,164 train 200 loss: 1.760175e+00 top1: 37.717662 top5: 87.608831 runtime: 3.079903
+2025-01-07 22:53:46,483 train_acc 37.747525 , train_obj 1.759714 
+2025-01-07 22:53:46,651 epoch 1 lr 7.000000e-03
+2025-01-07 22:53:46,651 genotype = Genotype(normal=[('max_pool_3x3', 0), ('dil_conv_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('dil_conv_5x5', 1), ('sep_conv_3x3', 4), ('max_pool_3x3', 0)], normal_concat=range(2, 6), reduce=[('max_pool_3x3', 0), ('dil_conv_5x5', 1), ('avg_pool_3x3', 2), ('max_pool_3x3', 0), ('max_pool_3x3', 2), ('avg_pool_3x3', 3), ('max_pool_3x3', 3), ('avg_pool_3x3', 2)], reduce_concat=range(2, 6))
+2025-01-07 22:53:50,029 train 000 loss: 1.592139e+00 top1: 31.250000 top5: 100.000000 runtime: 3.105849
+2025-01-07 22:56:36,060 train 050 loss: 1.623010e+00 top1: 40.686275 top5: 89.522059 runtime: 3.064292
+2025-01-07 22:59:22,062 train 100 loss: 1.636973e+00 top1: 40.160891 top5: 89.480198 runtime: 3.064758
+2025-01-07 23:02:08,361 train 150 loss: 1.632590e+00 top1: 40.376656 top5: 89.424669 runtime: 3.065814
+2025-01-07 23:04:54,441 train 200 loss: 1.622484e+00 top1: 41.075871 top5: 89.521144 runtime: 3.065723
+2025-01-07 23:04:57,757 train_acc 41.058168 , train_obj 1.622432 
+2025-01-07 23:04:57,914 epoch 2 lr 1.000000e-03
+2025-01-07 23:04:57,915 genotype = Genotype(normal=[('sep_conv_5x5', 0), ('dil_conv_3x3', 1), ('dil_conv_5x5', 2), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('dil_conv_5x5', 1), ('sep_conv_3x3', 4), ('max_pool_3x3', 0)], normal_concat=range(2, 6), reduce=[('max_pool_3x3', 0), ('avg_pool_3x3', 1), ('avg_pool_3x3', 2), ('max_pool_3x3', 0), ('avg_pool_3x3', 2), ('avg_pool_3x3', 3), ('max_pool_3x3', 3), ('avg_pool_3x3', 2)], reduce_concat=range(2, 6))
+2025-01-07 23:05:01,282 train 000 loss: 1.689487e+00 top1: 37.500000 top5: 90.625000 runtime: 3.057070
+2025-01-07 23:07:47,316 train 050 loss: 1.667108e+00 top1: 38.051471 top5: 89.031863 runtime: 3.062107
+2025-01-07 23:10:33,307 train 100 loss: 1.664456e+00 top1: 39.263614 top5: 88.613861 runtime: 3.063447
+2025-01-07 23:13:19,338 train 150 loss: 1.661841e+00 top1: 39.259106 top5: 88.617550 runtime: 3.063913
+2025-01-07 23:16:05,486 train 200 loss: 1.665635e+00 top1: 39.070274 top5: 88.277363 runtime: 3.064479
+2025-01-07 23:16:08,810 train_acc 39.062500 , train_obj 1.665172 

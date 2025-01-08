@@ -1,8 +1,11 @@
 import abc
 from typing import Dict
+
+from boat.dynamic_class_registry import register_class
 importlib = __import__("importlib")
 
 
+@register_class
 class DynamicalSystem(object):
     def __init__(
         self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config

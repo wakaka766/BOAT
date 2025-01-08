@@ -1,11 +1,13 @@
-from .dynamical_system import DynamicalSystem
-
 from torch.nn import Module
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class GDA(DynamicalSystem):
     """
     Implements the optimization procedure of the Gradient Descent Aggregation (GDA) [1].
@@ -51,7 +53,7 @@ class GDA(DynamicalSystem):
         )
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config["gda_loss"]
+        self.gda_loss = solver_config.get("gda_loss", None)
 
     def optimize(
         self,

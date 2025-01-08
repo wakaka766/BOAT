@@ -1,8 +1,10 @@
 from abc import abstractmethod
 from typing import List
+from boat.dynamic_class_registry import register_class
 importlib = __import__("importlib")
 
 
+@register_class
 class HyperGradient(object):
     """
     Base class for computing hyper-gradients of upper-level variables in bilevel optimization problems.

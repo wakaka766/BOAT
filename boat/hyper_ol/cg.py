@@ -1,11 +1,13 @@
 import torch
-from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 from boat.utils.op_utils import update_tensor_grads, conjugate_gradient
 
+from boat.dynamic_class_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+@register_class
 class CG(HyperGradient):
     """
     Computes the hyper-gradient of the upper-level variables using Finite Differentiation (FD) [1].
@@ -143,9 +145,10 @@ class CG(HyperGradient):
             "lower_model_params", list(auxiliary_model.parameters())
         )
         hparams = kwargs.get("hparams", list(self.ul_var))
-
+        import time
+        starttime=time.time()
         def fp_map(params, loss_f):
-            lower_grads = list(torch.autograd.grad(loss_f, params, create_graph=True))
+            lower_grads = torch.autograd.grad(loss_f, params, create_graph=True)
             updated_params = []
             for i in range(len(params)):
                 updated_params.append(params[i] - self.ll_lr * lower_grads[i])
@@ -167,6 +170,8 @@ class CG(HyperGradient):
         upper_loss = self.ul_objective(
             ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
+        print("step 1 time:", time.time() - starttime)
+        starttime=time.time()
         if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(
                 upper_loss, list(auxiliary_model.parameters(time=0)), retain_graph=True
@@ -181,7 +186,7 @@ class CG(HyperGradient):
             fp_map,
             self.tolerance,
         )
-
+        print("step 6 time:", time.time()- starttime)
         update_tensor_grads(self.ul_var, upper_grads)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

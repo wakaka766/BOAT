@@ -1,11 +1,14 @@
 import torch
-from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 from boat.utils.op_utils import update_tensor_grads
 
+from boat.dynamic_class_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+
+@register_class
 class IAD(HyperGradient):
     """
         Implements the optimization procedure of the Naive Gradient Descent (NGD) [1].
@@ -131,4 +134,4 @@ class IAD(HyperGradient):
                 ul_loss, list(auxiliary_model.parameters(time=0)), allow_unused=True
             )
             update_tensor_grads(self.ul_var, grads_upper)
-            return {"upper_loss": ul_loss, "hyper_gradient_finished": True}
+            return {"upper_loss": ul_loss.item(), "hyper_gradient_finished": True}

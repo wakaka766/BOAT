@@ -1,11 +1,13 @@
 import torch
-from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 from boat.utils.op_utils import update_tensor_grads
 
+from boat.dynamic_class_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+@register_class
 class IGA(HyperGradient):
     """
     Computes the hyper-gradient of the upper-level variables using Implicit Gradient Approximation (IGA) [1].
@@ -147,12 +149,11 @@ class IGA(HyperGradient):
             lower_loss = self.ll_objective(
                 ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
             )
+
         dfy = torch.autograd.grad(lower_loss, lower_model_params, retain_graph=True)
 
         upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model)
         dFy = torch.autograd.grad(upper_loss, lower_model_params, retain_graph=True)
-
-        # calculate GN loss
         gFyfy = 0
         gfyfy = 0
         for Fy, fy in zip(dFy, dfy):
@@ -165,8 +166,7 @@ class IGA(HyperGradient):
                 upper_loss, list(auxiliary_model.parameters(time=0)), retain_graph=True
             )
             update_tensor_grads(self.ll_var, grads_lower)
-
         grads_upper = torch.autograd.grad(GN_loss + upper_loss, list(self.ul_var))
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

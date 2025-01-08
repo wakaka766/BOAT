@@ -1,0 +1,45 @@
+2025-01-06 10:59:53,706 gpu device = 0
+2025-01-06 10:59:53,707 args = Namespace(data='/data', batch_size=32, learning_rate=0.025, learning_rate_min=0.001, momentum=0.9, weight_decay=0.0003, report_freq=50, gpu=0, epochs=3, init_channels=16, layers=3, model_path='saved_models', cutout=False, load=False, load_iter=0, cutout_length=16, drop_path_prob=0.3, save='NAS\\search-EXP-20250106-105953', seed=2, grad_clip=5, train_portion=0.5, inner_loop=1, unrolled=False, arch_learning_rate=0.0003, arch_weight_decay=0.001)
+2025-01-06 10:59:54,483 param size = 0.673850MB
+2025-01-06 10:59:55,081 epoch 0 lr 1.900000e-02
+2025-01-06 10:59:55,081 genotype = Genotype(normal=[('dil_conv_3x3', 0), ('max_pool_3x3', 1), ('sep_conv_5x5', 0), ('sep_conv_5x5', 2), ('avg_pool_3x3', 3), ('max_pool_3x3', 2), ('max_pool_3x3', 3), ('max_pool_3x3', 2)], normal_concat=range(2, 6), reduce=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('sep_conv_5x5', 2), ('dil_conv_3x3', 0), ('max_pool_3x3', 2), ('avg_pool_3x3', 1), ('dil_conv_5x5', 4), ('max_pool_3x3', 3)], reduce_concat=range(2, 6))
+2025-01-06 11:00:01,270 train 000 loss: 1.991143e+00 top1: 37.500000 top5: 87.500000 runtime: 5.922126
+2025-01-06 11:02:56,372 train 050 loss: 1.668207e+00 top1: 43.382353 top5: 90.931373 runtime: 3.301455
+2025-01-06 11:05:52,814 train 100 loss: 1.594816e+00 top1: 45.761139 top5: 91.738861 runtime: 3.284901
+2025-01-06 11:08:51,813 train 150 loss: 1.525102e+00 top1: 48.572020 top5: 92.446192 runtime: 3.293532
+2025-01-06 11:11:47,990 train 200 loss: 1.472923e+00 top1: 50.684080 top5: 92.972637 runtime: 3.285720
+2025-01-06 11:11:51,458 train_acc 50.727104 , train_obj 1.472381 
+2025-01-06 11:11:51,510 valid 000 loss: 1.628825e+00 top1: 37.500000 top5: 90.625000
+2025-01-06 11:11:53,256 valid 050 loss: 1.832340e+00 top1: 34.803922 top5: 85.968137
+2025-01-06 11:11:55,112 valid 100 loss: 1.824790e+00 top1: 35.272277 top5: 85.952970
+2025-01-06 11:11:56,891 valid 150 loss: 1.829575e+00 top1: 35.326987 top5: 85.885762
+2025-01-06 11:11:58,655 valid 200 loss: 1.843437e+00 top1: 34.919154 top5: 85.509950
+2025-01-06 11:11:58,697 valid_acc 34.900990, valid_obj 1.843671
+2025-01-06 11:11:58,778 epoch 1 lr 7.000000e-03
+2025-01-06 11:11:58,779 genotype = Genotype(normal=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_5x5', 2), ('max_pool_3x3', 0), ('max_pool_3x3', 2), ('max_pool_3x3', 0), ('max_pool_3x3', 1)], normal_concat=range(2, 6), reduce=[('sep_conv_5x5', 0), ('sep_conv_5x5', 1), ('sep_conv_5x5', 0), ('sep_conv_5x5', 1), ('dil_conv_3x3', 3), ('dil_conv_3x3', 2), ('sep_conv_3x3', 1), ('sep_conv_3x3', 4)], reduce_concat=range(2, 6))
+2025-01-06 11:12:02,352 train 000 loss: 1.606172e+00 top1: 46.875000 top5: 93.750000 runtime: 3.277444
+2025-01-06 11:14:56,847 train 050 loss: 1.414840e+00 top1: 50.796569 top5: 93.137255 runtime: 3.233825
+2025-01-06 11:17:51,624 train 100 loss: 1.391274e+00 top1: 51.732673 top5: 93.471535 runtime: 3.237088
+2025-01-06 11:20:46,272 train 150 loss: 1.375195e+00 top1: 52.152318 top5: 93.584437 runtime: 3.236725
+2025-01-06 11:23:40,976 train 200 loss: 1.353291e+00 top1: 53.482587 top5: 93.921020 runtime: 3.236690
+2025-01-06 11:23:44,541 train_acc 53.542698 , train_obj 1.352511 
+2025-01-06 11:23:44,593 valid 000 loss: 2.016185e+00 top1: 37.500000 top5: 78.125000
+2025-01-06 11:23:46,346 valid 050 loss: 1.551710e+00 top1: 43.750000 top5: 90.196078
+2025-01-06 11:23:48,136 valid 100 loss: 1.539208e+00 top1: 44.183168 top5: 90.284653
+2025-01-06 11:23:49,938 valid 150 loss: 1.519353e+00 top1: 44.598510 top5: 90.997517
+2025-01-06 11:23:51,691 valid 200 loss: 1.525363e+00 top1: 44.558458 top5: 91.138060
+2025-01-06 11:23:51,733 valid_acc 44.477104, valid_obj 1.527981
+2025-01-06 11:23:51,810 epoch 2 lr 1.000000e-03
+2025-01-06 11:23:51,811 genotype = Genotype(normal=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('max_pool_3x3', 3), ('max_pool_3x3', 0), ('max_pool_3x3', 1)], normal_concat=range(2, 6), reduce=[('sep_conv_5x5', 1), ('sep_conv_5x5', 0), ('sep_conv_5x5', 0), ('dil_conv_5x5', 2), ('dil_conv_3x3', 3), ('dil_conv_5x5', 1), ('sep_conv_3x3', 0), ('dil_conv_3x3', 3)], reduce_concat=range(2, 6))
+2025-01-06 11:23:55,395 train 000 loss: 1.554869e+00 top1: 43.750000 top5: 90.625000 runtime: 3.280670
+2025-01-06 11:26:50,095 train 050 loss: 1.425366e+00 top1: 48.039216 top5: 92.892157 runtime: 3.238436
+2025-01-06 11:29:44,845 train 100 loss: 1.442530e+00 top1: 48.329208 top5: 92.172030 runtime: 3.237583
+2025-01-06 11:32:39,589 train 150 loss: 1.432076e+00 top1: 48.820364 top5: 92.632450 runtime: 3.237436
+2025-01-06 11:35:34,248 train 200 loss: 1.427586e+00 top1: 48.631841 top5: 92.677239 runtime: 3.236808
+2025-01-06 11:35:37,767 train_acc 48.669554 , train_obj 1.426602 
+2025-01-06 11:35:37,819 valid 000 loss: 1.399263e+00 top1: 53.125000 top5: 96.875000
+2025-01-06 11:35:39,593 valid 050 loss: 1.437829e+00 top1: 49.448529 top5: 92.585784
+2025-01-06 11:35:41,399 valid 100 loss: 1.466456e+00 top1: 47.370050 top5: 92.079208
+2025-01-06 11:35:43,151 valid 150 loss: 1.470963e+00 top1: 47.061258 top5: 91.990894
+2025-01-06 11:35:44,951 valid 200 loss: 1.461898e+00 top1: 47.652363 top5: 92.024254
+2025-01-06 11:35:44,993 valid_acc 47.694926, valid_obj 1.462024

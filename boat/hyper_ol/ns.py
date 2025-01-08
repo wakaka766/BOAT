@@ -1,11 +1,14 @@
 import torch
-from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 from boat.utils.op_utils import update_tensor_grads, neumann
 
+from boat.dynamic_class_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+
+@register_class
 class NS(HyperGradient):
     """
     Calculation of the hyper gradient of the upper-level variables with Neumann Series (NS) [1].
@@ -158,4 +161,4 @@ class NS(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

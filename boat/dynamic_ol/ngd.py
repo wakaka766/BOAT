@@ -1,14 +1,15 @@
 import torch.autograd
-
-from .dynamical_system import DynamicalSystem
-
 from torch.nn import Module
 from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import stop_grads
+from boat.utils.op_utils import stop_grads
+
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class NGD(DynamicalSystem):
     """
     Implements the optimization procedure of the Naive Gradient Descent (NGD) [1].
@@ -162,4 +163,4 @@ class NGD(DynamicalSystem):
             else:
                 loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
             auxiliary_opt.step(loss_f, grad_callback=stop_grads if self.foa else None)
-        return self.lower_loop - self.truncate_iters
+        return -1

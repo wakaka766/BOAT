@@ -1,18 +1,17 @@
-from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat.utils.op_utils import (
     grad_unused_zero,
     require_model_grad,
-    update_tensor_grads,
-    stop_model_grad,
+    update_tensor_grads
 )
 
 import torch
 from torch.nn import Module
-from torch.optim import Optimizer
 import copy
 from typing import Dict, Any, Callable, List
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
-
+@register_class
 class PGDM(DynamicalSystem):
     """
     Implements the optimization procedure of Moreau Envelope based Single-loop Method (MESM) [1].
@@ -139,4 +138,4 @@ class PGDM(DynamicalSystem):
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
         self.ll_opt.step()
-        return F_y
+        return F_y.item()

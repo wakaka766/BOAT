@@ -1,7 +1,6 @@
 import torch
 from torch import Tensor
 from typing import List, Callable, Dict
-from torch.autograd import grad as torch_grad
 
 
 class ResultStore:
@@ -240,13 +239,13 @@ def neumann(
     gs_vec = cat_list_to_tensor(gs)
     for i in range(k):
         gs_prev_vec = gs_vec
-        vs = torch_grad(w_mapped, params, grad_outputs=vs, retain_graph=True)
+        vs = torch.autograd.grad(w_mapped, params, grad_outputs=vs, retain_graph=True)
         gs = [g + v for g, v in zip(gs, vs)]
         gs_vec = cat_list_to_tensor(gs)
         if float(torch.norm(gs_vec - gs_prev_vec)) < tol:
             break
 
-    grads = torch_grad(w_mapped, hparams, grad_outputs=gs)
+    grads = torch.autograd.grad(w_mapped, hparams, grad_outputs=gs)
     grads = [g + v for g, v in zip(grads, grad_outer_hparams)]
     return grads
 
@@ -260,20 +259,26 @@ def conjugate_gradient(
     fp_map: Callable[[List[Tensor], List[Tensor]], List[Tensor]],
     tol=1e-10,
 ) -> List[Tensor]:
+    import time
+    starttime = time.time()
     grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
+    print("step 2 time:", time.time() - starttime)
+    starttime = time.time()
 
     w_mapped = fp_map(params, lower_loss)
-
+    print("step 3 time:", time.time() - starttime)
     def dfp_map_dw(xs):
-        Jfp_mapTv = torch_grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
+        Jfp_mapTv = torch.autograd.grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
         return [v - j for v, j in zip(xs, Jfp_mapTv)]
-
+    starttime = time.time()
     vs = cg_step(
         dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol
-    )  # K steps of conjugate gradient
-
-    grads = torch_grad(w_mapped, hparams, grad_outputs=vs)
+    )
+    print("step 4 cg time:", time.time() - starttime)
+    starttime = time.time()
+    grads = torch.autograd.grad(w_mapped, hparams, grad_outputs=vs)
     grads = [g + v for g, v in zip(grads, grad_outer_hparams)]
+    print("step 5 grad time:", time.time() - starttime)
 
     return grads
 

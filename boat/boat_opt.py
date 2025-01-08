@@ -7,10 +7,10 @@ import torch
 from torch import Tensor
 import higher
 
+from boat.dynamic_class_registry import get_registered_class
+from boat.dynamic_ol import makes_functional_dynamical_system
+from boat.hyper_ol import makes_functional_hyper_operation
 importlib = __import__("importlib")
-ll_grads = importlib.import_module("boat.dynamic_ol")
-ul_grads = importlib.import_module("boat.hyper_ol")
-fo_gms = importlib.import_module("boat.fogm")
 
 
 def _load_loss_function(loss_config: Dict[str, Any]) -> Callable:
@@ -73,19 +73,19 @@ class Problem:
         self._ul_model = config["upper_level_model"]
         self._ll_var = config["lower_level_var"]
         self._ul_var = config["upper_level_var"]
-
         self._lower_opt = config["lower_level_opt"]
         self._upper_opt = config["upper_level_opt"]
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
         self.boat_configs = config
+        self._lower_loop = config.get("lower_iters", 10)
+        self._log_results = []
+        self._device = torch.device(config["device"])
         self._ll_solver = None
         self._ul_solver = None
         self._lower_init_opt = None
         self._fo_gm_solver = None
-        self._lower_loop = config.get("lower_iters", 10)
-        self._log_results = []
-        self._device = torch.device(config["device"])
+        self._track_opt_traj = False
         if config["dynamic_op"] is not None:
             if "GDA" in config["dynamic_op"]:
                 assert loss_config.get("gda_loss", None) is not None, "Set the 'gda_loss' in loss_config properly."
@@ -103,7 +103,7 @@ class Problem:
             ), "Set 'dynamic_op' and 'hyper_op' properly."
             self.check_status()
             sorted_ops = sorted([op.upper() for op in self._dynamic_op])
-            self._ll_solver = ll_grads.makes_functional_dynamical_system(
+            self._ll_solver = makes_functional_dynamical_system(
                 custom_order=sorted_ops,
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
@@ -123,7 +123,7 @@ class Problem:
                     ]["lr"]
 
         else:
-            self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
+            self._fo_gm_solver = get_registered_class("%s" % self.boat_configs["fo_gm"])(
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
                 ll_model=self._ll_model,
@@ -147,7 +147,7 @@ class Problem:
             ), "Choose FOGM based methods from ['VSM','VFM','MESM', 'PGDM'] or set 'dynamic_ol' and 'hyper_ol' properly. Currently, fo_gm ={} is not None".format(self.boat_configs["fo_gm"])
             sorted_ops = sorted([op.upper() for op in self._hyper_op])
             if "DM" not in self._dynamic_op:
-                self._ul_solver = ul_grads.makes_functional_hyper_operation(
+                self._ul_solver = makes_functional_hyper_operation(
                     custom_order=sorted_ops,
                     ul_objective=self._ul_loss,
                     ll_objective=self._ll_loss,
@@ -228,8 +228,8 @@ class Problem:
                     ll_feed_dict, ul_feed_dict
                 ):
                     with higher.innerloop_ctx(
-                        self._ll_model, self._lower_opt, copy_initial_weights=False
-                    ) as (auxiliary_model, auxiliary_opt):
+                        self._ll_model, self._lower_opt, copy_initial_weights=False, device=self._device,
+                        track_higher_grads=self._track_opt_traj) as (auxiliary_model, auxiliary_opt):
                         forward_time = time.perf_counter()
                         dynamic_results = self._ll_solver.optimize(
                             ll_feed_dict=batch_ll_feed_dict,
@@ -255,8 +255,8 @@ class Problem:
                 average_grad(self._ul_model, len(ll_feed_dict))
             else:
                 with higher.innerloop_ctx(
-                    self._ll_model, self._lower_opt, copy_initial_weights=True
-                ) as (auxiliary_model, auxiliary_opt):
+                    self._ll_model, self._lower_opt, copy_initial_weights=False, device=self._device,
+                        track_higher_grads=self._track_opt_traj) as (auxiliary_model, auxiliary_opt):
                     forward_time = time.perf_counter()
                     dynamic_results = self._ll_solver.optimize(
                         ll_feed_dict=ll_feed_dict,
@@ -267,7 +267,7 @@ class Problem:
                     )
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
-                    backward_time = time.time()
+                    backward_time = time.perf_counter()
                     if self._ul_solver is not None:
                         self._log_results.append(
                             self._ul_solver.compute_gradients(
@@ -281,7 +281,7 @@ class Problem:
                     if self.boat_configs["copy_last_param"]:
                         copy_parameter_from_list(
                             self._ll_model,
-                            list(auxiliary_model.parameters(time=max_loss_iter)),
+                            list(auxiliary_model.parameters(time=-1)),
                         )
                 if "DI" in self.boat_configs["dynamic_op"]:
                     self._lower_init_opt.step()
@@ -295,8 +295,12 @@ class Problem:
 
         return self._log_results, run_time
 
-    def check_status(self):
+    def set_track_trajectory(self, track_traj=True):
+        self._track_opt_traj = track_traj
 
+    def check_status(self):
+        if any(item in self._hyper_op for item in ["PTT", "IAD"]):
+            self.set_track_trajectory(True)
         if "DM" in self.boat_configs["dynamic_op"]:
             assert (self.boat_configs["hyper_op"] == ["RAD"]) or (
                 self.boat_configs["hyper_op"] == ["CG"]
@@ -342,3 +346,4 @@ class Problem:
         assert (
             self.boat_configs["RGT"]["truncate_iter"] < self.boat_configs["lower_iters"]
         ), "The value of 'truncate_iter' shouldn't be greater than 'lower_loop'."
+

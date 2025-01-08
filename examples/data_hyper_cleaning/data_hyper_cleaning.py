@@ -79,7 +79,7 @@ def main():
     print(args.dynamic_method)
     print(args.hyper_method)
     if hyper_method is not None and ("RGT" in hyper_method):
-            boat_config["RGT"]["truncate_iter"] = 1
+        boat_config["RGT"]["truncate_iter"] = 1
     boat_config["dynamic_op"] = dynamic_method
     boat_config["hyper_op"] = hyper_method
     boat_config["fo_gm"] = args.fo_gm

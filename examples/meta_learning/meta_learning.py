@@ -89,9 +89,6 @@ meta_model = get_sinuoid()
 dataloader = BatchMetaDataLoader(dataset, batch_size=batch_size, **kwargs)
 test_dataloader = BatchMetaDataLoader(dataset, batch_size=batch_size, **kwargs)
 
-# dataloader = BatchMetaDataLoader(dataset, batch_size=batch_size, **kwargs)
-# test_dataloader = BatchMetaDataLoader(test_dataset, batch_size=batch_size, **kwargs)
-
 inner_opt = torch.optim.SGD(lr=0.1, params=meta_model.parameters())
 outer_opt = torch.optim.Adam(meta_model.parameters(), lr=0.01)
 y_lr_schedular = torch.optim.lr_scheduler.CosineAnnealingLR(

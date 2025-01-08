@@ -1,4 +1,3 @@
-from .dynamical_system import DynamicalSystem
 import torch
 from torch.nn import Module
 from higher.patch import _MonkeyPatchBase
@@ -11,7 +10,11 @@ from ..utils.op_utils import (
     list_tensor_matmul,
 )
 
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class DM(DynamicalSystem):
     """
     Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1],

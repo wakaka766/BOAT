@@ -1,11 +1,13 @@
 import torch
-from .hyper_gradient import HyperGradient
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
 from boat.utils.op_utils import update_tensor_grads
 
+from boat.dynamic_class_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+@register_class
 class FD(HyperGradient):
     """
     Computes the hyper-gradient of the upper-level variables using Finite Differentiation (FD) [1].
@@ -128,7 +130,6 @@ class FD(HyperGradient):
         AssertionError
             If `next_operation` is not None, as FD does not support `next_operation`.
         """
-
         assert next_operation is None, "FD does not support next_operation"
         lower_model_params = kwargs.get(
             "lower_model_params", list(auxiliary_model.parameters())
@@ -136,15 +137,15 @@ class FD(HyperGradient):
         loss = self.ul_objective(
             ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
-        grad_x = torch.autograd.grad(loss, list(self.ul_var), retain_graph=True)
         grad_y = torch.autograd.grad(
             loss,
-            list(auxiliary_model.parameters()),
-            retain_graph=self.dynamic_initialization,
+            lower_model_params,
+            retain_graph=True
         )
-
+        grad_x = torch.autograd.grad(loss, list(self.ul_var))
         dalpha = [v.data for v in grad_x]
         vector = [v.data for v in grad_y]
+
         implicit_grads = self._hessian_vector_product(
             vector, ll_feed_dict, ul_feed_dict
         )
@@ -157,10 +158,8 @@ class FD(HyperGradient):
                 loss, list(auxiliary_model.parameters(time=0))
             )
             update_tensor_grads(self.ll_var, grads_lower)
-
         update_tensor_grads(self.ul_var, dalpha)
-
-        return {"upper_loss": loss, "hyper_gradient_finished": True}
+        return {"upper_loss": loss.item(), "hyper_gradient_finished": True}
 
     def _hessian_vector_product(self, vector, ll_feed_dict, ul_feed_dict):
         """
@@ -188,8 +187,8 @@ class FD(HyperGradient):
         """
 
         eta = self._r / torch.cat([x.view(-1) for x in vector]).norm()
-        for p, v in zip(self.ll_model.parameters(), vector):
-            p.data.add_(v, alpha=eta)  # w+
+        for p, v in zip(self.ll_var, vector):
+            p.data.add_(v, alpha=eta)
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha
             loss = self.gda_loss(
@@ -199,7 +198,7 @@ class FD(HyperGradient):
             loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
         grads_p = torch.autograd.grad(loss, list(self.ul_var))
 
-        for p, v in zip(self.ll_model.parameters(), vector):
+        for p, v in zip(self.ll_var, vector):
             p.data.sub_(v, alpha=2 * eta)  # w-
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha
@@ -210,7 +209,7 @@ class FD(HyperGradient):
             loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
         grads_n = torch.autograd.grad(loss, list(self.ul_var))
 
-        for p, v in zip(self.ll_model.parameters(), vector):
+        for p, v in zip(self.ll_var, vector):
             p.data.add_(v, alpha=eta)  # w
 
         return [(x - y).div_(2 * eta) for x, y in zip(grads_p, grads_n)]

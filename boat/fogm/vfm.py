@@ -1,4 +1,3 @@
-from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat.utils.op_utils import (
     update_grads,
     grad_unused_zero,
@@ -10,11 +9,13 @@ from boat.utils.op_utils import (
 import torch
 import torch.nn.functional as F
 from torch.nn import Module
-from torch.optim import Optimizer
 import copy
 from typing import Dict, Any, Callable, List
+from boat.dynamic_class_registry import register_class
+from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class VFM(DynamicalSystem):
     """
     Implements the optimization procedure of Value-function based First-Order Method (VFM) [1].
@@ -146,14 +147,14 @@ class VFM(DynamicalSystem):
         y_grad = []
         x_grad = []
         all_numel = 0
-        for _, param in enumerate(self.ll_model.parameters()):
+        for _, param in enumerate(self.ll_var):
             y_grad.append(
                 (d[all_numel : all_numel + param.numel()])
                 .data.view(tuple(param.shape))
                 .clone()
             )
             all_numel = all_numel + param.numel()
-        for _, param in enumerate(self.ul_model.parameters()):
+        for _, param in enumerate(self.ul_var):
             x_grad.append(
                 (d[all_numel : all_numel + param.numel()])
                 .data.view(tuple(param.shape))
@@ -164,4 +165,4 @@ class VFM(DynamicalSystem):
         update_tensor_grads(self.ll_var, y_grad)
         update_tensor_grads(self.ul_var, x_grad)
         self.ll_opt.step()
-        return F_y
+        return F_y.item()
