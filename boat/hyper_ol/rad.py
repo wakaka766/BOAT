@@ -2,7 +2,7 @@ import torch
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
-from boat.utils.op_utils import update_tensor_grads
+from boat.utils.op_utils import update_tensor_grads,grad_unused_zero
 
 from boat.dynamic_class_registry import register_class
 from boat.hyper_ol.hyper_gradient import HyperGradient
@@ -107,11 +107,10 @@ class RAD(HyperGradient):
             auxiliary_model,
             params=lower_model_params,
         )
-        grads_upper = torch.autograd.grad(
+        grads_upper = grad_unused_zero(
             upper_loss,
             self.ul_var,
-            retain_graph=self.dynamic_initialization,
-            allow_unused=True,
+            retain_graph=self.dynamic_initialization
         )
         update_tensor_grads(self.ul_var, grads_upper)
 

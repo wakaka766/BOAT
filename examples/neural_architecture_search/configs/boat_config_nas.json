@@ -1,6 +1,6 @@
 {
     "fo_gm": null,
-    "dynamic_op": ["NGD"],
+    "dynamic_op": ["GDA","NGD"],
     "hyper_op":  ["FD"],
     "return_grad": false,
     "lower_iters": 1,
