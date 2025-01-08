@@ -104,4 +104,3 @@ class DI(DynamicalSystem):
             "current_iter": current_iter,
             **kwargs,
         }
-

@@ -110,9 +110,7 @@ class MESM(DynamicalSystem):
         )
 
         errs = []
-        for a, b in zip(
-            list(self.y_hat.parameters()), list(self.ll_var)
-        ):
+        for a, b in zip(list(self.y_hat.parameters()), list(self.ll_var)):
             diff = a - b
             errs.append(diff)
         vs_param = []
@@ -135,9 +133,7 @@ class MESM(DynamicalSystem):
         )
 
         self.ll_opt.zero_grad()
-        grad_y_parmaters = grad_unused_zero(
-            lower_loss, list(self.ll_var)
-        )
+        grad_y_parmaters = grad_unused_zero(lower_loss, list(self.ll_var))
 
         update_tensor_grads(self.ll_var, grad_y_parmaters)
 
@@ -148,9 +144,7 @@ class MESM(DynamicalSystem):
             + self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
             - self.ll_objective(ll_feed_dict, self.ul_model, self.y_hat)
         )
-        grad_x_parmaters = grad_unused_zero(
-            upper_loss, self.ul_var
-        )
+        grad_x_parmaters = grad_unused_zero(upper_loss, self.ul_var)
         update_tensor_grads(self.ul_var, grad_x_parmaters)
 
         return upper_loss.item()

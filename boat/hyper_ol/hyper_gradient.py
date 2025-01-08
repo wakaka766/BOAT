@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import List
 from boat.operation_registry import register_class
+
 importlib = __import__("importlib")
 
 
@@ -35,6 +36,7 @@ class HyperGradient(object):
     solver_config : dict
         Dictionary containing configurations for the solver.
     """
+
     def __init__(
         self,
         ll_objective,
@@ -56,4 +58,3 @@ class HyperGradient(object):
     @abstractmethod
     def compute_gradients(self, **kwargs):
         pass
-

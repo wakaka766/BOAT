@@ -71,21 +71,21 @@ class GDA(DynamicalSystem):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization. 
+            Dictionary containing the lower-level data used for optimization.
             Typically includes training data, targets, and other information required to compute the LL objective.
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization. 
+            Dictionary containing the upper-level data used for optimization.
             Typically includes validation data, targets, and other information required to compute the UL objective.
         auxiliary_model : _MonkeyPatchBase
-            A patched lower model wrapped by the `higher` library. 
+            A patched lower model wrapped by the `higher` library.
             This model is used for differentiable optimization in the lower-level procedure.
         auxiliary_opt : DifferentiableOptimizer
-            A patched optimizer for the lower-level model, wrapped by the `higher` library. 
+            A patched optimizer for the lower-level model, wrapped by the `higher` library.
             Allows differentiable optimization.
         current_iter : int
             The current iteration number of the optimization process.
         next_operation : str, optional
-            Specifies the next operation to be executed in the optimization pipeline. 
+            Specifies the next operation to be executed in the optimization pipeline.
             Default is None.
         **kwargs : dict
             Additional parameters required for the optimization procedure.

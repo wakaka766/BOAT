@@ -2,6 +2,7 @@ import abc
 from typing import Dict
 
 from boat.operation_registry import register_class
+
 importlib = __import__("importlib")
 
 
@@ -39,4 +40,3 @@ class DynamicalSystem(object):
     @abc.abstractmethod
     def optimize(self, **kwargs):
         pass
-

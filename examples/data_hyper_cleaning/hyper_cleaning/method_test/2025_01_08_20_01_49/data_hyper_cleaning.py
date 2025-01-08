@@ -1,12 +1,13 @@
 import sys
 import os
 import json
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import boat
 import torch
 import torch.nn.functional as F
 from util_file import data_splitting, initialize, accuary, Binarization
-from boat.utils import HyperGradientRules,DynamicalSystemRules
+from boat.utils import HyperGradientRules, DynamicalSystemRules
 from torchvision.datasets import MNIST
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
@@ -91,20 +92,25 @@ def main():
     boat_config["upper_level_var"] = list(x.parameters())
     b_optimizer = boat.Problem(boat_config, loss_config)
     if boat_config["fo_gm"] is not None and ("PGDM" in boat_config["fo_gm"]):
-        boat_config["PGDM"]["gamma_init"] = boat_config["PGDM"]["gamma_max"]+0.1
+        boat_config["PGDM"]["gamma_init"] = boat_config["PGDM"]["gamma_max"] + 0.1
 
     b_optimizer.build_ll_solver()
     b_optimizer.build_ul_solver()
     ul_feed_dict = {"data": val.data.to(device), "target": val.clean_target.to(device)}
     ll_feed_dict = {"data": tr.data.to(device), "target": tr.dirty_target.to(device)}
-    HyperGradientRules.set_gradient_order([
-        ["PTT","RGT", "FOA"],
-        ["IAD", "RAD", "FD", "IGA"],
-        ["CG", "NS"],])
-    DynamicalSystemRules.set_gradient_order([
-        ["GDA", "DI"],
-        ["DM", "NGD"],
-    ])
+    HyperGradientRules.set_gradient_order(
+        [
+            ["PTT", "RGT", "FOA"],
+            ["IAD", "RAD", "FD", "IGA"],
+            ["CG", "NS"],
+        ]
+    )
+    DynamicalSystemRules.set_gradient_order(
+        [
+            ["GDA", "DI"],
+            ["DM", "NGD"],
+        ]
+    )
     if boat_config["dynamic_op"] is not None:
         if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
             iterations = 3
@@ -112,11 +118,15 @@ def main():
             iterations = 2
             b_optimizer.boat_configs["return_grad"] = True
     else:
-        iterations=3
+        iterations = 3
     for x_itr in range(iterations):
         if boat_config["dynamic_op"] is not None:
-            if "DM" in boat_config["dynamic_op"] and ("GDA" in boat_config["dynamic_op"]):
-                b_optimizer._ll_solver.gradient_instances[-1].strategy = "s" + str(x_itr + 1)
+            if "DM" in boat_config["dynamic_op"] and (
+                "GDA" in boat_config["dynamic_op"]
+            ):
+                b_optimizer._ll_solver.gradient_instances[-1].strategy = "s" + str(
+                    x_itr + 1
+                )
         loss, run_time = b_optimizer.run_iter(
             ll_feed_dict, ul_feed_dict, current_iter=x_itr
         )

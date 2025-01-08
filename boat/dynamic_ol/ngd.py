@@ -96,7 +96,7 @@ class NGD(DynamicalSystem):
         -------
         None
         """
-        
+
         assert next_operation is None, "NGD does not support next_operation"
         if "gda_loss" in kwargs:
             gda_loss = kwargs["gda_loss"]

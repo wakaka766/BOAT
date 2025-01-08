@@ -83,7 +83,11 @@ class CG(HyperGradient):
         self.K = solver_config["CG"]["k"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config.get("gda_loss", None) if "GDA" in solver_config["dynamic_op"] else None
+        self.gda_loss = (
+            solver_config.get("gda_loss", None)
+            if "GDA" in solver_config["dynamic_op"]
+            else None
+        )
 
     def compute_gradients(
         self,
@@ -147,7 +151,9 @@ class CG(HyperGradient):
         )
         hparams = kwargs.get("hparams", list(self.ul_var))
         import time
-        starttime=time.time()
+
+        starttime = time.time()
+
         def fp_map(params, loss_f):
             lower_grads = torch.autograd.grad(loss_f, params, create_graph=True)
             updated_params = []
@@ -172,7 +178,7 @@ class CG(HyperGradient):
             ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
         print("step 1 time:", time.time() - starttime)
-        starttime=time.time()
+        starttime = time.time()
         if self.dynamic_initialization:
             grads_lower = torch.autograd.grad(
                 upper_loss, list(auxiliary_model.parameters(time=0)), retain_graph=True
@@ -187,7 +193,7 @@ class CG(HyperGradient):
             fp_map,
             self.tolerance,
         )
-        print("step 6 time:", time.time()- starttime)
+        print("step 6 time:", time.time() - starttime)
         update_tensor_grads(self.ul_var, upper_grads)
 
         return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

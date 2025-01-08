@@ -81,7 +81,7 @@ class DM(DynamicalSystem):
         self.eta = solver_config["DM"]["eta0"]
         self.strategy = solver_config["DM"]["strategy"]
         self.hyper_op = solver_config["hyper_op"]
-        self.gda_loss = solver_config.get("gda_loss",None)
+        self.gda_loss = solver_config.get("gda_loss", None)
 
     def optimize(
         self,

@@ -260,6 +260,7 @@ def conjugate_gradient(
     tol=1e-10,
 ) -> List[Tensor]:
     import time
+
     starttime = time.time()
     grad_outer_w, grad_outer_hparams = get_outer_gradients(upper_loss, params, hparams)
     print("step 2 time:", time.time() - starttime)
@@ -267,13 +268,15 @@ def conjugate_gradient(
 
     w_mapped = fp_map(params, lower_loss)
     print("step 3 time:", time.time() - starttime)
+
     def dfp_map_dw(xs):
-        Jfp_mapTv = torch.autograd.grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
+        Jfp_mapTv = torch.autograd.grad(
+            w_mapped, params, grad_outputs=xs, retain_graph=True
+        )
         return [v - j for v, j in zip(xs, Jfp_mapTv)]
+
     starttime = time.time()
-    vs = cg_step(
-        dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol
-    )
+    vs = cg_step(dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol)
     print("step 4 cg time:", time.time() - starttime)
     starttime = time.time()
     grads = torch.autograd.grad(w_mapped, hparams, grad_outputs=vs)

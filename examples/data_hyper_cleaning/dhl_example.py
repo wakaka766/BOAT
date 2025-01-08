@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import boat
 import torch
@@ -18,6 +19,7 @@ test.data_flatten()
 
 print(torch.cuda.is_available())
 device = torch.device("cpu")
+
 
 class Net_x(torch.nn.Module):
     def __init__(self, tr):
@@ -89,9 +91,7 @@ def main():
     ll_feed_dict = {"data": tr.data.to(device), "target": tr.dirty_target.to(device)}
     iterations = 3
     for x_itr in range(iterations):
-        b_optimizer.run_iter(
-            ll_feed_dict, ul_feed_dict, current_iter=x_itr
-        )
+        b_optimizer.run_iter(ll_feed_dict, ul_feed_dict, current_iter=x_itr)
 
 
 if __name__ == "__main__":

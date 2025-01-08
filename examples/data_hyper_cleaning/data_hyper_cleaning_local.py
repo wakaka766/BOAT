@@ -11,7 +11,7 @@ dynamic_methodlist = (
     ["GDA", "NGD", "DI"],
     ["DI", "NGD", "GDA"],
 )
-dynamic_method_dm = (["DM"], [ "DM", "GDA"])
+dynamic_method_dm = (["DM"], ["DM", "GDA"])
 hyper_methodlist = (
     ["CG"],
     ["CG", "PTT"],
@@ -24,7 +24,7 @@ hyper_methodlist = (
     ["NS"],
     ["NS", "PTT"],
     ["IGA"],
-    ["IGA","PTT"],
+    ["IGA", "PTT"],
 )
 hyper_method_dm = (["RAD"], ["CG"])
 fogm_method = (["VSM"], ["VFM"], ["MESM"], ["PGDM"])

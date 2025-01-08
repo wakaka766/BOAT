@@ -13,9 +13,7 @@ class UpperModel(torch.nn.Module):
     def __init__(self, n_feats, device):
         super(UpperModel, self).__init__()
         self.x = torch.nn.Parameter(
-            torch.zeros(n_feats, requires_grad=True, device=device).requires_grad_(
-                True
-            )
+            torch.zeros(n_feats, requires_grad=True, device=device).requires_grad_(True)
         )
 
     def forward(self):
@@ -24,7 +22,7 @@ class UpperModel(torch.nn.Module):
 
 class LowerModel(torch.nn.Module):
 
-    def __init__(self, n_feats, device,num_classes):
+    def __init__(self, n_feats, device, num_classes):
         super(LowerModel, self).__init__()
         self.y = torch.nn.Parameter(
             torch.zeros((n_feats, num_classes), requires_grad=True, device=device)
@@ -42,6 +40,7 @@ def evaluate(x, w, testset):
         loss = F.cross_entropy(y, test_y).detach().item()
         acc = (y.argmax(-1).eq(test_y).sum() / test_y.shape[0]).detach().cpu().item()
     return loss, acc
+
 
 def get_data(args):
     def from_sparse(x):

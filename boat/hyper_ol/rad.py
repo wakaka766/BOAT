@@ -2,7 +2,7 @@ import torch
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
-from boat.utils.op_utils import update_tensor_grads,grad_unused_zero
+from boat.utils.op_utils import update_tensor_grads, grad_unused_zero
 
 from boat.operation_registry import register_class
 from boat.hyper_ol.hyper_gradient import HyperGradient
@@ -71,22 +71,22 @@ class RAD(HyperGradient):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization. 
+            Dictionary containing the lower-level data used for optimization.
             Typically includes training data, targets, and other information required to compute the lower-level objective.
-        
+
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization. 
+            Dictionary containing the upper-level data used for optimization.
             Typically includes validation data, targets, and other information required to compute the upper-level objective.
-        
+
         auxiliary_model : _MonkeyPatchBase
             A patched lower model wrapped by the `higher` library. It serves as the lower-level model for optimization.
-        
+
         max_loss_iter : int, optional
             The number of iterations used for backpropagation. Default is 0.
-        
+
         next_operation : str, optional
             The next operator for the calculation of the hypergradient. Default is None.
-        
+
         **kwargs : dict
             Additional keyword arguments passed to the method.
 
@@ -108,9 +108,7 @@ class RAD(HyperGradient):
             params=lower_model_params,
         )
         grads_upper = grad_unused_zero(
-            upper_loss,
-            self.ul_var,
-            retain_graph=self.dynamic_initialization
+            upper_loss, self.ul_var, retain_graph=self.dynamic_initialization
         )
         update_tensor_grads(self.ul_var, grads_upper)
 

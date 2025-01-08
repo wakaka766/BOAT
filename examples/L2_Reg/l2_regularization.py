@@ -164,9 +164,7 @@ def main():
         (trainset, valset, testset, tevalset), os.path.join(args.data_path, "l2reg.pt")
     )
     print(f"[info] successfully generated data to {args.data_path}/l2reg.pt")
-    device = torch.device(
-        "cpu"
-    ) 
+    device = torch.device("cpu")
     n_feats = trainset[0].shape[-1]
     num_classes = trainset[1].unique().shape[-1]
 

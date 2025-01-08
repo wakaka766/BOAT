@@ -2,7 +2,7 @@ import torch
 from torch.nn import Module
 from typing import List, Callable, Dict
 from higher.patch import _MonkeyPatchBase
-from boat.utils.op_utils import update_tensor_grads,grad_unused_zero
+from boat.utils.op_utils import update_tensor_grads, grad_unused_zero
 
 from boat.operation_registry import register_class
 from boat.hyper_ol.hyper_gradient import HyperGradient
@@ -141,9 +141,7 @@ class FD(HyperGradient):
 
         grad_x = grad_unused_zero(loss, self.ul_var, retain_graph=True)
         grad_y = grad_unused_zero(
-            loss,
-            lower_model_params,
-            retain_graph=self.dynamic_initialization
+            loss, lower_model_params, retain_graph=self.dynamic_initialization
         )
         dalpha = [v.data for v in grad_x]
         vector = [v.data for v in grad_y]

@@ -36,7 +36,7 @@ class PTT(HyperGradient):
     [1] Liu R., Liu Y., Zeng S., et al. "Towards gradient-based bilevel optimization
         with non-convex followers and beyond," in NeurIPS, 2021.
     """
-    
+
     def __init__(
         self,
         ll_objective: Callable,
@@ -76,7 +76,7 @@ class PTT(HyperGradient):
         ll_feed_dict : Dict
             Dictionary containing the lower-level data used for optimization.
             It typically includes training data, targets, and other information required to compute the LL objective.
-        
+
         ul_feed_dict : Dict
             Dictionary containing the upper-level data used for optimization.
             It typically includes validation data, targets, and other information required to compute the UL objective.

@@ -5,6 +5,7 @@ import boat
 import os
 import json
 import sys
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from examples.L2_Reg.utils_l2 import get_data, UpperModel, LowerModel
 
@@ -38,7 +39,8 @@ def main():
         parser.add_argument("--iterations", type=int, default=10, help="T")
         parser.add_argument("--data_path", default="./data", help="where to save data")
         parser.add_argument(
-            "--model_path", default="./save_l2reg", help="where to save model")
+            "--model_path", default="./save_l2reg", help="where to save model"
+        )
         parser.add_argument(
             "--dynamic_method",
             type=str,
@@ -71,7 +73,9 @@ def main():
     device = torch.device("cpu")
     n_feats = trainset[0].shape[-1]
     upper_model = UpperModel(n_feats, device)
-    lower_model = LowerModel(n_feats, device, num_classes=trainset[1].unique().shape[-1])
+    lower_model = LowerModel(
+        n_feats, device, num_classes=trainset[1].unique().shape[-1]
+    )
     upper_opt = torch.optim.Adam(upper_model.parameters(), lr=0.01)
     lower_opt = torch.optim.SGD(lower_model.parameters(), lr=0.01)
     dynamic_method = args.dynamic_method.split(",") if args.dynamic_method else []
@@ -93,9 +97,8 @@ def main():
     ll_feed_dict = {"data": valset[0].to(device), "target": valset[1].to(device)}
     iterations = 30
     for x_itr in range(iterations):
-        b_optimizer.run_iter(
-            ll_feed_dict, ul_feed_dict, current_iter=x_itr
-        )
+        b_optimizer.run_iter(ll_feed_dict, ul_feed_dict, current_iter=x_itr)
+
 
 if __name__ == "__main__":
     main()
