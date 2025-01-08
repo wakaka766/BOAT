@@ -3,7 +3,7 @@ from higher.patch import _MonkeyPatchBase
 from higher.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 
-from boat.dynamic_class_registry import register_class
+from boat.operation_registry import register_class
 from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 

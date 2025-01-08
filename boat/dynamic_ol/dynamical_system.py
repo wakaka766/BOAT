@@ -1,7 +1,7 @@
 import abc
 from typing import Dict
 
-from boat.dynamic_class_registry import register_class
+from boat.operation_registry import register_class
 importlib = __import__("importlib")
 
 

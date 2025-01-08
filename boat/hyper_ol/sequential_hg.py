@@ -1,6 +1,6 @@
 from typing import List, Dict
 from boat.utils import HyperGradientRules, ResultStore
-from boat.dynamic_class_registry import get_registered_class
+from boat.operation_registry import get_registered_operation
 
 
 class SequentialHG:
@@ -91,7 +91,7 @@ def makes_functional_hyper_operation(custom_order: List[str], **kwargs) -> Seque
     gradient_classes = {}
     # module = importlib.import_module("boat.hyper_ol")
     for op in custom_order:
-        gradient_classes[op] = get_registered_class(op)
+        gradient_classes[op] = get_registered_operation(op)
 
     # Reorder classes according to adjusted order
     ordered_instances = [gradient_classes[op](**kwargs) for op in adjusted_order]

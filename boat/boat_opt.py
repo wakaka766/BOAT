@@ -7,7 +7,7 @@ import torch
 from torch import Tensor
 import higher
 
-from boat.dynamic_class_registry import get_registered_class
+from boat.operation_registry import get_registered_operation
 from boat.dynamic_ol import makes_functional_dynamical_system
 from boat.hyper_ol import makes_functional_hyper_operation
 importlib = __import__("importlib")
@@ -123,7 +123,7 @@ class Problem:
                     ]["lr"]
 
         else:
-            self._fo_gm_solver = get_registered_class("%s" % self.boat_configs["fo_gm"])(
+            self._fo_gm_solver = get_registered_operation("%s" % self.boat_configs["fo_gm"])(
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
                 ll_model=self._ll_model,

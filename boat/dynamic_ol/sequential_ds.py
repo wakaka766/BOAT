@@ -1,8 +1,8 @@
 from typing import List, Dict
 from boat.utils import DynamicalSystemRules, ResultStore
-
+from boat.operation_registry import get_registered_operation
 importlib = __import__("importlib")
-from boat.dynamic_class_registry import get_registered_class
+
 
 class SequentialDS:
     """
@@ -105,7 +105,7 @@ def makes_functional_dynamical_system(
     gradient_classes = {}
     # module = importlib.import_module("boat.dynamic_ol")
     for op in custom_order:
-        gradient_classes[op] = get_registered_class(op)
+        gradient_classes[op] = get_registered_operation(op)
 
     # Reorder classes according to adjusted order
     ordered_instances = [gradient_classes[op](**kwargs) for op in adjusted_order]

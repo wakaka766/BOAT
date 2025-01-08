@@ -10,7 +10,7 @@ from ..utils.op_utils import (
     list_tensor_matmul,
 )
 
-from boat.dynamic_class_registry import register_class
+from boat.operation_registry import register_class
 from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 

@@ -4,7 +4,7 @@ import torch
 from torch.nn import Module
 import copy
 from typing import Dict, Any, Callable, List
-from boat.dynamic_class_registry import register_class
+from boat.operation_registry import register_class
 from boat.dynamic_ol.dynamical_system import DynamicalSystem
 
 
