@@ -1,11 +1,13 @@
-from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 from boat_ms.utils.op_utils import l2_reg
 import mindspore as ms
 from typing import Dict, Any, Callable, List
 from mindspore import nn, ops, Tensor, numpy as mnp
 import copy
+from boat_ms.operation_registry import register_class
+from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class VSM(DynamicalSystem):
     def __init__(
         self,

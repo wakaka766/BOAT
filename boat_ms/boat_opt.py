@@ -6,8 +6,7 @@ from mindspore.nn.optim import Optimizer
 
 
 import importlib
-
-fo_gms = importlib.import_module("boat_ms.fogm")
+from boat_ms.operation_registry import get_registered_operation
 
 
 def _load_loss_function(loss_config: Dict[str, Any]) -> Callable:
@@ -87,15 +86,13 @@ class Problem:
         """
         Configure the lower-level solver.
 
-        :param lower_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type lower_opt: Optimizer
-
         :returns: None
         """
         self.boat_configs["ll_opt"] = self._lower_opt
         self._lower_loop = self.boat_configs.get("lower_iters", 10)
-        self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
-            ll_objective=self._ll_loss,
+        self._fo_gm_solver = get_registered_operation(
+                "%s" % self.boat_configs["fo_gm"]
+        )(ll_objective=self._ll_loss,
             ul_objective=self._ul_loss,
             ll_model=self._ll_model,
             ul_model=self._ul_model,
@@ -109,9 +106,6 @@ class Problem:
     def build_ul_solver(self):
         """
         Configure the lower-level solver.
-
-        :param upper_opt: The optimizer to use for the lower-level variables initialized (defined in the 'config["lower_level_var"]').
-        :type upper_opt: Optimizer
 
         :returns: None
         """

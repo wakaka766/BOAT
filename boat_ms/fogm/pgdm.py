@@ -1,4 +1,3 @@
-from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 from boat_ms.utils.op_utils import require_model_grad
 
 import mindspore as ms
@@ -6,7 +5,11 @@ from mindspore import nn, ops
 import copy
 from typing import Dict, Any, Callable, List
 
+from boat_ms.operation_registry import register_class
+from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class PGDM(DynamicalSystem):
     """
     Implements the optimization procedure of Penalty based Gradient Descent Method (PGDM) _`[1]`.

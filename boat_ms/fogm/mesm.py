@@ -1,11 +1,14 @@
-from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 from boat_ms.utils.op_utils import copy_parameter_from_list
 import numpy as np
 from mindspore import nn, Tensor, ops
 from typing import Dict, Any, Callable, List
 import copy
 
+from boat_ms.operation_registry import register_class
+from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class MESM(DynamicalSystem):
     """
     Implements the optimization procedure of Moreau Envelop based Single-loop Method (MESM).

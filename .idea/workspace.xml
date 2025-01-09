@@ -5,19 +5,72 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/BOAT.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boat_ms/operation_registry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/20news-bydate_py3.pkz" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/20news-bydate_py3.pkz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/20newsgroup_vectorized_py3.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/20newsgroup_vectorized_py3.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/l2reg.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/l2reg.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/l2reg.pt" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/l2reg.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization_local.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2reg.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2reg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_ms/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/boat_opt.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/dynamic_ol/dynamical_system.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/mesm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/pgdm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/vfm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/vsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_hyper_cleaning/data_hyper_cleaning_local.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_betak.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_betak.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_dhl.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_dhl.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_l2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_ml.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_ml.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_nas.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_nas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_betak.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_betak.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_dhl.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_dhl.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_l2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_ml.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_ml.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_nas.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_nas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_betak.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_betak.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_dhl.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_dhl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_l2.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_l2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_ml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_ml_omniglot.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_ml_omniglot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_nas.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_nas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,9 +90,11 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "boat__ms",
-    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/boat_jit/dynamic_ol",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/examples/L2_Reg_ms",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -52,30 +107,12 @@
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\dynamic_ol" />
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\hyper_ol" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\examples\L2_Reg_ms" />
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\examples" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.l2_regularization_local (1)">
-    <configuration name="l2_regularization_local (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="BOAT" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/L2_Reg_ms" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/L2_Reg_ms/l2_regularization_local.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="l2_regularization_local" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BOAT" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -85,12 +122,12 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="SDK_NAME" value="mindspore" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/L2_Reg_jit" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/L2_Reg_ms" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization_local.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -99,13 +136,10 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.l2_regularization_local (1)" />
-      <item itemvalue="Python.l2_regularization_local" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.l2_regularization_local (1)" />
+        <item itemvalue="Python.l2_regularization_local" />
+        <item itemvalue="Python.l2_regularization_local" />
         <item itemvalue="Python.l2_regularization_local" />
       </list>
     </recent_temporary>
@@ -121,6 +155,7 @@
       <workItem from="1735446936875" duration="2029000" />
       <workItem from="1735531820622" duration="5225000" />
       <workItem from="1735550330496" duration="2739000" />
+      <workItem from="1736408682218" duration="1349000" />
     </task>
     <servers />
   </component>
@@ -161,7 +196,7 @@
     <SUITE FILE_PATH="coverage/backbone_py$test_data_hyper_cleaning__1_.coverage" NAME="test_data_hyper_cleaning (1) Coverage Results" MODIFIED="1734077703149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_hyper_cleaning" />
     <SUITE FILE_PATH="coverage/BOAT$BOAT_Opt.coverage" NAME="BOAT_Opt Coverage Results" MODIFIED="1713797001696" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat" />
     <SUITE FILE_PATH="coverage/backbone_py$rad.coverage" NAME="rad Coverage Results" MODIFIED="1733111752492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat/hyper_ol" />
-    <SUITE FILE_PATH="coverage/BOAT$l2_regularization_local__1_.coverage" NAME="l2_regularization_local (1) Coverage Results" MODIFIED="1735553372843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/L2_Reg_ms" />
+    <SUITE FILE_PATH="coverage/BOAT$l2_regularization_local__1_.coverage" NAME="l2_regularization_local Coverage Results" MODIFIED="1736410007414" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/L2_Reg_ms" />
     <SUITE FILE_PATH="coverage/backbone_py$code_cov_test.coverage" NAME="code_cov_test Coverage Results" MODIFIED="1733837719367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/backbone_py$neural_architecture_search__1_.coverage" NAME="neural_architecture_search (1) Coverage Results" MODIFIED="1733300048430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/neural_architecture_search" />
     <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning__1_.coverage" NAME="data_hyper_cleaning Coverage Results" MODIFIED="1733811074122" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\data_hyper_cleaning" />

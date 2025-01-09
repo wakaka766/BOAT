@@ -1,10 +1,13 @@
-from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 import mindspore as ms
 from mindspore import nn, ops, numpy as mnp
 from typing import Dict, Any, Callable, List
 import copy
 
+from boat_ms.operation_registry import register_class
+from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class VFM(DynamicalSystem):
     """
     Implements the optimization procedure of Value-function based First-Order Method (VFM) _`[1]`.
