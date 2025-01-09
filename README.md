@@ -29,7 +29,7 @@ To enhance flexibility and efficiency, BOAT incorporates the **Dynamic Operation
 
 <p align="center">
   <a href="https://github.com/callous-youth/BOAT">
-    <img src="docs/source/_static/BOAT.png" alt="BOAT Structure" width="80%" align="top">
+    <img src="docs/source/_static/BOAT.png" alt="BOAT Structure" width="90%" align="top">
   </a>
 </p>
 
