@@ -5,15 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/sequential_ds.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/sequential_hg.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/boat_jit/operation_registry.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/set.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization_local.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2reg.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2reg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/boat_opt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_jit/boat_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/configs_jit/boat_config_l2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_jit/loss_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/configs_jit/loss_config_l2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs_jit/loss_func_l2.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/configs_jit/loss_func_l2.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,24 +61,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;boat__jit&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ASUS/Documents/GitHub/BOAT/boat_jit/dynamic_ol&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "boat__jit",
+    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/boat_jit/dynamic_ol",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\dynamic_ol" />
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\hyper_ol" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\examples\L2_Reg_jit" />
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\examples" />
     </key>
   </component>
   <component name="RunManager">
@@ -129,6 +165,7 @@
     <SUITE FILE_PATH="coverage/backbone_py$test_data_hyper_cleaning__1_.coverage" NAME="test_data_hyper_cleaning (1) Coverage Results" MODIFIED="1734077703149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_hyper_cleaning" />
     <SUITE FILE_PATH="coverage/BOAT$BOAT_Opt.coverage" NAME="BOAT_Opt Coverage Results" MODIFIED="1713797001696" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat" />
     <SUITE FILE_PATH="coverage/backbone_py$rad.coverage" NAME="rad Coverage Results" MODIFIED="1733111752492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/boat/hyper_ol" />
+    <SUITE FILE_PATH="coverage/BOAT$l2_regularization_local__1_.coverage" NAME="l2_regularization_local Coverage Results" MODIFIED="1736410007414" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/L2_Reg_ms" />
     <SUITE FILE_PATH="coverage/backbone_py$code_cov_test.coverage" NAME="code_cov_test Coverage Results" MODIFIED="1733837719367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/backbone_py$neural_architecture_search__1_.coverage" NAME="neural_architecture_search (1) Coverage Results" MODIFIED="1733300048430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/neural_architecture_search" />
     <SUITE FILE_PATH="coverage/backbone_py$data_hyper_cleaning__1_.coverage" NAME="data_hyper_cleaning Coverage Results" MODIFIED="1733811074122" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\Users\ASUS\Documents\GitHub\BOAT\data_hyper_cleaning" />

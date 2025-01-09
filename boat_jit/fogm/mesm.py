@@ -1,6 +1,4 @@
-from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat_jit.utils.op_utils import (
-    update_grads,
     grad_unused_zero,
     update_tensor_grads,
     copy_parameter_from_list,
@@ -8,12 +6,15 @@ from boat_jit.utils.op_utils import (
 )
 import numpy
 from jittor import Module
-from jittor.optim import Optimizer
 import copy
 from typing import Dict, Any, Callable, List
 import jittor as jit
 
+from boat_jit.operation_registry import register_class
+from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class MESM(DynamicalSystem):
     """
     Implements the optimization procedure of Moreau Envelop based Single-loop Method (MESM).

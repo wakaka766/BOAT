@@ -1,5 +1,4 @@
 from boat_jit.utils.op_utils import l2_reg
-from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat_jit.utils.op_utils import (
     update_grads,
     update_tensor_grads,
@@ -8,11 +7,14 @@ from boat_jit.utils.op_utils import (
 )
 import jittor as jit
 from jittor import Module
-from jittor.optim import Optimizer
 import copy
 from typing import Dict, Any, Callable, List
 
+from boat_jit.operation_registry import register_class
+from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class VSM(DynamicalSystem):
     """
     Implements the optimization procedure of Value-function based Sequential (VSM) _`[1]`.

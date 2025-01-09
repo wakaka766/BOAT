@@ -1,12 +1,14 @@
-from .dynamical_system import DynamicalSystem
 from jittor import Module
 from typing import Callable
 from ..higher_jit.patch import _MonkeyPatchBase
 from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
-from ..utils.op_utils import stop_grads
+
+from boat_jit.operation_registry import register_class
+from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class GDA(DynamicalSystem):
     """
     Implements the lower-level optimization procedure of the Gradient Descent Aggregation (GDA) _`[1]`.

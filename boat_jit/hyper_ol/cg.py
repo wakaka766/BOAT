@@ -1,11 +1,14 @@
 import jittor as jit
-from .hyper_gradient import HyperGradient
 from jittor import Module
 from typing import List, Callable, Dict
 from ..higher_jit.patch import _MonkeyPatchBase
 from boat_jit.utils.op_utils import update_tensor_grads, conjugate_gradient
 
+from boat.operation_registry import register_class
+from boat.hyper_ol.hyper_gradient import HyperGradient
 
+
+@register_class
 class CG(HyperGradient):
     """Calculation of the hyper gradient of the upper-level variables with Conjugate Gradient (CG)`[1]`.
 

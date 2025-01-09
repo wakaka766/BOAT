@@ -13,7 +13,11 @@ from ..utils.op_utils import (
     manual_update,
 )
 
+from boat_jit.operation_registry import register_class
+from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class DM(DynamicalSystem):
     """
     Implements the lower-level optimization procedure of the Dual Multiplier (DM) _`[1]`.

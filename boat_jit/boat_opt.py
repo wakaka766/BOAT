@@ -13,9 +13,9 @@ import boat_jit.higher_jit as higher
 
 
 importlib = __import__("importlib")
-ll_grads = importlib.import_module("boat_jit.dynamic_ol")
-ul_grads = importlib.import_module("boat_jit.hyper_ol")
-fo_gms = importlib.import_module("boat_jit.fogm")
+from boat.operation_registry import get_registered_operation
+from boat.dynamic_ol import makes_functional_dynamical_system
+from boat.hyper_ol import makes_functional_hyper_operation
 
 
 def _load_loss_function(loss_config: Dict[str, Any]) -> Callable:
@@ -83,6 +83,7 @@ class Problem:
             if "GDA" in config["dynamic_op"]
             else None
         )
+        self._lower_loop = config.get("lower_iters", 10)
         self._lower_opt = self.boat_configs["lower_level_opt"]
         self._upper_opt = self.boat_configs["upper_level_opt"]
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
@@ -105,7 +106,6 @@ class Problem:
                 self.boat_configs["hyper_op"] is not None
             ), "Set 'dynamic_op' and 'hyper_op' properly."
 
-            self._lower_loop = self.boat_configs.get("lower_iters", 10)
             self.check_status()
             if "DM" in self._dynamic_op:
                 self.boat_configs["DM"]["auxiliary_v"] = [
@@ -116,7 +116,7 @@ class Problem:
                     lr=self.boat_configs["DM"]["auxiliary_v_lr"],
                 )
             sorted_ops = sorted([op.upper() for op in self._dynamic_op])
-            self._ll_solver = ll_grads.makes_functional_dynamical_system(
+            self._ll_solver = makes_functional_dynamical_system(
                 custom_order=sorted_ops,
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
@@ -134,8 +134,7 @@ class Problem:
                         "DI"
                     ]["lr"]
         else:
-            self._lower_loop = self.boat_configs.get("lower_iters", 10)
-            self._fo_gm_solver = getattr(fo_gms, "%s" % self.boat_configs["fo_gm"])(
+            self._fo_gm_solver = get_registered_operation("%s" % self.boat_configs["fo_gm"])(
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
                 ll_model=self._ll_model,
@@ -159,7 +158,7 @@ class Problem:
                 self.boat_configs["hyper_op"] is not None
             ), "Choose FOGM based methods from ['VSM'],['VFM'],['MESM'] or set 'dynamic_ol' and 'hyper_ol' properly."
             sorted_ops = sorted([op.upper() for op in self._hyper_op])
-            self._ul_solver = ul_grads.makes_functional_hyper_operation(
+            self._ul_solver = makes_functional_hyper_operation(
                 custom_order=sorted_ops,
                 ul_objective=self._ul_loss,
                 ll_objective=self._ll_loss,

@@ -1,4 +1,3 @@
-from ..dynamic_ol.dynamical_system import DynamicalSystem
 from boat_jit.utils.op_utils import (
     grad_unused_zero,
     require_model_grad,
@@ -9,11 +8,13 @@ from boat_jit.utils.op_utils import (
 
 import jittor as jit
 from jittor import Module
-from jittor.optim import Optimizer
 import copy
 from typing import Dict, Any, Callable, List
+from boat_jit.operation_registry import register_class
+from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 
 
+@register_class
 class VFM(DynamicalSystem):
     """
     Implements the optimization procedure of Value-function based First-Order Method (VFM) _`[1]`.

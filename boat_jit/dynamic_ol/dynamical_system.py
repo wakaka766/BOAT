@@ -3,7 +3,10 @@ from typing import List, Dict
 from boat_jit.utils import DynamicalSystemRules, ResultStore
 importlib = __import__("importlib")
 
+from boat_jit.operation_registry import register_class
 
+
+@register_class
 class DynamicalSystem(object):
     def __init__(self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config) -> None:
         """

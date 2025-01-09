@@ -1,11 +1,13 @@
-from .dynamical_system import DynamicalSystem
 from jittor import Module
-from typing import Callable
 from ..higher_jit.patch import _MonkeyPatchBase
 from ..higher_jit.optim import DifferentiableOptimizer
 from typing import Dict, Any, Callable
 
+from boat_jit.operation_registry import register_class
+from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 
+
+@register_class
 class DI(DynamicalSystem):
     """
     Implements the lower-level optimization procedure of the Dynamic Initialization (DI) _`[1]`.

@@ -1,8 +1,11 @@
 from abc import abstractmethod
 from typing import List, Dict
 from boat_jit.utils import HyperGradientRules
+from boat_jit.operation_registry import register_class
 importlib = __import__("importlib")
 
+
+@register_class
 class HyperGradient(object):
     def __init__(self, ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config):
         self.ll_objective = ll_objective
