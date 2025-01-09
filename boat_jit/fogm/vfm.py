@@ -133,10 +133,9 @@ class VFM(DynamicalSystem):
         # Compute dot product
         dot = (delta_F * delta_f).sum()
 
-        # Update delta_F with ReLU activation
         scaling_factor = jit.nn.relu(
             (self.u1 * loss - dot) / (norm_dq + 1e-8)
-        )  # 避免除以 0
+        )  #
         d = delta_F + scaling_factor * delta_f
 
         y_grad = []

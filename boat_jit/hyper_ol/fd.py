@@ -47,7 +47,7 @@ class FD(HyperGradient):
         solver_config: Dict,
     ):
         super(FD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
-        self.ll_lr = solver_config["ll_opt"].defaults["lr"]
+        self.ll_lr = solver_config["lower_level_opt"].defaults["lr"]
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
         self._r = solver_config["FD"]["r"]
         self.alpha = solver_config["GDA"]["alpha_init"]
@@ -114,53 +114,6 @@ class FD(HyperGradient):
         update_tensor_grads(self.ul_var, dalpha)
 
         return {'upper_loss': loss, 'hyper_gradient_finished': True}
-
-    # def _hessian_vector_product(
-    #         self,
-    #         vector,
-    #         ll_feed_dict,
-    #         ul_feed_dict
-    # ):
-    #     """
-    #     Built-in calculation function. Compute the first order approximation of
-    #     the second-order derivative of upper variables.
-
-    #     Parameters
-    #     ----------
-    #        train_data: Tensor
-    #             The training data used for upper level problem optimization.
-
-    #         train_target: Tensor
-    #             The labels of the samples in the train data.
-
-    #     Returns
-    #     -------
-    #     Tensor
-    #        Returns the calculated first order approximation grads.
-    #     """
-    #     eta = self._r / torch.cat([x.view(-1) for x in vector]).norm()
-    #     for p, v in zip(self.ll_model.parameters(), vector):
-    #         p.data.add_(v, alpha=eta)  # w+
-    #     if self.gda_loss is not None:
-    #         ll_feed_dict['alpha'] = self.alpha
-    #         loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
-    #     else:
-    #         loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-    #     grads_p = torch.autograd.grad(loss, list(self.ul_var))
-
-    #     for p, v in zip(self.ll_model.parameters(), vector):
-    #         p.data.sub_(v, alpha= 2 * eta )  # w-
-    #     if self.gda_loss is not None:
-    #         ll_feed_dict['alpha'] = self.alpha
-    #         loss = self.gda_loss(ll_feed_dict, ul_feed_dict, self.ul_model, self.ll_model)
-    #     else:
-    #         loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-    #     grads_n = torch.autograd.grad(loss, list(self.ul_var))
-
-    #     for p, v in zip(self.ll_model.parameters(), vector):
-    #         p.data.add_(v, alpha=eta)  # w
-
-    #     return [(x - y).div_(2 * eta) for x, y in zip(grads_p, grads_n)]
 
     def _hessian_vector_product(self, vector, ll_feed_dict, ul_feed_dict):
         """

@@ -49,7 +49,7 @@ class NS(HyperGradient):
         super(NS, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
-        self.ll_lr = solver_config["ll_opt"].defaults["lr"]
+        self.ll_lr = solver_config["lower_level_opt"].defaults["lr"]
         self.tolerance = solver_config["CG"]["tolerance"]
         self.K = solver_config["CG"]["k"]
         self.alpha = solver_config["GDA"]["alpha_init"]

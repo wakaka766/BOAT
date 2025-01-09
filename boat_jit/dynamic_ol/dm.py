@@ -162,9 +162,7 @@ class DM(DynamicalSystem):
                     self.strategy == "s1"
             ), "Only 's1' strategy is supported for DM without GDA operation."
 
-            x_lr = (
-                    self.ul_lr * (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults["lr"]
-            )
+            x_lr = self.ul_opt.defaults["lr"]* (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults["lr"]
             eta = (
                     self.eta
                     * (current_iter + 1) ** (-0.5 * self.tau)

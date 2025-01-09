@@ -1,4 +1,4 @@
-from boat_jit.boat_opt import Problem
+from boat_jit.boat_opt import *
 import boat_jit.boat_opt
 import boat_jit.utils
 import boat_jit.dynamic_ol
