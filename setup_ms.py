@@ -20,7 +20,13 @@ setup(
     long_description=long_description,
     url="https://github.com/callous-youth/BOAT/tree/boat_ms",
     license="MIT",
-    keywords=["Bilevel-optimization", "Learning and vision", "Python", "Deep learning","MindSpore"],
+    keywords=[
+        "Bilevel-optimization",
+        "Learning and vision",
+        "Python",
+        "Deep learning",
+        "MindSpore",
+    ],
     install_requires=get_install_requirements(),
     classifiers=[
         "License :: OSI Approved :: MIT License",

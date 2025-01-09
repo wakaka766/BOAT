@@ -6,7 +6,9 @@ importlib = __import__("importlib")
 
 @register_class
 class DynamicalSystem(object):
-    def __init__(self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config) -> None:
+    def __init__(
+        self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+    ) -> None:
         """
         Implements the abstract class for the lower-level optimization procedure.
 

@@ -91,8 +91,9 @@ class Problem:
         self.boat_configs["ll_opt"] = self._lower_opt
         self._lower_loop = self.boat_configs.get("lower_iters", 10)
         self._fo_gm_solver = get_registered_operation(
-                "%s" % self.boat_configs["fo_gm"]
-        )(ll_objective=self._ll_loss,
+            "%s" % self.boat_configs["fo_gm"]
+        )(
+            ll_objective=self._ll_loss,
             ul_objective=self._ul_loss,
             ll_model=self._ll_model,
             ul_model=self._ul_model,

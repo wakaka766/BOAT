@@ -18,10 +18,10 @@ from sklearn.datasets import fetch_20newsgroups_vectorized
 
 def get_data(args):
     def from_sparse(x):
-        x = x.tocoo()  
-        indices = np.vstack((x.row, x.col)).astype(np.int32).T  
-        values = x.data.astype(np.float32)  
-        shape = x.shape  
+        x = x.tocoo()
+        indices = np.vstack((x.row, x.col)).astype(np.int32).T
+        values = x.data.astype(np.float32)
+        shape = x.shape
         return COOTensor(
             indices=Tensor(indices, ms.int32),
             values=Tensor(values, ms.float32),
@@ -42,7 +42,7 @@ def get_data(args):
         data_home=args.data_path,
         download_if_missing=True,
     )
-    
+
     train_x, val_x, train_y, val_y = train_test_split(
         train_x, train_y, stratify=train_y, test_size=val_size
     )
@@ -84,7 +84,7 @@ def evaluate(x, w, testset):
         y = ops.MatMul()(test_x, x)
 
     loss_fn = nn.SoftmaxCrossEntropyWithLogits(sparse=True)
-    loss = loss_fn(y, test_y).mean()  
+    loss = loss_fn(y, test_y).mean()
 
     loss = loss.asnumpy().item()
 

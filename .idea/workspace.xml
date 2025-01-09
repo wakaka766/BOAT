@@ -5,60 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/BOAT.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/boat_ms/operation_registry.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.readthedocs.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/20news-bydate_py3.pkz" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/20news-bydate_py3.pkz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/20newsgroup_vectorized_py3.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/20newsgroup_vectorized_py3.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/l2reg.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/l2reg.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/data/l2reg.pt" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/data/l2reg.pt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_25/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_29/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_52_45/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_06/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_53_48/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_54_05/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_17_55_02/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization/method_test/2024_12_30_18_09_32/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization_local.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_ms/l2reg.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2reg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/boat_opt.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/dynamic_ol/dynamical_system.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/mesm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/pgdm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/vfm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_ms/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/vsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_betak.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_betak.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_dhl.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_dhl.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_l2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_ml.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_ml.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/boat_config_nas.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/boat_config_nas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_betak.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_betak.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_dhl.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_dhl.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_l2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_ml.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_ml.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_config_nas.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_config_nas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_betak.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_betak.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_dhl.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_dhl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_l2.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_l2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_ml.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_ml_omniglot.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_ml_omniglot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_ms/loss_func_nas.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/configs_ms/loss_func_nas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_ms/l2_regularization_local.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup_ms.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup_ms.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +52,7 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "boat__ms",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/examples/L2_Reg_ms",
+    "last_opened_file_path": "C:/Users/ASUS/Documents/GitHub/BOAT/docs",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -104,6 +62,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\docs" />
+      <recent name="C:\Users\ASUS\Documents\GitHub\BOAT" />
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\dynamic_ol" />
       <recent name="C:\Users\ASUS\Documents\GitHub\BOAT\boat_jit\hyper_ol" />
     </key>

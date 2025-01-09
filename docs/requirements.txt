@@ -1,0 +1,12 @@
+sphinx
+sphinx-rtd-theme
+myst-parser
+m2r
+numpy
+setuptools
+typing
+tqdm
+scikit-learn >= 1.3
+--extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple
+mindspore-dev
+

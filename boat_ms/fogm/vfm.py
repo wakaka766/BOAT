@@ -49,7 +49,9 @@ class VFM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VFM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(VFM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
@@ -134,10 +136,8 @@ class VFM(DynamicalSystem):
             [p.view(-1) for p in gx_minus_gx_k]
         ).astype(ms.float32)
 
-        norm_dq = (ops.norm(delta_f) ** 2).astype(
-            ms.float32
-        )  
-        dot = ops.ReduceSum()(delta_F * delta_f)  
+        norm_dq = (ops.norm(delta_f) ** 2).astype(ms.float32)
+        dot = ops.ReduceSum()(delta_F * delta_f)
         correction = ops.ReLU()((self.u1 * loss - dot) / (norm_dq + 1e-8))
         d = delta_F + correction * delta_f
         y_grad = []

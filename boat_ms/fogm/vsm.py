@@ -20,7 +20,9 @@ class VSM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VSM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(VSM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.ll_opt = solver_config["lower_level_opt"]
         self.ul_opt = solver_config["upper_level_opt"]
         self.ll_var = ll_var
@@ -47,7 +49,6 @@ class VSM(DynamicalSystem):
             for param in self.ll_model.trainable_params():
                 if param.grad is not None:
                     param.grad.set_data(mnp.zeros_like(param.grad))
-
 
             reg_decay = Tensor(reg_decay, ms.float32)
             self.ll_l2_reg = Tensor(self.ll_l2_reg, ms.float32)
