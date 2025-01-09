@@ -46,7 +46,15 @@ class FD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(FD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(FD, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.ll_lr = solver_config["lower_level_opt"].defaults["lr"]
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
         self._r = solver_config["FD"]["r"]
@@ -91,8 +99,12 @@ class FD(HyperGradient):
         :returns: the current upper-level objective
         """
         assert next_operation is None, "FD does not support next_operation"
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
-        loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
+        loss = self.ul_objective(
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+        )
         dalpha = jit.grad(loss, list(self.ul_var), retain_graph=True)
         vector = jit.grad(
             loss,
@@ -113,7 +125,7 @@ class FD(HyperGradient):
 
         update_tensor_grads(self.ul_var, dalpha)
 
-        return {'upper_loss': loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": loss, "hyper_gradient_finished": True}
 
     def _hessian_vector_product(self, vector, ll_feed_dict, ul_feed_dict):
         """

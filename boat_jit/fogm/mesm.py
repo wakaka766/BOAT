@@ -56,7 +56,9 @@ class MESM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(MESM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(MESM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var

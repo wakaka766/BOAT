@@ -46,7 +46,15 @@ class FOA(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(FOA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(FOA, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
 
     def compute_gradients(
         self,
@@ -85,6 +93,14 @@ class FOA(HyperGradient):
         :returns: the current upper-level objective
         """
         assert next_operation is None, "FOA does not support next_operation"
-        assert hyper_gradient_finished is False, "Hypergradient computation should not be finished"
-        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': False, **kwargs}
+        assert (
+            hyper_gradient_finished is False
+        ), "Hypergradient computation should not be finished"
+        return {
+            "ll_feed_dict": ll_feed_dict,
+            "ul_feed_dict": ul_feed_dict,
+            "auxiliary_model": auxiliary_model,
+            "max_loss_iter": max_loss_iter,
+            "hyper_gradient_finished": False,
+            **kwargs,
+        }

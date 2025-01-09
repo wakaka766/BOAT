@@ -46,7 +46,15 @@ class IAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(IAD, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
 
     def compute_gradients(
         self,
@@ -86,14 +94,27 @@ class IAD(HyperGradient):
         """
 
         if next_operation is not None:
-            lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+            lower_model_params = kwargs.get(
+                "lower_model_params", list(auxiliary_model.parameters())
+            )
             hparams = list(auxiliary_model.parameters(time=0))
-            return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                    'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': hyper_gradient_finished,
-                    'hparams': hparams, 'lower_model_params': lower_model_params, **kwargs}
+            return {
+                "ll_feed_dict": ll_feed_dict,
+                "ul_feed_dict": ul_feed_dict,
+                "auxiliary_model": auxiliary_model,
+                "max_loss_iter": max_loss_iter,
+                "hyper_gradient_finished": hyper_gradient_finished,
+                "hparams": hparams,
+                "lower_model_params": lower_model_params,
+                **kwargs,
+            }
         else:
-            lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
-            ul_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+            lower_model_params = kwargs.get(
+                "lower_model_params", list(auxiliary_model.parameters())
+            )
+            ul_loss = self.ul_objective(
+                ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            )
             grads_upper = jit.grad(ul_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ul_var, grads_upper)
-            return {'upper_loss': ul_loss, 'hyper_gradient_finished': True}
+            return {"upper_loss": ul_loss, "hyper_gradient_finished": True}

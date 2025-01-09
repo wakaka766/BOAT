@@ -45,7 +45,15 @@ class PTT(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(PTT, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(PTT, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
 
     def compute_gradients(
@@ -84,11 +92,22 @@ class PTT(HyperGradient):
 
         :returns: the current upper-level objective
         """
-        assert hyper_gradient_finished is False, "Hypergradient computation should not be finished"
+        assert (
+            hyper_gradient_finished is False
+        ), "Hypergradient computation should not be finished"
         assert self.truncate_max_loss_iter and (
             max_loss_iter > 0
         ), "With PTT operation, 'max_loss_iter' should be greater than 0"
         assert next_operation is not None, "Next operation should be defined"
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters(time=max_loss_iter)))
-        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': False, 'lower_model_params':lower_model_params, **kwargs}
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters(time=max_loss_iter))
+        )
+        return {
+            "ll_feed_dict": ll_feed_dict,
+            "ul_feed_dict": ul_feed_dict,
+            "auxiliary_model": auxiliary_model,
+            "max_loss_iter": max_loss_iter,
+            "hyper_gradient_finished": False,
+            "lower_model_params": lower_model_params,
+            **kwargs,
+        }

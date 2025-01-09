@@ -2,12 +2,22 @@ from abc import abstractmethod
 from typing import List, Dict
 from boat_jit.utils import HyperGradientRules
 from boat_jit.operation_registry import register_class
+
 importlib = __import__("importlib")
 
 
 @register_class
 class HyperGradient(object):
-    def __init__(self, ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config):
+    def __init__(
+        self,
+        ll_objective,
+        ul_objective,
+        ul_model,
+        ll_model,
+        ll_var,
+        ul_var,
+        solver_config,
+    ):
         self.ll_objective = ll_objective
         self.ul_objective = ul_objective
         self.ul_model = ul_model
@@ -28,6 +38,7 @@ class ResultStore:
     """
     A simple class to store and manage intermediate results of hyper-gradient computation.
     """
+
     def __init__(self):
         self.results = []
 
@@ -55,6 +66,7 @@ class SequentialHyperGradient:
     """
     A dynamically created class for sequential hyper-gradient operations.
     """
+
     def __init__(self, ordered_instances: List[object], custom_order: List[str]):
         self.gradient_instances = ordered_instances
         self.custom_order = custom_order
@@ -73,8 +85,12 @@ class SequentialHyperGradient:
         for idx, gradient_instance in enumerate(self.gradient_instances):
             # Compute the gradient, passing the intermediate result as input
             result = gradient_instance.compute_gradients(
-                **(kwargs if idx == 0 else intermediate_result),next_operation=self.custom_order[idx + 1]
-                if idx + 1 < len(self.custom_order) else None
+                **(kwargs if idx == 0 else intermediate_result),
+                next_operation=(
+                    self.custom_order[idx + 1]
+                    if idx + 1 < len(self.custom_order)
+                    else None
+                ),
             )
             # Store the result
             self.result_store.add(f"gradient_operator_results_{idx}", result)
@@ -84,8 +100,7 @@ class SequentialHyperGradient:
 
 
 def makes_functional_hyper_operation(
-        custom_order: List[str],
-        **kwargs
+    custom_order: List[str], **kwargs
 ) -> SequentialHyperGradient:
     """
     Dynamically create a SequentialHyperGradient object with ordered gradient operators.
@@ -119,7 +134,9 @@ def makes_functional_hyper_operation(
     return SequentialHyperGradient(ordered_instances, custom_order)
 
 
-def validate_and_adjust_order(custom_order: List[str], gradient_order: List[List[str]]) -> List[str]:
+def validate_and_adjust_order(
+    custom_order: List[str], gradient_order: List[List[str]]
+) -> List[str]:
     """
     Validate and adjust the custom order to match the predefined gradient order.
 

@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict
 from boat_jit.utils import DynamicalSystemRules, ResultStore
+
 importlib = __import__("importlib")
 
 from boat_jit.operation_registry import register_class
@@ -8,7 +9,9 @@ from boat_jit.operation_registry import register_class
 
 @register_class
 class DynamicalSystem(object):
-    def __init__(self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config) -> None:
+    def __init__(
+        self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+    ) -> None:
         """
         Implements the abstract class for the lower-level optimization procedure.
 
@@ -39,6 +42,7 @@ class SequentialDS:
     """
     A dynamically created class for sequential hyper-gradient operations.
     """
+
     def __init__(self, ordered_instances: List[object], custom_order: List[str]):
         self.gradient_instances = ordered_instances
         self.custom_order = custom_order
@@ -57,8 +61,12 @@ class SequentialDS:
         for idx, gradient_instance in enumerate(self.gradient_instances):
             # Compute the gradient, passing the intermediate result as input
             result = gradient_instance.optimize(
-                **(kwargs if idx == 0 else intermediate_result), next_operation=self.custom_order[idx + 1]
-                if idx + 1 < len(self.custom_order) else None
+                **(kwargs if idx == 0 else intermediate_result),
+                next_operation=(
+                    self.custom_order[idx + 1]
+                    if idx + 1 < len(self.custom_order)
+                    else None
+                ),
             )
             # Store the result
             self.result_store.add(f"dynamic_results_{idx}", result)
@@ -68,8 +76,7 @@ class SequentialDS:
 
 
 def makes_functional_dynamical_system(
-        custom_order: List[str],
-        **kwargs
+    custom_order: List[str], **kwargs
 ) -> SequentialDS:
     """
     Dynamically create a SequentialHyperGradient object with ordered gradient operators.
@@ -103,7 +110,9 @@ def makes_functional_dynamical_system(
     return SequentialDS(ordered_instances, custom_order)
 
 
-def validate_and_adjust_order(custom_order: List[str], gradient_order: List[List[str]]) -> List[str]:
+def validate_and_adjust_order(
+    custom_order: List[str], gradient_order: List[List[str]]
+) -> List[str]:
     """
     Validate and adjust the custom order to match the predefined gradient order.
 

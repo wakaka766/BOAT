@@ -56,7 +56,9 @@ class VFM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VFM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(VFM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
@@ -133,9 +135,7 @@ class VFM(DynamicalSystem):
         # Compute dot product
         dot = (delta_F * delta_f).sum()
 
-        scaling_factor = jit.nn.relu(
-            (self.u1 * loss - dot) / (norm_dq + 1e-8)
-        )  #
+        scaling_factor = jit.nn.relu((self.u1 * loss - dot) / (norm_dq + 1e-8))  #
         d = delta_F + scaling_factor * delta_f
 
         y_grad = []

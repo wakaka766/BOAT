@@ -20,7 +20,13 @@ setup(
     long_description=long_description,
     url="https://github.com/callous-youth/BOAT/tree/boat_jit",
     license="MIT",
-    keywords=["Bilevel-optimization", "Learning and vision", "Python", "Deep learning", "Jittor"],
+    keywords=[
+        "Bilevel-optimization",
+        "Learning and vision",
+        "Python",
+        "Deep learning",
+        "Jittor",
+    ],
     install_requires=get_install_requirements(),
     classifiers=[
         "License :: OSI Approved :: MIT License",
@@ -33,4 +39,3 @@ setup(
     author_email="liuyaohua.918@gmail.com",
     description="A Bilevel Optimization Toolkit in Python for Learning and Vision Tasks Based on Jittor",
 )
-

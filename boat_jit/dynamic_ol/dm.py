@@ -54,7 +54,9 @@ class DM(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(DM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(DM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
@@ -146,9 +148,9 @@ class DM(DynamicalSystem):
                 )
             elif self.strategy == "s3":
                 self.alpha = self.mu0 * 1 / (current_iter + 1) ** (1 / self.p)
-                self.eta = (current_iter + 1) ** (-0.5 * self.tau) * self.ll_opt.defaults[
-                    "lr"
-                ]
+                self.eta = (current_iter + 1) ** (
+                    -0.5 * self.tau
+                ) * self.ll_opt.defaults["lr"]
                 x_lr = (
                     (current_iter + 1) ** (-1.5 * self.tau)
                     * self.alpha**3
@@ -159,14 +161,18 @@ class DM(DynamicalSystem):
         else:
             gda_loss = None
             assert (
-                    self.strategy == "s1"
+                self.strategy == "s1"
             ), "Only 's1' strategy is supported for DM without GDA operation."
 
-            x_lr = self.ul_opt.defaults["lr"]* (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults["lr"]
+            x_lr = (
+                self.ul_opt.defaults["lr"]
+                * (current_iter + 1) ** (-self.tau)
+                * self.ll_opt.defaults["lr"]
+            )
             eta = (
-                    self.eta
-                    * (current_iter + 1) ** (-0.5 * self.tau)
-                    * self.ll_opt.defaults["lr"]
+                self.eta
+                * (current_iter + 1) ** (-0.5 * self.tau)
+                * self.ll_opt.defaults["lr"]
             )
             for params in self.auxiliary_v_opt.param_groups:
                 params["lr"] = eta
@@ -187,8 +193,7 @@ class DM(DynamicalSystem):
                 ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
             )
         else:
-            loss_full = self.ll_objective(ll_feed_dict,self.ul_model, auxiliary_model
-            )
+            loss_full = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
 
         grad_y_temp = jit.grad(
             loss_full, list(auxiliary_model.parameters()), retain_graph=True
