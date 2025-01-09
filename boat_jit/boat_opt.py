@@ -13,9 +13,9 @@ import boat_jit.higher_jit as higher
 
 
 importlib = __import__("importlib")
-from boat.operation_registry import get_registered_operation
-from boat.dynamic_ol import makes_functional_dynamical_system
-from boat.hyper_ol import makes_functional_hyper_operation
+from boat_jit.operation_registry import get_registered_operation
+from boat_jit.dynamic_ol import makes_functional_dynamical_system
+from boat_jit.hyper_ol import makes_functional_hyper_operation
 
 
 def _load_loss_function(loss_config: Dict[str, Any]) -> Callable:
@@ -88,12 +88,21 @@ class Problem:
         self._upper_opt = self.boat_configs["upper_level_opt"]
         self._ll_loss = _load_loss_function(loss_config["lower_level_loss"])
         self._ul_loss = _load_loss_function(loss_config["upper_level_loss"])
+        self._track_opt_traj = False
         self._ll_solver = None
         self._ul_solver = None
         self._lower_init_opt = None
         self._fo_gm_solver = None
         self._lower_loop = None
         self._log_results_dict = {}
+        if config["dynamic_op"] is not None:
+            if "GDA" in config["dynamic_op"]:
+                assert (
+                    loss_config.get("gda_loss", None) is not None
+                ), "Set the 'gda_loss' in loss_config properly."
+                self.boat_configs["gda_loss"] = _load_loss_function(
+                    loss_config["gda_loss"]
+                )
 
     def build_ll_solver(self):
         """
@@ -228,7 +237,8 @@ class Problem:
                     ll_feed_dict, ul_feed_dict
                 ):
                     with higher.innerloop_ctx(
-                        self._ll_model, self._lower_opt, copy_initial_weights=False
+                        self._ll_model, self._lower_opt, copy_initial_weights=False,
+                    track_higher_grads=self._track_opt_traj
                     ) as (auxiliary_model, auxiliary_opt):
                         forward_time = time.perf_counter()
                         dynamic_results = self._ll_solver.optimize(
@@ -254,7 +264,8 @@ class Problem:
                 average_grad(self._ul_model, len(ll_feed_dict))
             else:
                 with higher.innerloop_ctx(
-                    self._ll_model, self._lower_opt, copy_initial_weights=True
+                    self._ll_model, self._lower_opt, copy_initial_weights=True,
+                    track_higher_grads=self._track_opt_traj
                 ) as (auxiliary_model, auxiliary_opt):
                     forward_time = time.perf_counter()
                     dynamic_results = self._ll_solver.optimize(
@@ -303,8 +314,12 @@ class Problem:
 
         return self._log_results_dict["upper_loss"], run_time
 
-    def check_status(self):
+    def set_track_trajectory(self, track_traj=True):
+        self._track_opt_traj = track_traj
 
+    def check_status(self):
+        if any(item in self._hyper_op for item in ["PTT", "IAD"]):
+            self.set_track_trajectory(True)
         if "DM" in self.boat_configs["dynamic_op"]:
             assert (self.boat_configs["hyper_op"] == ["RAD"]) or (
                 self.boat_configs["hyper_op"] == ["CG"]

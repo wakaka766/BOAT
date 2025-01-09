@@ -5,35 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/sequential_ds.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/sequential_hg.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/boat_jit/operation_registry.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/l2_regularization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/set.bat" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization/method_test/2024_12_30_13_08_35/set.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2_regularization_local.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization_local.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/L2_Reg_jit/l2reg.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2reg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/boat_opt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_jit/boat_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/configs_jit/boat_config_l2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_jit/loss_config_l2.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/configs_jit/loss_config_l2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs_jit/loss_func_l2.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/configs_jit/loss_func_l2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/L2_Reg_jit/l2_regularization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
