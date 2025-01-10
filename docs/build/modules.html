@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>boat_jit &mdash; BOAT 0.0.1 documentation</title>
+  <title>boat_jit &mdash; BOAT-Jittor 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a96ec788" />
@@ -31,7 +31,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            BOAT
+            BOAT-Jittor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -45,7 +45,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="boat_jit.html">boat_jit package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boat_jit.html">BOAT Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -58,7 +58,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">BOAT</a>
+          <a href="index.html">BOAT-Jittor</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -80,8 +80,18 @@
 <h1>boat_jit<a class="headerlink" href="#boat-jit" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="boat_jit.html">boat_jit package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="boat_jit.html">BOAT Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit.boat_opt">Core Problem Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.build_ll_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ll_solver()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.build_ul_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ul_solver()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.check_status"><code class="docutils literal notranslate"><span class="pre">Problem.check_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.run_iter"><code class="docutils literal notranslate"><span class="pre">Problem.run_iter()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#main-subpackages">Main Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.dynamic_ol.html">boat_jit.dynamic_ol package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="boat_jit.dynamic_ol.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="boat_jit.dynamic_ol.html#module-boat_jit.dynamic_ol.di">boat_jit.dynamic_ol.di module</a></li>
@@ -134,23 +144,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit.boat_opt">boat_jit.boat_opt module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.build_ll_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ll_solver()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.build_ul_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ul_solver()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.check_status"><code class="docutils literal notranslate"><span class="pre">Problem.check_status()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat_jit.html#boat_jit.boat_opt.Problem.run_iter"><code class="docutils literal notranslate"><span class="pre">Problem.run_iter()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit.operation_registry">boat_jit.operation_registry module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit.operation_registry">Extension with Operation_Registry</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.html#boat_jit.operation_registry.get_registered_operation"><code class="docutils literal notranslate"><span class="pre">get_registered_operation()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.html#boat_jit.operation_registry.register_class"><code class="docutils literal notranslate"><span class="pre">register_class()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit">Module contents</a></li>
 </ul>
 </li>
 </ul>
