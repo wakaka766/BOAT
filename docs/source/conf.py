@@ -52,12 +52,12 @@ html_context = {
 import sys
 from unittest.mock import MagicMock
 
-MOCK_MODULES = [
-    'jittor',
-    'jittor.optim',
-    'jittor.nn',
-    'jittor.compiler',
-    'jittor.utils',
-]
-sys.modules.update((mod_name, MagicMock()) for mod_name in MOCK_MODULES)
-
+autodoc_mock_imports = ['jittor']
+MOCK_MODULES = ['jittor']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = MagicMock()
+    # Dynamically create submodules
+    sys.modules[f"{mod_name}.optim"] = MagicMock()
+    sys.modules[f"{mod_name}.nn"] = MagicMock()
+    sys.modules[f"{mod_name}.compiler"] = MagicMock()
+    sys.modules[f"{mod_name}.utils"] = MagicMock()
