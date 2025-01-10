@@ -53,7 +53,7 @@ html_context = {
 import sys
 from unittest.mock import MagicMock
 
-autodoc_mock_imports = ['jittor']
+autodoc_mock_imports = ['jittor','boat_jit.higher_jit']
 MOCK_MODULES = ['jittor']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = MagicMock()
