@@ -5,8 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/readthedocs.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.doctree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/environment.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/_sources/boat_jit.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/boat_jit.rst.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.dynamic_ol.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.dynamic_ol.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.fogm.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.fogm.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.higher_jit.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.higher_jit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.hyper_ol.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.hyper_ol.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.utils.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.utils.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/genindex.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/modules.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/modules.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/objects.inv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/py-modindex.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/build/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/searchindex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_jit.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/conf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readthedocs.yml" beforeDir="false" afterPath="$PROJECT_DIR$/readthedocs.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -48,7 +48,16 @@
 <li class="toctree-l1"><a class="reference internal" href="description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">boat_jit package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-boat_jit.boat_opt">Core Problem module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat_jit.dynamic_ol.html">boat_jit.dynamic_ol package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_jit.fogm.html">boat_jit.fogm package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_jit.higher_jit.html">boat_jit.higher_jit package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_jit.hyper_ol.html">boat_jit.hyper_ol package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_jit.utils.html">boat_jit.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-boat_jit.boat_opt">boat_jit.boat_opt module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#boat_jit.boat_opt.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#boat_jit.boat_opt.Problem.build_ll_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ll_solver()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#boat_jit.boat_opt.Problem.build_ul_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ul_solver()</span></code></a></li>
@@ -58,19 +67,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#main-subpackages">Main Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat_jit.dynamic_ol.html">boat_jit.dynamic_ol package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="boat_jit.fogm.html">boat_jit.fogm package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="boat_jit.higher_jit.html">boat_jit.higher_jit package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="boat_jit.hyper_ol.html">boat_jit.hyper_ol package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="boat_jit.utils.html">boat_jit.utils package</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-boat_jit.operation_registry">Extension with Operation_Registry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-boat_jit.operation_registry">boat_jit.operation_registry module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#boat_jit.operation_registry.get_registered_operation"><code class="docutils literal notranslate"><span class="pre">get_registered_operation()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#boat_jit.operation_registry.register_class"><code class="docutils literal notranslate"><span class="pre">register_class()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#module-boat_jit">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -105,96 +107,8 @@
              
   <section id="boat-jit-package">
 <h1>boat_jit package<a class="headerlink" href="#boat-jit-package" title="Permalink to this heading"></a></h1>
-<section id="module-boat_jit.boat_opt">
-<span id="core-problem-module"></span><h2>Core Problem module<a class="headerlink" href="#module-boat_jit.boat_opt" title="Permalink to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.boat_opt.</span></span><span class="sig-name descname"><span class="pre">Problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Enhanced bi-level optimization problem class supporting flexible loss functions and operation configurations.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.build_ll_solver">
-<span class="sig-name descname"><span class="pre">build_ll_solver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.build_ll_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.build_ll_solver" title="Permalink to this definition"></a></dt>
-<dd><p>Configure the lower-level solver.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.build_ul_solver">
-<span class="sig-name descname"><span class="pre">build_ul_solver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.build_ul_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.build_ul_solver" title="Permalink to this definition"></a></dt>
-<dd><p>Configure the lower-level solver.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.check_status">
-<span class="sig-name descname"><span class="pre">check_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.check_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.check_status" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.run_iter">
-<span class="sig-name descname"><span class="pre">run_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.run_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.run_iter" title="Permalink to this definition"></a></dt>
-<dd><p>Run a single iteration of the bi-level optimization process.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tensor</em><em>]</em>) – <p>Dictionary containing the real-time data and parameters
-fed for the construction of the lower-level (LL) objective.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">train_images</span><span class="p">,</span>
-    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">train_texts</span><span class="p">,</span>
-    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">train_labels</span>  <span class="c1"># Optional</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tensor</em><em>]</em>) – <p>Dictionary containing the real-time data and parameters
-fed for the construction of the upper-level (UL) objective.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">val_images</span><span class="p">,</span>
-    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">val_texts</span><span class="p">,</span>
-    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">val_labels</span>  <span class="c1"># Optional</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</p></li>
-<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Notes<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p>When <cite>accumulate_grad</cite> is set to True, you need to pack the data of
-each batch based on the format above.</p></li>
-<li><p>In that case, pass <cite>ll_feed_dict</cite> and <cite>ul_feed_dict</cite> as lists of
-dictionaries, i.e., <cite>[Dict[str, Tensor]]</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A tuple containing:
-- <strong>loss</strong> (<em>float</em>): The loss value for the current iteration.
-- <strong>run_time</strong> (<em>float</em>): The total time taken for the iteration.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="main-subpackages">
-<h2>Main Subpackages<a class="headerlink" href="#main-subpackages" title="Permalink to this heading"></a></h2>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="boat_jit.dynamic_ol.html">boat_jit.dynamic_ol package</a><ul>
@@ -471,8 +385,99 @@ dictionaries, i.e., <cite>[Dict[str, Tensor]]</cite>.</p></li>
 </ul>
 </div>
 </section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-boat_jit.boat_opt">
+<span id="boat-jit-boat-opt-module"></span><h2>boat_jit.boat_opt module<a class="headerlink" href="#module-boat_jit.boat_opt" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.boat_opt.</span></span><span class="sig-name descname"><span class="pre">Problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Enhanced bi-level optimization problem class supporting flexible loss functions and operation configurations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.build_ll_solver">
+<span class="sig-name descname"><span class="pre">build_ll_solver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.build_ll_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.build_ll_solver" title="Permalink to this definition"></a></dt>
+<dd><p>Configure the lower-level solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.build_ul_solver">
+<span class="sig-name descname"><span class="pre">build_ul_solver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.build_ul_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.build_ul_solver" title="Permalink to this definition"></a></dt>
+<dd><p>Configure the lower-level solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.check_status">
+<span class="sig-name descname"><span class="pre">check_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.check_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.check_status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="boat_jit.boat_opt.Problem.run_iter">
+<span class="sig-name descname"><span class="pre">run_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/boat_jit/boat_opt.html#Problem.run_iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.boat_opt.Problem.run_iter" title="Permalink to this definition"></a></dt>
+<dd><p>Run a single iteration of the bi-level optimization process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tensor</em><em>]</em>) – <p>Dictionary containing the real-time data and parameters
+fed for the construction of the lower-level (LL) objective.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">train_images</span><span class="p">,</span>
+    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">train_texts</span><span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">train_labels</span>  <span class="c1"># Optional</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Tensor</em><em>]</em>) – <p>Dictionary containing the real-time data and parameters
+fed for the construction of the upper-level (UL) objective.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">val_images</span><span class="p">,</span>
+    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">val_texts</span><span class="p">,</span>
+    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">val_labels</span>  <span class="c1"># Optional</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Notes<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p>When <cite>accumulate_grad</cite> is set to True, you need to pack the data of
+each batch based on the format above.</p></li>
+<li><p>In that case, pass <cite>ll_feed_dict</cite> and <cite>ul_feed_dict</cite> as lists of
+dictionaries, i.e., <cite>[Dict[str, Tensor]]</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing:
+- <strong>loss</strong> (<em>float</em>): The loss value for the current iteration.
+- <strong>run_time</strong> (<em>float</em>): The total time taken for the iteration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-boat_jit.operation_registry">
-<span id="extension-with-operation-registry"></span><h2>Extension with Operation_Registry<a class="headerlink" href="#module-boat_jit.operation_registry" title="Permalink to this heading"></a></h2>
+<span id="boat-jit-operation-registry-module"></span><h2>boat_jit.operation_registry module<a class="headerlink" href="#module-boat_jit.operation_registry" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_jit.operation_registry.get_registered_operation">
 <span class="sig-prename descclassname"><span class="pre">boat_jit.operation_registry.</span></span><span class="sig-name descname"><span class="pre">get_registered_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/operation_registry.html#get_registered_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.operation_registry.get_registered_operation" title="Permalink to this definition"></a></dt>
@@ -485,6 +490,9 @@ dictionaries, i.e., <cite>[Dict[str, Tensor]]</cite>.</p></li>
 <dd><p>Register a new operation class to the global registry.</p>
 </dd></dl>
 
+</section>
+<section id="module-boat_jit">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-boat_jit" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 
