@@ -20,9 +20,9 @@ class DynamicalSystem(object):
             :param ll_objective: The lower-level objective of the BLO problem.
             :type ll_objective: callable
             :param ll_model: The lower-level model of the BLO problem.
-            :type ll_model: torch.nn.Module
+            :type ll_model: Jittor.Module
             :param ul_model: The upper-level model of the BLO problem.
-            :type ul_model: torch.nn.Module
+            :type ul_model: Jittor.Module
             :param lower_loop: Number of iterations for lower-level optimization.
             :type lower_loop: int
         """

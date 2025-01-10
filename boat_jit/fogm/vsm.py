@@ -26,9 +26,9 @@ class VSM(DynamicalSystem):
     :param ul_objective: The upper-level objective of the BLO problem.
     :type ul_objective: callable
     :param ll_model: The lower-level model of the BLO problem.
-    :type ll_model: torch.nn.Module
+    :type ll_model: Jittor.Module
     :param ul_model: The upper-level model of the BLO problem.
-    :type ul_model: torch.nn.Module
+    :type ul_model: Jittor.Module
     :param ll_var: The list of lower-level variables of the BLO problem.
     :type ll_var: List
     :param ul_var: The list of upper-level variables of the BLO problem.

@@ -20,9 +20,9 @@ class FD(HyperGradient):
         :param ul_objective: The upper-level objective of the BLO problem.
         :type ul_objective: callable
         :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: torch.nn.Module
+        :type ll_model: Jittor.Module
         :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: torch.nn.Module
+        :type ul_model: Jittor.Module
         :param ll_var: List of variables optimized with the lower-level objective.
         :type ll_var: List
         :param ul_var:  of variables optimized with the upper-level objective.
