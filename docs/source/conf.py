@@ -48,3 +48,10 @@ html_css_files = [
 html_context = {
     "extrahead": '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">',
 }
+
+import sys
+from unittest.mock import MagicMock
+
+MOCK_MODULES = ['jittor']
+sys.modules.update((mod_name, MagicMock()) for mod_name in MOCK_MODULES)
+
