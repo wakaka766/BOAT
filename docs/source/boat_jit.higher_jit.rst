@@ -1,10 +1,10 @@
-boat\_jit.higher\_jit package
+boat\_jit.higher\_jit
 =============================
 
 Submodules
 ----------
 
-boat\_jit.higher\_jit.optim module
+boat\_jit.higher\_jit.optim
 ----------------------------------
 
 .. automodule:: boat_jit.higher_jit.optim
@@ -12,7 +12,7 @@ boat\_jit.higher\_jit.optim module
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.higher\_jit.patch module
+boat\_jit.higher\_jit.patch
 ----------------------------------
 
 .. automodule:: boat_jit.higher_jit.patch
@@ -20,7 +20,7 @@ boat\_jit.higher\_jit.patch module
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.higher\_jit.utils module
+boat\_jit.higher\_jit.utils
 ----------------------------------
 
 .. automodule:: boat_jit.higher_jit.utils

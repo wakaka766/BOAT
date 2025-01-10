@@ -1,10 +1,10 @@
-boat\_jit.hyper\_ol package
+boat\_jit.hyper\_ol
 ===========================
 
 Submodules
 ----------
 
-boat\_jit.hyper\_ol.cg module
+boat\_jit.hyper\_ol.cg
 -----------------------------
 
 .. automodule:: boat_jit.hyper_ol.cg
@@ -12,7 +12,7 @@ boat\_jit.hyper\_ol.cg module
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.hyper\_ol.fd module
+boat\_jit.hyper\_ol.fd
 -----------------------------
 
 .. automodule:: boat_jit.hyper_ol.fd
@@ -20,7 +20,7 @@ boat\_jit.hyper\_ol.fd module
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.hyper\_ol.foa module
+boat\_jit.hyper\_ol.foa
 ------------------------------
 
 .. automodule:: boat_jit.hyper_ol.foa
@@ -28,7 +28,7 @@ boat\_jit.hyper\_ol.foa module
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.hyper\_ol.hyper\_gradient module
+boat\_jit.hyper\_ol.hyper\_gradient
 ------------------------------------------
 
 .. automodule:: boat_jit.hyper_ol.hyper_gradient
