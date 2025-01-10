@@ -48,8 +48,7 @@ class IGA(HyperGradient):
 
     References
     ----------
-    [1] Liu R, Gao J, Liu X, et al., "Learning with constraint learning: New perspective, solution strategy and
-        various applications," IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.
+    [1] Liu R, Gao J, Liu X, et al., "Learning with constraint learning: New perspective, solution strategy and various applications," IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.
     """
 
     def __init__(
@@ -92,11 +91,9 @@ class IGA(HyperGradient):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization, including training data,
-            targets, and other information required for the LL objective computation.
+            Dictionary containing the lower-level data used for optimization, including training data, targets, and other information required for the LL objective computation.
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization, including validation data,
-            targets, and other information required for the UL objective computation.
+            Dictionary containing the upper-level data used for optimization, including validation data, targets, and other information required for the UL objective computation.
         auxiliary_model : _MonkeyPatchBase
             A patched lower-level model wrapped by the `higher` library, enabling differentiable optimization.
         max_loss_iter : int, optional

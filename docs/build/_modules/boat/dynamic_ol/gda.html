@@ -118,8 +118,7 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, &quot;A generic first-order algorithmic framework</span>
-<span class="sd">        for bi-level programming beyond lower-level singleton&quot;, in ICML, 2020.</span>
+<span class="sd">    [1] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, &quot;A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton&quot;, in ICML, 2020.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -160,19 +159,15 @@
 <span class="sd">            Dictionary containing the lower-level data used for optimization.</span>
 <span class="sd">            Typically includes training data, targets, and other information required to compute the LL objective.</span>
 <span class="sd">        ul_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            Typically includes validation data, targets, and other information required to compute the UL objective.</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the UL objective.</span>
 <span class="sd">        auxiliary_model : _MonkeyPatchBase</span>
-<span class="sd">            A patched lower model wrapped by the `higher` library.</span>
-<span class="sd">            This model is used for differentiable optimization in the lower-level procedure.</span>
+<span class="sd">            A patched lower model wrapped by the `higher` library. This model is used for differentiable optimization in the lower-level procedure.</span>
 <span class="sd">        auxiliary_opt : DifferentiableOptimizer</span>
-<span class="sd">            A patched optimizer for the lower-level model, wrapped by the `higher` library.</span>
-<span class="sd">            Allows differentiable optimization.</span>
+<span class="sd">            A patched optimizer for the lower-level model, wrapped by the `higher` library. Allows differentiable optimization.</span>
 <span class="sd">        current_iter : int</span>
 <span class="sd">            The current iteration number of the optimization process.</span>
 <span class="sd">        next_operation : str, optional</span>
-<span class="sd">            Specifies the next operation to be executed in the optimization pipeline.</span>
-<span class="sd">            Default is None.</span>
+<span class="sd">            Specifies the next operation to be executed in the optimization pipeline. Default is None.</span>
 <span class="sd">        **kwargs : dict</span>
 <span class="sd">            Additional parameters required for the optimization procedure.</span>
 

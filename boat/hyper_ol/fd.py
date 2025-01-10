@@ -99,16 +99,13 @@ class FD(HyperGradient):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
+            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
 
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
+            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
 
         auxiliary_model : _MonkeyPatchBase
-            A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
+            A patched lower model wrapped by the `higher` library. It serves as the lower-level model for optimization.
 
         max_loss_iter : int, optional
             The number of iterations used for backpropagation. Default is 0.

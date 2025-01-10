@@ -36,8 +36,7 @@ class NGD(DynamicalSystem):
 
     References
     ----------
-    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
-        programming for hyperparameter optimization and meta-learning", in ICML, 2018.
+    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter optimization and meta-learning", in ICML, 2018.
     """
 
     def __init__(
@@ -74,20 +73,16 @@ class NGD(DynamicalSystem):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization.
-            Typically includes training data, targets, and other information required to compute the lower-level (LL) objective.
+            Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the lower-level (LL) objective.
 
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization.
-            Typically includes validation data, targets, and other information required to compute the upper-level (UL) objective.
+            Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the upper-level (UL) objective.
 
         auxiliary_model : _MonkeyPatchBase
-            A patched lower-level model wrapped by the `higher` library.
-            Used for differentiable optimization in the lower-level procedure.
+            A patched lower-level model wrapped by the `higher` library. Used for differentiable optimization in the lower-level procedure.
 
         auxiliary_opt : DifferentiableOptimizer
-            A patched optimizer for the lower-level model, wrapped by the `higher` library.
-            Enables differentiable optimization.
+            A patched optimizer for the lower-level model, wrapped by the `higher` library. Enables differentiable optimization.
 
         current_iter : int
             The current iteration number of the optimization process.

@@ -143,20 +143,17 @@
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Liu R, Liu Z, Yao W, et al. “Moreau Envelope for Nonconvex Bi-Level Optimization:</dt><dd><p>A Single-loop and Hessian-free Solution Strategy,” ICML, 2024.</p>
-</dd>
-</dl>
+<p>[1] Liu R, Liu Z, Yao W, et al. “Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy,” ICML, 2024.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.fogm.mesm.MESM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/fogm/mesm.html#MESM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.fogm.mesm.MESM.optimize" title="Link to this definition"></a></dt>
 <dd><p>Execute the optimization procedure using the provided data and model configurations.</p>
-<p>:param : Typically includes training data, targets, and other information required to compute the LL objective.
-:type : param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+<p>:param :
+:type : param ll_feed_dict: Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the LL objective.
 :param :
 :type : type ll_feed_dict: Dict
-:param : Typically includes validation data, targets, and other information required to compute the UL objective.
-:type : param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+:param :
+:type : param ul_feed_dict: Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the UL objective.
 :param :
 :type : type ul_feed_dict: Dict
 :param :
@@ -213,10 +210,7 @@
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Liu R, Liu Z, Yao W, et al. “Moreau Envelope for Nonconvex Bi-Level Optimization:</dt><dd><p>A Single-loop and Hessian-free Solution Strategy,” ICML, 2024.</p>
-</dd>
-</dl>
+<p>[1] Liu R, Liu Z, Yao W, et al. “Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy,” ICML, 2024.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.fogm.pgdm.PGDM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/fogm/pgdm.html#PGDM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.fogm.pgdm.PGDM.optimize" title="Link to this definition"></a></dt>
@@ -296,10 +290,7 @@
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, “A Value-Function-based</dt><dd><p>Interior-point Method for Non-convex Bi-level Optimization,” in ICML, 2021.</p>
-</dd>
-</dl>
+<p>[1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, “A Value-Function-based Interior-point Method for Non-convex Bi-level Optimization,” in ICML, 2021.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.fogm.vfm.VFM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/fogm/vfm.html#VFM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.fogm.vfm.VFM.optimize" title="Link to this definition"></a></dt>
@@ -307,10 +298,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
 <li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number of the optimization process.</p></li>
 </ul>
 </dd>
@@ -362,10 +351,7 @@ It typically includes validation data, targets, and other information required t
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Liu B, Ye M, Wright S, et al. “BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach,”</dt><dd><p>in NeurIPS, 2022.</p>
-</dd>
-</dl>
+<p>[1] Liu B, Ye M, Wright S, et al. “BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach”, in NeurIPS, 2022.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.fogm.vsm.VSM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/fogm/vsm.html#VSM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.fogm.vsm.VSM.optimize" title="Link to this definition"></a></dt>

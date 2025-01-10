@@ -82,31 +82,35 @@ class IAD(HyperGradient):
         **kwargs
     ):
         """
-        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
+        Compute the hyper-gradients of the upper-level variables using the data from feed_dict and patched models.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower-level model wrapped by the `higher` library. It serves as the lower-level model for optimization.
 
-        :param max_loss_iter: The number of iteration used for backpropagation.
-        :type max_loss_iter: int
+        max_loss_iter : int
+            The number of iterations used for backpropagation.
 
-        :param next_operation: The next operator for the calculation of the hypergradient.
-        :type next_operation: str
+        next_operation : str
+            The next operator for the calculation of the hypergradient.
 
-        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
-        :type  hyper_gradient_finished: bool
+        hyper_gradient_finished : bool
+            A boolean flag indicating whether the hypergradient computation is finished.
 
-        :returns: the current upper-level objective
+        Returns
+        -------
+        float
+            The current upper-level objective.
+
         """
+
 
         if next_operation is not None:
             lower_model_params = kwargs.get(

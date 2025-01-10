@@ -91,8 +91,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for managing sequential hyper-gradient operations.</span>
 
-<span class="sd">    This class dynamically organizes and executes a sequence of hyper-gradient computations</span>
-<span class="sd">    using user-defined and validated orders of gradient operators.</span>
+<span class="sd">    This class dynamically organizes and executes a sequence of hyper-gradient computations using user-defined and validated orders of gradient operators.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -114,8 +113,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute hyper-gradients sequentially using the ordered instances.</span>
 
-<span class="sd">        This method processes the hyper-gradients in the defined order, passing intermediate</span>
-<span class="sd">        results between consecutive gradient operators.</span>
+<span class="sd">        This method processes the hyper-gradients in the defined order, passing intermediate results between consecutive gradient operators.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -155,8 +153,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dynamically create a SequentialHG object with ordered gradient operators.</span>
 
-<span class="sd">    This function validates the user-defined operator order, adjusts it to conform</span>
-<span class="sd">    with predefined gradient rules, and dynamically loads the corresponding operator classes.</span>
+<span class="sd">    This function validates the user-defined operator order, adjusts it to conform with predefined gradient rules, and dynamically loads the corresponding operator classes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -197,10 +194,7 @@
     <span class="n">custom_order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">gradient_order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Validate and adjust the custom order to match the predefined gradient order.</span>
-
-<span class="sd">    This function ensures that the user-defined order adheres to the predefined grouping</span>
-<span class="sd">    rules and adjusts it accordingly.</span>
+<span class="sd">    Validate and adjust the custom order to match the predefined gradient order. This function ensures that the user-defined order adheres to the predefined grouping rules and adjusts it accordingly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

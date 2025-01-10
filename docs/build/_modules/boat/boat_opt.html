@@ -276,8 +276,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run a single iteration of the bi-level optimization process.</span>
 
-<span class="sd">        :param ll_feed_dict: Dictionary containing the real-time data and parameters</span>
-<span class="sd">            fed for the construction of the lower-level (LL) objective.</span>
+<span class="sd">        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the lower-level (LL) objective.</span>
 
 <span class="sd">            Example::</span>
 
@@ -289,8 +288,7 @@
 
 <span class="sd">        :type ll_feed_dict: Dict[str, Tensor]</span>
 
-<span class="sd">        :param ul_feed_dict: Dictionary containing the real-time data and parameters</span>
-<span class="sd">            fed for the construction of the upper-level (UL) objective.</span>
+<span class="sd">        :param ul_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the upper-level (UL) objective.</span>
 
 <span class="sd">            Example::</span>
 
@@ -306,10 +304,8 @@
 <span class="sd">        :type current_iter: int</span>
 
 <span class="sd">        :notes:</span>
-<span class="sd">            - When `accumulate_grad` is set to True, you need to pack the data of</span>
-<span class="sd">              each batch based on the format above.</span>
-<span class="sd">            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of</span>
-<span class="sd">              dictionaries, i.e., `[Dict[str, Tensor]]`.</span>
+<span class="sd">            - When `accumulate_grad` is set to True, you need to pack the data of each batch based on the format above.</span>
+<span class="sd">            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of dictionaries, i.e., `[Dict[str, Tensor]]`.</span>
 
 <span class="sd">        :returns: A tuple containing:</span>
 <span class="sd">            - **loss** (*float*): The loss value for the current iteration.</span>

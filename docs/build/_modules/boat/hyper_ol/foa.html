@@ -157,16 +157,13 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        ll_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the lower-level data used for optimization.</span>
-<span class="sd">            It typically includes training data, targets, and other information required to compute the LL objective.</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</span>
 
 <span class="sd">        ul_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            It typically includes validation data, targets, and other information required to compute the UL objective.</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</span>
 
 <span class="sd">        auxiliary_model : _MonkeyPatchBase</span>
-<span class="sd">            A patched lower-level model wrapped by the `higher` library.</span>
-<span class="sd">            It serves as the lower-level model for optimization.</span>
+<span class="sd">            A patched lower-level model wrapped by the `higher` library. It serves as the lower-level model for optimization.</span>
 
 <span class="sd">        max_loss_iter : int, optional</span>
 <span class="sd">            The number of iterations used for backpropagation, by default 0.</span>
@@ -183,8 +180,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Dict</span>
-<span class="sd">            A dictionary containing information required for the next step in the hypergradient computation,</span>
-<span class="sd">            including the feed dictionaries, auxiliary model, iteration count, and other optional arguments.</span>
+<span class="sd">            A dictionary containing information required for the next step in the hypergradient computation, including the feed dictionaries, auxiliary model, iteration count, and other optional arguments.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>

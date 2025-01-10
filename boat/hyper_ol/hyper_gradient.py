@@ -10,8 +10,7 @@ class HyperGradient(object):
     """
     Base class for computing hyper-gradients of upper-level variables in bilevel optimization problems.
 
-    This class provides an abstract interface for hyper-gradient computation that can be extended
-    for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.
+    This class provides an abstract interface for hyper-gradient computation that can be extended for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.
 
     Parameters
     ----------

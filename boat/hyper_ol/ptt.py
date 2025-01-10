@@ -33,8 +33,7 @@ class PTT(HyperGradient):
 
     References
     ----------
-    [1] Liu R., Liu Y., Zeng S., et al. "Towards gradient-based bilevel optimization
-        with non-convex followers and beyond," in NeurIPS, 2021.
+    [1] Liu R., Liu Y., Zeng S., et al. "Towards gradient-based bilevel optimization with non-convex followers and beyond," in NeurIPS, 2021.
     """
 
     def __init__(

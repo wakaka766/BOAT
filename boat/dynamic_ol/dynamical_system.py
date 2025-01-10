@@ -26,8 +26,7 @@ class DynamicalSystem(object):
         :type ul_model: torch.nn.Module
         :param lower_loop: The number of iterations for lower-level optimization.
         :type lower_loop: int
-        :param solver_config: A dictionary containing solver configurations. It includes details about optimization algorithms,
-            hyperparameter settings, and additional configurations required for solving the BLO problem.
+        :param solver_config: A dictionary containing solver configurations. It includes details about optimization algorithms, hyperparameter settings, and additional configurations required for solving the BLO problem.
         :type solver_config: Dict[str, Any]
         """
         self.ll_objective = ll_objective

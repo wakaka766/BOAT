@@ -7,8 +7,7 @@ class SequentialHG:
     """
     A class for managing sequential hyper-gradient operations.
 
-    This class dynamically organizes and executes a sequence of hyper-gradient computations
-    using user-defined and validated orders of gradient operators.
+    This class dynamically organizes and executes a sequence of hyper-gradient computations using user-defined and validated orders of gradient operators.
 
     Parameters
     ----------
@@ -28,8 +27,7 @@ class SequentialHG:
         """
         Compute hyper-gradients sequentially using the ordered instances.
 
-        This method processes the hyper-gradients in the defined order, passing intermediate
-        results between consecutive gradient operators.
+        This method processes the hyper-gradients in the defined order, passing intermediate results between consecutive gradient operators.
 
         Parameters
         ----------
@@ -65,8 +63,7 @@ def makes_functional_hyper_operation(custom_order: List[str], **kwargs) -> Seque
     """
     Dynamically create a SequentialHG object with ordered gradient operators.
 
-    This function validates the user-defined operator order, adjusts it to conform
-    with predefined gradient rules, and dynamically loads the corresponding operator classes.
+    This function validates the user-defined operator order, adjusts it to conform with predefined gradient rules, and dynamically loads the corresponding operator classes.
 
     Parameters
     ----------
@@ -104,10 +101,7 @@ def validate_and_adjust_order(
     custom_order: List[str], gradient_order: List[List[str]]
 ) -> List[str]:
     """
-    Validate and adjust the custom order to match the predefined gradient order.
-
-    This function ensures that the user-defined order adheres to the predefined grouping
-    rules and adjusts it accordingly.
+    Validate and adjust the custom order to match the predefined gradient order. This function ensures that the user-defined order adheres to the predefined grouping rules and adjusts it accordingly.
 
     Parameters
     ----------

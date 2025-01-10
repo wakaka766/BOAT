@@ -101,8 +101,7 @@
 <span class="nd">@register_class</span>
 <span class="k">class</span> <span class="nc">DM</span><span class="p">(</span><span class="n">DynamicalSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1],</span>
-<span class="sd">    Gradient Descent Aggregation (GDA) [2], and Dual Multiplier (DM) [3].</span>
+<span class="sd">    Implements the lower-level optimization procedure for Dual Multiplier (DM) [1].</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -117,19 +116,11 @@
 <span class="sd">    lower_loop : int</span>
 <span class="sd">        The number of iterations for the lower-level optimization process.</span>
 <span class="sd">    solver_config : Dict[str, Any]</span>
-<span class="sd">        A dictionary containing configurations for the optimization solver, including</span>
-<span class="sd">        hyperparameters and specific settings for NGD, GDA, and DM.</span>
+<span class="sd">        A dictionary containing configurations for the optimization solver, including hyperparameters and specific settings for NGD, GDA, and DM.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, &quot;Bilevel programming for hyperparameter</span>
-<span class="sd">        optimization and meta-learning,&quot; ICML, 2018.</span>
-
-<span class="sd">    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, &quot;A generic first-order algorithmic framework for bi-level</span>
-<span class="sd">        programming beyond lower-level singleton,&quot; ICML, 2020.</span>
-
-<span class="sd">    [3] Liu R, Liu Y, Yao W, et al., &quot;Averaged method of multipliers for bi-level optimization without lower-level</span>
-<span class="sd">        strong convexity,&quot; ICML, 2023.</span>
+<span class="sd">    [1] Liu R, Liu Y, Yao W, et al., &quot;Averaged method of multipliers for bi-level optimization without lower-level strong convexity,&quot; ICML, 2023.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -221,9 +212,7 @@
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
-<span class="sd">        [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, &quot;Bilevel programming for hyperparameter optimization and meta-learning&quot;, in ICML, 2018.</span>
-<span class="sd">        [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, &quot;A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton&quot;, in ICML, 2020.</span>
-<span class="sd">        [3] Liu R, Liu Y, Yao W, et al. &quot;Averaged method of multipliers for bi-level optimization without lower-level strong convexity&quot;, in ICML, 2023.</span>
+<span class="sd">        [1] Liu R, Liu Y, Yao W, et al. &quot;Averaged method of multipliers for bi-level optimization without lower-level strong convexity&quot;, in ICML, 2023.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="n">next_operation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;NGD does not support next_operation&quot;</span>

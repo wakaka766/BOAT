@@ -71,12 +71,10 @@ class RAD(HyperGradient):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization.
-            Typically includes training data, targets, and other information required to compute the lower-level objective.
+            Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the lower-level objective.
 
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization.
-            Typically includes validation data, targets, and other information required to compute the upper-level objective.
+            Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the upper-level objective.
 
         auxiliary_model : _MonkeyPatchBase
             A patched lower model wrapped by the `higher` library. It serves as the lower-level model for optimization.

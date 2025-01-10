@@ -45,8 +45,7 @@ class MESM(DynamicalSystem):
 
     References
     ----------
-    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization:
-        A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
+    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
     """
 
     def __init__(
@@ -81,12 +80,10 @@ class MESM(DynamicalSystem):
 
         Parameters
         ----------
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            Typically includes training data, targets, and other information required to compute the LL objective.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the LL objective.
         :type ll_feed_dict: Dict
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            Typically includes validation data, targets, and other information required to compute the UL objective.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the UL objective.
         :type ul_feed_dict: Dict
 
         :param current_iter: The current iteration number of the optimization process.

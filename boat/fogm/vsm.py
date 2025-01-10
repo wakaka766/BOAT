@@ -44,8 +44,7 @@ class VSM(DynamicalSystem):
 
     References
     ----------
-    [1] Liu B, Ye M, Wright S, et al. "BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach,"
-        in NeurIPS, 2022.
+    [1] Liu B, Ye M, Wright S, et al. "BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach", in NeurIPS, 2022.
     """
 
     def __init__(

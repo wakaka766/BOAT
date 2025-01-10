@@ -363,12 +363,9 @@ It serves as the lower-level model for optimization.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
-<li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower model wrapped by the <cite>higher</cite> library.
-It serves as the lower-level model for optimization.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
+<li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower model wrapped by the <cite>higher</cite> library. It serves as the lower-level model for optimization.</p></li>
 <li><p><strong>max_loss_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations used for backpropagation. Default is 0.</p></li>
 <li><p><strong>hyper_gradient_finished</strong> (<em>bool</em><em>, </em><em>optional</em>) – A boolean flag indicating whether the hyper-gradient computation is finished. Default is False.</p></li>
 <li><p><strong>next_operation</strong> (<em>str</em><em>, </em><em>optional</em>) – The next operator for the calculation of the hyper-gradient. Default is None.</p></li>
@@ -421,12 +418,9 @@ It serves as the lower-level model for optimization.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
-<li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower-level model wrapped by the <cite>higher</cite> library.
-It serves as the lower-level model for optimization.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
+<li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower-level model wrapped by the <cite>higher</cite> library. It serves as the lower-level model for optimization.</p></li>
 <li><p><strong>max_loss_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations used for backpropagation, by default 0.</p></li>
 <li><p><strong>hyper_gradient_finished</strong> (<em>bool</em><em>, </em><em>optional</em>) – A boolean flag indicating whether the hypergradient computation is finished, by default False.</p></li>
 <li><p><strong>next_operation</strong> (<em>str</em><em>, </em><em>optional</em>) – The next operator for the calculation of the hypergradient, by default None.</p></li>
@@ -434,8 +428,7 @@ It serves as the lower-level model for optimization.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A dictionary containing information required for the next step in the hypergradient computation,
-including the feed dictionaries, auxiliary model, iteration count, and other optional arguments.</p>
+<dd class="field-even"><p>A dictionary containing information required for the next step in the hypergradient computation, including the feed dictionaries, auxiliary model, iteration count, and other optional arguments.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dict</p>
@@ -456,8 +449,7 @@ including the feed dictionaries, auxiliary model, iteration count, and other opt
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.hyper_gradient.</span></span><span class="sig-name descname"><span class="pre">HyperGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/hyper_gradient.html#HyperGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.hyper_gradient.HyperGradient" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for computing hyper-gradients of upper-level variables in bilevel optimization problems.</p>
-<p>This class provides an abstract interface for hyper-gradient computation that can be extended
-for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.</p>
+<p>This class provides an abstract interface for hyper-gradient computation that can be extended for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -562,23 +554,23 @@ for specific methods such as Conjugate Gradient, Finite Differentiation, or Firs
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.hyper_ol.iad.IAD.compute_gradients">
 <span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxiliary_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loss_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_gradient_finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/iad.html#IAD.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.iad.IAD.compute_gradients" title="Link to this definition"></a></dt>
-<dd><p>Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.</p>
+<dd><p>Compute the hyper-gradients of the upper-level variables using the data from feed_dict and patched models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
-<li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower model wrapped by the <cite>higher</cite> library.
-It serves as the lower-level model for optimization.</p></li>
-<li><p><strong>max_loss_iter</strong> (<em>int</em>) – The number of iteration used for backpropagation.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
+<li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower-level model wrapped by the <cite>higher</cite> library. It serves as the lower-level model for optimization.</p></li>
+<li><p><strong>max_loss_iter</strong> (<em>int</em>) – The number of iterations used for backpropagation.</p></li>
 <li><p><strong>next_operation</strong> (<em>str</em>) – The next operator for the calculation of the hypergradient.</p></li>
 <li><p><strong>hyper_gradient_finished</strong> (<em>bool</em>) – A boolean flag indicating whether the hypergradient computation is finished.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the current upper-level objective</p>
+<dd class="field-even"><p>The current upper-level objective.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -658,10 +650,7 @@ It serves as the lower-level model for optimization.</p></li>
 </dd></dl>
 
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Liu R, Gao J, Liu X, et al., “Learning with constraint learning: New perspective, solution strategy and</dt><dd><p>various applications,” IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.</p>
-</dd>
-</dl>
+<p>[1] Liu R, Gao J, Liu X, et al., “Learning with constraint learning: New perspective, solution strategy and various applications,” IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.hyper_ol.iga.IGA.compute_gradients">
 <span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxiliary_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loss_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_gradient_finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/iga.html#IGA.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.iga.IGA.compute_gradients" title="Link to this definition"></a></dt>
@@ -669,10 +658,8 @@ It serves as the lower-level model for optimization.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization, including training data,
-targets, and other information required for the LL objective computation.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization, including validation data,
-targets, and other information required for the UL objective computation.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization, including training data, targets, and other information required for the LL objective computation.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization, including validation data, targets, and other information required for the UL objective computation.</p></li>
 <li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower-level model wrapped by the <cite>higher</cite> library, enabling differentiable optimization.</p></li>
 <li><p><strong>max_loss_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations used for backpropagation, by default 0.</p></li>
 <li><p><strong>hyper_gradient_finished</strong> (<em>bool</em><em>, </em><em>optional</em>) – A flag indicating whether the hypergradient computation is finished, by default False.</p></li>
@@ -760,10 +747,7 @@ targets, and other information required for the UL objective computation.</p></l
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] J. Lorraine, P. Vicol, and D. Duvenaud, “Optimizing millions of hyperparameters</dt><dd><p>by implicit differentiation,” in AISTATS, 2020.</p>
-</dd>
-</dl>
+<p>[1] J. Lorraine, P. Vicol, and D. Duvenaud, “Optimizing millions of hyperparameters by implicit differentiation,” in AISTATS, 2020.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.hyper_ol.ns.NS.compute_gradients">
 <span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxiliary_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loss_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_gradient_finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/ns.html#NS.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.ns.NS.compute_gradients" title="Link to this definition"></a></dt>
@@ -816,10 +800,7 @@ It serves as the lower-level model for optimization.</p></li>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="simple">
-<dt>[1] Liu R., Liu Y., Zeng S., et al. “Towards gradient-based bilevel optimization</dt><dd><p>with non-convex followers and beyond,” in NeurIPS, 2021.</p>
-</dd>
-</dl>
+<p>[1] Liu R., Liu Y., Zeng S., et al. “Towards gradient-based bilevel optimization with non-convex followers and beyond,” in NeurIPS, 2021.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat.hyper_ol.ptt.PTT.compute_gradients">
 <span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxiliary_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loss_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyper_gradient_finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/ptt.html#PTT.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.ptt.PTT.compute_gradients" title="Link to this definition"></a></dt>
@@ -879,10 +860,8 @@ It serves as the lower-level model for optimization.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-Typically includes training data, targets, and other information required to compute the lower-level objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-Typically includes validation data, targets, and other information required to compute the upper-level objective.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the lower-level objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the upper-level objective.</p></li>
 <li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower model wrapped by the <cite>higher</cite> library. It serves as the lower-level model for optimization.</p></li>
 <li><p><strong>max_loss_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations used for backpropagation. Default is 0.</p></li>
 <li><p><strong>next_operation</strong> (<em>str</em><em>, </em><em>optional</em>) – The next operator for the calculation of the hypergradient. Default is None.</p></li>
@@ -932,10 +911,8 @@ Typically includes validation data, targets, and other information required to c
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes
-training data, targets, and other information required to compute the lower-level objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Typically includes
-validation data, targets, and other information required to compute the upper-level objective.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the lower-level objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the upper-level objective.</p></li>
 <li><p><strong>auxiliary_model</strong> (<em>_MonkeyPatchBase</em>) – A patched lower model wrapped by the <cite>higher</cite> library. It serves as the lower-level model for optimization.</p></li>
 <li><p><strong>max_loss_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations used for backpropagation. Default is 0.</p></li>
 <li><p><strong>next_operation</strong> (<em>str</em><em>, </em><em>optional</em>) – The next operator for the calculation of the hypergradient. Default is None.</p></li>
@@ -968,8 +945,7 @@ validation data, targets, and other information required to compute the upper-le
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">SequentialHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordered_instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#SequentialHG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class for managing sequential hyper-gradient operations.</p>
-<p>This class dynamically organizes and executes a sequence of hyper-gradient computations
-using user-defined and validated orders of gradient operators.</p>
+<p>This class dynamically organizes and executes a sequence of hyper-gradient computations using user-defined and validated orders of gradient operators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -982,8 +958,7 @@ using user-defined and validated orders of gradient operators.</p>
 <dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients">
 <span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#SequentialHG.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients" title="Link to this definition"></a></dt>
 <dd><p>Compute hyper-gradients sequentially using the ordered instances.</p>
-<p>This method processes the hyper-gradients in the defined order, passing intermediate
-results between consecutive gradient operators.</p>
+<p>This method processes the hyper-gradients in the defined order, passing intermediate results between consecutive gradient operators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments required for gradient computations.</p>
@@ -1003,8 +978,7 @@ results between consecutive gradient operators.</p>
 <dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.makes_functional_hyper_operation">
 <span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">makes_functional_hyper_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="boat.hyper_ol.sequential_hg.SequentialHG"><span class="pre">SequentialHG</span></a></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#makes_functional_hyper_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.makes_functional_hyper_operation" title="Link to this definition"></a></dt>
 <dd><p>Dynamically create a SequentialHG object with ordered gradient operators.</p>
-<p>This function validates the user-defined operator order, adjusts it to conform
-with predefined gradient rules, and dynamically loads the corresponding operator classes.</p>
+<p>This function validates the user-defined operator order, adjusts it to conform with predefined gradient rules, and dynamically loads the corresponding operator classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1024,9 +998,7 @@ with predefined gradient rules, and dynamically loads the corresponding operator
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.validate_and_adjust_order">
 <span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">validate_and_adjust_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#validate_and_adjust_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.validate_and_adjust_order" title="Link to this definition"></a></dt>
-<dd><p>Validate and adjust the custom order to match the predefined gradient order.</p>
-<p>This function ensures that the user-defined order adheres to the predefined grouping
-rules and adjusts it accordingly.</p>
+<dd><p>Validate and adjust the custom order to match the predefined gradient order. This function ensures that the user-defined order adheres to the predefined grouping rules and adjusts it accordingly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

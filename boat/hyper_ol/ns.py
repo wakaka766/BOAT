@@ -40,8 +40,7 @@ class NS(HyperGradient):
 
     References
     ----------
-    [1] J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of hyperparameters
-        by implicit differentiation," in AISTATS, 2020.
+    [1] J. Lorraine, P. Vicol, and D. Duvenaud, "Optimizing millions of hyperparameters by implicit differentiation," in AISTATS, 2020.
     """
 
     def __init__(

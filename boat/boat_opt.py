@@ -184,8 +184,7 @@ class Problem:
         """
         Run a single iteration of the bi-level optimization process.
 
-        :param ll_feed_dict: Dictionary containing the real-time data and parameters
-            fed for the construction of the lower-level (LL) objective.
+        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the lower-level (LL) objective.
 
             Example::
 
@@ -197,8 +196,7 @@ class Problem:
 
         :type ll_feed_dict: Dict[str, Tensor]
 
-        :param ul_feed_dict: Dictionary containing the real-time data and parameters
-            fed for the construction of the upper-level (UL) objective.
+        :param ul_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the upper-level (UL) objective.
 
             Example::
 
@@ -214,10 +212,8 @@ class Problem:
         :type current_iter: int
 
         :notes:
-            - When `accumulate_grad` is set to True, you need to pack the data of
-              each batch based on the format above.
-            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of
-              dictionaries, i.e., `[Dict[str, Tensor]]`.
+            - When `accumulate_grad` is set to True, you need to pack the data of each batch based on the format above.
+            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of dictionaries, i.e., `[Dict[str, Tensor]]`.
 
         :returns: A tuple containing:
             - **loss** (*float*): The loss value for the current iteration.

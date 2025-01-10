@@ -52,8 +52,7 @@ class PGDM(DynamicalSystem):
 
     References
     ----------
-    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization:
-        A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
+    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
     """
 
     def __init__(

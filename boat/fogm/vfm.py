@@ -48,8 +48,7 @@ class VFM(DynamicalSystem):
 
     References
     ----------
-    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based
-        Interior-point Method for Non-convex Bi-level Optimization," in ICML, 2021.
+    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based Interior-point Method for Non-convex Bi-level Optimization," in ICML, 2021.
     """
 
     def __init__(
@@ -78,12 +77,10 @@ class VFM(DynamicalSystem):
         """
         Execute the optimization procedure with the data from feed_dict.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
+        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
         :type ll_feed_dict: Dict
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
         :type ul_feed_dict: Dict
 
         :param current_iter: The current iteration number of the optimization process.

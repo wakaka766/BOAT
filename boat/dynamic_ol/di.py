@@ -9,8 +9,7 @@ from boat.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class DI(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1]
-    and Gradient Descent Aggregation (GDA) [2].
+    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1] and Gradient Descent Aggregation (GDA) [2].
 
     Parameters
     ----------
@@ -25,16 +24,13 @@ class DI(DynamicalSystem):
     lower_loop : int
         The number of iterations for the lower-level optimization process.
     solver_config : Dict[str, Any]
-        A dictionary containing configurations for the optimization solver, including
-        hyperparameters and specific settings for NGD and GDA.
+        A dictionary containing configurations for the optimization solver, including hyperparameters and specific settings for NGD and GDA.
 
     References
     ----------
-    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter
-        optimization and meta-learning," ICML, 2018.
+    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter optimization and meta-learning," ICML, 2018.
 
-    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level
-        programming beyond lower-level singleton," ICML, 2020.
+    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton," ICML, 2020.
     """
 
     def optimize(
@@ -63,19 +59,16 @@ class DI(DynamicalSystem):
             - "target" : The target output (optional, depending on the task).
 
         auxiliary_model : _MonkeyPatchBase
-            A patched lower model wrapped by the `higher` library. Serves as the lower-level model
-            for optimization in a differentiable way.
+            A patched lower model wrapped by the `higher` library. Serves as the lower-level model for optimization in a differentiable way.
 
         auxiliary_opt : DifferentiableOptimizer
-            A patched optimizer for the lower-level model, wrapped by the `higher` library.
-            Allows for differentiable optimization steps.
+            A patched optimizer for the lower-level model, wrapped by the `higher` library. Allows for differentiable optimization steps.
 
         current_iter : int
             The current iteration number of the optimization process.
 
         next_operation : str
-            Specifies the next operation to execute during the optimization process.
-            Must not be None.
+            Specifies the next operation to execute during the optimization process. Must not be None.
 
         **kwargs : dict
             Additional arguments passed to the optimization procedure.
@@ -92,8 +85,7 @@ class DI(DynamicalSystem):
 
         Notes
         -----
-        Ensure that `next_operation` is defined before calling this function to specify the
-        next operation in the optimization pipeline.
+        Ensure that `next_operation` is defined before calling this function to specify the next operation in the optimization pipeline.
         """
         assert next_operation is not None, "Next operation should be defined."
         return {
