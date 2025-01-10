@@ -1,10 +1,10 @@
-boat.hyper\_ol package
+boat.hyper\_ol
 ======================
 
 Submodules
 ----------
 
-boat.hyper\_ol.cg module
+boat.hyper\_ol.cg
 ------------------------
 
 .. automodule:: boat.hyper_ol.cg
@@ -12,7 +12,7 @@ boat.hyper\_ol.cg module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.fd module
+boat.hyper\_ol.fd
 ------------------------
 
 .. automodule:: boat.hyper_ol.fd
@@ -20,7 +20,7 @@ boat.hyper\_ol.fd module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.foa module
+boat.hyper\_ol.foa
 -------------------------
 
 .. automodule:: boat.hyper_ol.foa
@@ -28,7 +28,7 @@ boat.hyper\_ol.foa module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.hyper\_gradient module
+boat.hyper\_ol.hyper\_gradient
 -------------------------------------
 
 .. automodule:: boat.hyper_ol.hyper_gradient
@@ -36,7 +36,7 @@ boat.hyper\_ol.hyper\_gradient module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.iad module
+boat.hyper\_ol.iad
 -------------------------
 
 .. automodule:: boat.hyper_ol.iad
@@ -44,7 +44,7 @@ boat.hyper\_ol.iad module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.iga module
+boat.hyper\_ol.iga
 -------------------------
 
 .. automodule:: boat.hyper_ol.iga
@@ -52,7 +52,7 @@ boat.hyper\_ol.iga module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.ns module
+boat.hyper\_ol.ns
 ------------------------
 
 .. automodule:: boat.hyper_ol.ns
@@ -60,7 +60,7 @@ boat.hyper\_ol.ns module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.ptt module
+boat.hyper\_ol.ptt
 -------------------------
 
 .. automodule:: boat.hyper_ol.ptt
@@ -68,7 +68,7 @@ boat.hyper\_ol.ptt module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.rad module
+boat.hyper\_ol.rad
 -------------------------
 
 .. automodule:: boat.hyper_ol.rad
@@ -76,7 +76,7 @@ boat.hyper\_ol.rad module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.rgt module
+boat.hyper\_ol.rgt
 -------------------------
 
 .. automodule:: boat.hyper_ol.rgt
@@ -84,7 +84,7 @@ boat.hyper\_ol.rgt module
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.sequential\_hg module
+boat.hyper\_ol.sequential\_hg
 ------------------------------------
 
 .. automodule:: boat.hyper_ol.sequential_hg

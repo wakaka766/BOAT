@@ -1,10 +1,10 @@
-boat.fogm package
+boat.fogm
 =================
 
 Submodules
 ----------
 
-boat.fogm.mesm module
+boat.fogm.mesm
 ---------------------
 
 .. automodule:: boat.fogm.mesm
@@ -12,7 +12,7 @@ boat.fogm.mesm module
    :undoc-members:
    :show-inheritance:
 
-boat.fogm.pgdm module
+boat.fogm.pgdm
 ---------------------
 
 .. automodule:: boat.fogm.pgdm
@@ -20,7 +20,7 @@ boat.fogm.pgdm module
    :undoc-members:
    :show-inheritance:
 
-boat.fogm.vfm module
+boat.fogm.vfm
 --------------------
 
 .. automodule:: boat.fogm.vfm
@@ -28,7 +28,7 @@ boat.fogm.vfm module
    :undoc-members:
    :show-inheritance:
 
-boat.fogm.vsm module
+boat.fogm.vsm
 --------------------
 
 .. automodule:: boat.fogm.vsm
