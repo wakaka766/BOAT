@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>boat_jit.higher_jit package &mdash; BOAT 0.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f6245a2f"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -49,25 +47,23 @@
 <li class="toctree-l1"><a class="reference internal" href="description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="boat_jit.html">boat_jit package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="boat_jit.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit.boat_opt">Core Problem module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="boat_jit.html#main-subpackages">Main Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.dynamic_ol.html">boat_jit.dynamic_ol package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.fogm.html">boat_jit.fogm package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">boat_jit.higher_jit package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#boat-jit-higher-jit-optim-module">boat_jit.higher_jit.optim module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#boat-jit-higher-jit-patch-module">boat_jit.higher_jit.patch module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#boat-jit-higher-jit-utils-module">boat_jit.higher_jit.utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-boat_jit.higher_jit.optim">boat_jit.higher_jit.optim module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-boat_jit.higher_jit.patch">boat_jit.higher_jit.patch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-boat_jit.higher_jit.utils">boat_jit.higher_jit.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-boat_jit.higher_jit">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.hyper_ol.html">boat_jit.hyper_ol package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="boat_jit.utils.html">boat_jit.utils package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#boat-jit-boat-opt-module">boat_jit.boat_opt module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#boat-jit-operation-registry-module">boat_jit.operation_registry module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boat_jit.html#module-boat_jit.operation_registry">Extension with Operation_Registry</a></li>
 </ul>
 </li>
 </ul>
@@ -102,21 +98,438 @@
            <div itemprop="articleBody">
              
   <section id="boat-jit-higher-jit-package">
-<h1>boat_jit.higher_jit package<a class="headerlink" href="#boat-jit-higher-jit-package" title="Link to this heading"></a></h1>
+<h1>boat_jit.higher_jit package<a class="headerlink" href="#boat-jit-higher-jit-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="boat-jit-higher-jit-optim-module">
-<h2>boat_jit.higher_jit.optim module<a class="headerlink" href="#boat-jit-higher-jit-optim-module" title="Link to this heading"></a></h2>
+<section id="module-boat_jit.higher_jit.optim">
+<span id="boat-jit-higher-jit-optim-module"></span><h2>boat_jit.higher_jit.optim module<a class="headerlink" href="#module-boat_jit.higher_jit.optim" title="Permalink to this heading"></a></h2>
+<p>Differentiable optimizer wrappers around <code class="docutils literal notranslate"><span class="pre">jittor.optim</span></code> instances.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableASGD">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableASGD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableASGD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableASGD" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the ASGD optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableAdadelta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableAdadelta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableAdadelta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableAdadelta" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the Adadelta optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableAdagrad">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableAdagrad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableAdagrad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableAdagrad" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the Adagrad optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableAdam">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableAdam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableAdam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableAdam" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the Adam optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableAdamW">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableAdamW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableAdamW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableAdamW" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the AdamW optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableAdamax">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableAdamax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableAdamax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableAdamax" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the Adamax optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableOptimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableOptimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableOptimizer.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableOptimizer.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer.step" title="Permalink to this definition"></a></dt>
+<dd><p>Perform a model update.</p>
+<p>This would be used by replacing the normal sequence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">diffopt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loss</strong> – the loss tensor.</p></li>
+<li><p><strong>params</strong> (<em>optional</em>) – the parameters with regard to which we measure
+the loss. These must be provided if the differentiable optimizer
+did not receive a patched model with a view over its own fast
+weights at initialisation. If there is such a model, and params
+are provided, they will overwrite the params of the encapsulated
+model.</p></li>
+<li><p><strong>override</strong> (<em>optional</em>) – a dictionary mapping optimizer settings (i.e.
+those which would be passed to the optimizer constructor or
+provided within parameter groups) to either singleton lists of
+override values, or to a list of override values of length equal
+to the number of parameter groups. If a single override is
+provided for a keyword, it is used for all parameter groups. If
+a list is provided, the <code class="docutils literal notranslate"><span class="pre">i</span></code>th element of the list overrides
+the corresponding setting in the <code class="docutils literal notranslate"><span class="pre">i</span></code>th parameter group. This
+permits the passing of tensors requiring gradient to
+differentiable optimizers for use as optimizer settings. Setting
+override here has highest precedence, i.e. it will override any
+tensors provided as override during the creation of the
+differentiable optimizer, where there is name clash.</p></li>
+<li><p><strong>grad_callback</strong> – (optional) a single argument function which will be
+applied to a list of gradients of parameters, which respects the
+order specified by <code class="docutils literal notranslate"><span class="pre">reference_params</span></code>. This can be used to
+apply a function, such as gradient clipping, to all (or a
+subset) of these gradients every time the step function is
+called. This callback overrides the default provided when
+constructing the differentiable optimizer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated parameters, which will individually have <code class="docutils literal notranslate"><span class="pre">grad_fn</span></code>s
+of their own. If the optimizer has an encapsulated patched model,
+its view over its own fast weights will be updated with these
+params.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableRMSprop">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableRMSprop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableRMSprop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableRMSprop" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the RMSprop optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableRprop">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableRprop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableRprop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableRprop" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the Rprop optimizer for Jittor.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.DifferentiableSGD">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">DifferentiableSGD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#DifferentiableSGD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.DifferentiableSGD" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code></a></p>
+<p>A differentiable version of the SGD optimizer.</p>
+<p>This optimizer creates a gradient tape as it updates parameters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.apply_trainable_opt_params">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">apply_trainable_opt_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#apply_trainable_opt_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.apply_trainable_opt_params" title="Permalink to this definition"></a></dt>
+<dd><p>Apply learned hyperparameters back to original optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opt</strong> – the original optimizer. The hyperparameters in its parameter groups
+will be modified in place.</p></li>
+<li><p><strong>override</strong> – dictionary of the format used for the override kwarg of
+differentiable optimizers.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.create_diff_optim">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">create_diff_optim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opt_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Optimizer</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><span class="pre">DifferentiableOptimizer</span></a></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#create_diff_optim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.create_diff_optim" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a differentiable version of an new optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opt_type</strong> – the type (constructor) for a jittor.optim.Optimizer subtype
+from amongst the types supported by the library, or registered with
+it a runtime.</p></li>
+<li><p><strong>opt_kwargs</strong> – a dictionary of keywords to be passed to the optimizer
+constructor.</p></li>
+<li><p><strong>params</strong> (<em>optional</em>) – a list of (fast) weights which the differentiable
+optimizer will update. These must be provided if fmodel is not
+provided. If both, these will be used in lieu. These will only
+be used for shape inference when initializing the optimizer.
+This argument can also take the same format as parameter groups,
+i.e. an iterable over dictionaries which contain the ‘params’ key
+with fast weights as value, and group-specific hyperparameters.</p></li>
+<li><p><strong>fmodel</strong> (<em>optional</em>) – a patched version of the <code class="docutils literal notranslate"><span class="pre">module</span></code> tracked by <code class="docutils literal notranslate"><span class="pre">opt</span></code>.
+It is assumed this patched instance has a view on its latest fast
+weights through <code class="docutils literal notranslate"><span class="pre">fmodel.parameters()</span></code>. If provided, it is not
+necessary to pass the fast weights explicitly to the differentiable
+optimizer’s <code class="docutils literal notranslate"><span class="pre">step</span></code> function via the keyword arg <code class="docutils literal notranslate"><span class="pre">params</span></code>. If not
+provided, the fast weights to update must be provided to <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – the device to cast the optimizer state to when
+creating the differentiable optimizer. If not provided, the same
+device as used for the parameters tracked by <code class="docutils literal notranslate"><span class="pre">opt</span></code> will be used.</p></li>
+<li><p><strong>override</strong> (<em>optional</em>) – a dictionary mapping optimizer settings (i.e.
+those which would be passed to the optimizer constructor or
+provided within parameter groups) to either singleton lists of
+override values, or to a list of override values of length equal to
+the number of parameter groups. If a single override is provided for
+a keyword, it is used for all parameter groups. If a list is
+provided, the <code class="docutils literal notranslate"><span class="pre">i</span></code>th element of the list overrides the corresponding
+setting in the <code class="docutils literal notranslate"><span class="pre">i</span></code>th parameter group. This permits the passing of
+tensors requiring gradient to differentiable optimizers for use as
+optimizer settings.</p></li>
+<li><p><strong>track_higher_grads</strong> – if True, during unrolled optimization the graph be
+retained, and the fast weights will bear grad funcs, so as to permit
+backpropagation through the optimization process. Setting this to
+False allows the returned differentiable optimizer to be used in
+“test mode”, without potentially tracking higher order gradients.
+This can be useful when running the training loop at test time,
+e.g. in k-shot learning experiments, without incurring a significant
+memory overhead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An initialized <code class="docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code> instance of the right subtype.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.get_diff_optim">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">get_diff_optim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><span class="pre">DifferentiableOptimizer</span></a></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#get_diff_optim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.get_diff_optim" title="Permalink to this definition"></a></dt>
+<dd><p>Construct/initialize a differentiable version of an existing optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opt</strong> – an existing optimizer, assumed to be an instance of
+<code class="docutils literal notranslate"><span class="pre">jittor.optim.Optimizer</span></code>, of a supported type which is either defined
+in <code class="docutils literal notranslate"><span class="pre">jittor.optim</span></code>, or a custom implementation which has been added to
+higher at runtime by using <code class="docutils literal notranslate"><span class="pre">higher.register_optim</span></code>. We assume this
+optimizer tracks the parameters (or some subset thereof) of a single
+<code class="docutils literal notranslate"><span class="pre">jittor.Module</span></code> instance, with support for parameter groups.</p></li>
+<li><p><strong>reference_params</strong> – the parameters of the module tracked by <code class="docutils literal notranslate"><span class="pre">opt</span></code>, as
+returned by <code class="docutils literal notranslate"><span class="pre">module.parameters()</span></code>.</p></li>
+<li><p><strong>fmodel</strong> (<em>optional</em>) – a patched version of the <code class="docutils literal notranslate"><span class="pre">module</span></code> tracked by <code class="docutils literal notranslate"><span class="pre">opt</span></code>.
+It is assumed this patched instance has a view on its latest fast
+weights through <code class="docutils literal notranslate"><span class="pre">fmodel.parameters()</span></code>. If provided, it is not
+necessary to pass the fast weights explicitly to the differentiable
+optimizer’s <code class="docutils literal notranslate"><span class="pre">step</span></code> function via the keyword arg <code class="docutils literal notranslate"><span class="pre">params</span></code>. If not
+provided, the fast weights to update must be provided to <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – the device to cast the optimizer state to when
+creating the differentiable optimizer. If not provided, the same
+device as used for the parameters tracked by <code class="docutils literal notranslate"><span class="pre">opt</span></code> will be used.</p></li>
+<li><p><strong>override</strong> (<em>optional</em>) – a dictionary mapping optimizer settings (i.e.
+those which would be passed to the optimizer constructor or
+provided within parameter groups) to either singleton lists of
+override values, or to a list of override values of length equal to
+the number of parameter groups. If a single override is provided for
+a keyword, it is used for all parameter groups. If a list is
+provided, the <code class="docutils literal notranslate"><span class="pre">i</span></code>th element of the list overrides the corresponding
+setting in the <code class="docutils literal notranslate"><span class="pre">i</span></code>th parameter group. This permits the passing of
+tensors requiring gradient to differentiable optimizers for use as
+optimizer settings.</p></li>
+<li><p><strong>track_higher_grads</strong> – if True, during unrolled optimization the graph be
+retained, and the fast weights will bear grad funcs, so as to permit
+backpropagation through the optimization process. Setting this to
+False allows the returned differentiable optimizer to be used in
+“test mode”, without potentially tracking higher order gradients.
+This can be useful when running the training loop at test time,
+e.g. in k-shot learning experiments, without incurring a significant
+memory overhead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An initialized <code class="docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code> instance of the right subtype.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.get_trainable_opt_params">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">get_trainable_opt_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#get_trainable_opt_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.get_trainable_opt_params" title="Permalink to this definition"></a></dt>
+<dd><p>Get an override dictionary from an optimizer instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opt</strong> – the optimizer to obtain an override dictionary from.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – the device to cast the learnable tensors to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of the format expected for the override kwarg of
+differentiable optimizers. It is initialized with trainable tensors
+with as values those float and int hyperparameters found in the
+optimizer’s parameter groups (or stuctures containing these).
+Heuristically, hyperparameters containing mixtures of differentiable
+and non-differentiable types will be ignored (and must be manually
+specified when constructing an override dict).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.optim.register_optim">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.optim.</span></span><span class="sig-name descname"><span class="pre">register_optim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optim_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_optim_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#boat_jit.higher_jit.optim.DifferentiableOptimizer" title="boat_jit.higher_jit.optim.DifferentiableOptimizer"><span class="pre">DifferentiableOptimizer</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/optim.html#register_optim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.optim.register_optim" title="Permalink to this definition"></a></dt>
+<dd><p>Registers a new optimizer type for use with higher functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>optim_type</strong> – the type of a new optimizer, assumed to be an instance of
+<code class="docutils literal notranslate"><span class="pre">jittor.optim.Optimizer</span></code>.</p></li>
+<li><p><strong>diff_optim_type</strong> – the type of a new differentiable optimizer, assumed to
+be an instance of <code class="docutils literal notranslate"><span class="pre">higher.optim.DifferentiableOptimizer</span></code> with
+functionally equivalent logic to <code class="docutils literal notranslate"><span class="pre">optim_type</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="boat-jit-higher-jit-patch-module">
-<h2>boat_jit.higher_jit.patch module<a class="headerlink" href="#boat-jit-higher-jit-patch-module" title="Link to this heading"></a></h2>
+<section id="module-boat_jit.higher_jit.patch">
+<span id="boat-jit-higher-jit-patch-module"></span><h2>boat_jit.higher_jit.patch module<a class="headerlink" href="#module-boat_jit.higher_jit.patch" title="Permalink to this heading"></a></h2>
+<p>Functions for making <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> subclass instances stateless.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.patch.buffer_sync">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.patch.</span></span><span class="sig-name descname"><span class="pre">buffer_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmodule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/patch.html#buffer_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.patch.buffer_sync" title="Permalink to this definition"></a></dt>
+<dd><p>One off sync (copy) of buffers in <code class="docutils literal notranslate"><span class="pre">fmodule</span></code> with those from <code class="docutils literal notranslate"><span class="pre">module</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.patch.make_functional">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.patch.</span></span><span class="sig-name descname"><span class="pre">make_functional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encapsulator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">_MonkeyPatchBase</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_MonkeyPatchBase</span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/patch.html#make_functional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.patch.make_functional" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a stateless version of an <code class="docutils literal notranslate"><span class="pre">nn.Module</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.patch.monkeypatch">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.patch.</span></span><span class="sig-name descname"><span class="pre">monkeypatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_initial_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_MonkeyPatchBase</span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/patch.html#monkeypatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.patch.monkeypatch" title="Permalink to this definition"></a></dt>
+<dd><p>Create a monkey-patched stateless version of a module.</p>
+<p>This function produces a monkey-patched version of a module, and returns a
+copy of its parameters for use as fast weights. Where the original module
+or any of its submodules have state (e.g. batch norm), this will be copied
+too, but further updates (e.g. during inner loop training) will cause these
+to diverge without changing the state of the original module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> – a <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> subclass instance.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – a device to cast the fast weights and state to.</p></li>
+<li><p><strong>copy_initial_weights</strong> – if True, the weights of the patched module are
+copied to form the initial weights of the patched module, and thus
+are not part of the gradient tape when unrolling the patched module.
+If this is set to False, the actual module weights will be the
+initial weights of the patched module. This is useful when doing
+MAML, for example.</p></li>
+<li><p><strong>track_higher_grads</strong> – if True, during unrolled optimization the graph be
+retained, and the fast weights will bear grad funcs, so as to permit
+backpropagation through the optimization process. Setting this to
+False allows <code class="docutils literal notranslate"><span class="pre">monkeypatch</span></code> to be used in “test mode”, without
+potentially tracking higher order gradients. This can be useful when
+running the training loop at test time, e.g. in k-shot learning
+experiments, without incurring a significant memory overhead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a “stateless” version of the original module, for which calls
+to forward take the additional kwarg-only parameter <code class="docutils literal notranslate"><span class="pre">params</span></code>, which
+should be a list of torch tensors requiring gradients, ideally
+provided by this function (see below) or by an update step from one
+of the optimizers in <code class="docutils literal notranslate"><span class="pre">higher.optim</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">fmodule</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="boat-jit-higher-jit-utils-module">
-<h2>boat_jit.higher_jit.utils module<a class="headerlink" href="#boat-jit-higher-jit-utils-module" title="Link to this heading"></a></h2>
+<section id="module-boat_jit.higher_jit.utils">
+<span id="boat-jit-higher-jit-utils-module"></span><h2>boat_jit.higher_jit.utils module<a class="headerlink" href="#module-boat_jit.higher_jit.utils" title="Permalink to this heading"></a></h2>
+<p>Utility functions for components of <code class="docutils literal notranslate"><span class="pre">higher_jit</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.utils.flatten">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.utils.</span></span><span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/utils.html#flatten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.utils.flatten" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a flattened list of objects from a nested structure.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.utils.get_func_params">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.utils.</span></span><span class="sig-name descname"><span class="pre">get_func_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">safe_copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Var</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat_jit/higher_jit/utils.html#get_func_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.utils.get_func_params" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a detached copy of module parameters which requires gradient.</p>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-boat_jit.higher_jit">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-boat_jit.higher_jit" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="boat_jit.higher_jit.innerloop_ctx">
+<span class="sig-prename descclassname"><span class="pre">boat_jit.higher_jit.</span></span><span class="sig-name descname"><span class="pre">innerloop_ctx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_initial_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_higher_grads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_jit/higher_jit.html#innerloop_ctx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_jit.higher_jit.innerloop_ctx" title="Permalink to this definition"></a></dt>
+<dd><p>A context manager for writing differentiable inner loops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – a <code class="docutils literal notranslate"><span class="pre">jit.Module</span></code> subclass instance.</p></li>
+<li><p><strong>opt</strong> – an existing optimizer, assumed to be an instance of
+<code class="docutils literal notranslate"><span class="pre">jit.optim.Optimizer</span></code>, of a supported type which is either
+defined in <code class="docutils literal notranslate"><span class="pre">jit.optim</span></code>, or a custom implementation which has
+been added to higher at runtime by using <code class="docutils literal notranslate"><span class="pre">higher.register_optim</span></code>.
+We assume this optimizer tracks the parameters (or some subset
+thereof) of a single <code class="docutils literal notranslate"><span class="pre">jit.Module</span></code> instance, with support for
+parameter groups.</p></li>
+<li><p><strong>device</strong> (<em>optional</em>) – a device to cast the fast weights and state to. If
+not specified, the device used for corresponding weights of
+<code class="docutils literal notranslate"><span class="pre">model</span></code> will be used.</p></li>
+<li><p><strong>copy_initial_weights</strong> – if true, the weights of the patched module are
+copied to form the initial weights of the patched module, and thus
+are not part of the gradient tape when unrolling the patched module.
+If this is set to False, the actual module weights will be the
+initial weights of the patched module. This is useful when doing
+MAML, for example.</p></li>
+<li><p><strong>override</strong> (<em>optional</em>) – a dictionary mapping optimizer settings (i.e. those
+which would be passed to the optimizer constructor or provided
+within parameter groups) to either singleton lists of override
+values, or to a list of override values of length equal to the
+number of parameter groups. If a single override is provided for a
+keyword, it is used for all parameter groups. If a list is provided,
+the <code class="docutils literal notranslate"><span class="pre">i</span></code>th element of the list overrides the corresponding
+setting in the <code class="docutils literal notranslate"><span class="pre">i</span></code>th parameter group. This permits the passing
+of tensors requiring gradient to differentiable optimizers for use
+as optimizer settings.</p></li>
+<li><p><strong>track_higher_grads</strong> – if True, during unrolled optimization the graph be
+retained, and the fast weights will bear grad funcs, so as to permit
+backpropagation through the optimization process. Setting this to
+False allows <code class="docutils literal notranslate"><span class="pre">innerloop_ctx</span></code> to be used in “test mode”, without
+potentially tracking higher order gradients. This can be useful when
+running the training loop at test time, e.g. in k-shot learning
+experiments, without incurring a significant memory overhead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">(fmodule,</span> <span class="pre">diffopt)</span></code> tuple. where <code class="docutils literal notranslate"><span class="pre">fmodule</span></code> is a “stateless”
+version of the original module, for which calls to forward take the
+additional kwarg-only parameter <code class="docutils literal notranslate"><span class="pre">params</span></code>, which should be a list of
+jit tensors requiring gradients, ideally provided by this function
+(see below) or by an update step from one of the optimizers in
+<code class="docutils literal notranslate"><span class="pre">higher_jit.optim</span></code>. And <code class="docutils literal notranslate"><span class="pre">diffopt</span></code> is an initialized
+<code class="docutils literal notranslate"><span class="pre">DifferentiableOptimizer</span></code> instance of the right subtype.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

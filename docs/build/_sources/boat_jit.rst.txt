@@ -1,8 +1,19 @@
 boat\_jit package
 =================
 
-Subpackages
------------
+
+Core Problem module
+--------------------
+
+.. automodule:: boat_jit.boat_opt
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+Main Subpackages
+----------------
 
 .. toctree::
    :maxdepth: 4
@@ -13,18 +24,8 @@ Subpackages
    boat_jit.hyper_ol
    boat_jit.utils
 
-Submodules
-----------
 
-boat\_jit.boat\_opt module
---------------------------
-
-.. automodule:: boat_jit.boat_opt
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-boat\_jit.operation\_registry module
+Extension with Operation\_Registry
 ------------------------------------
 
 .. automodule:: boat_jit.operation_registry
@@ -32,10 +33,4 @@ boat\_jit.operation\_registry module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
 
-.. automodule:: boat_jit
-   :members:
-   :undoc-members:
-   :show-inheritance:
