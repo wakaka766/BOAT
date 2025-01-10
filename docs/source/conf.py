@@ -11,6 +11,7 @@ import sys
 # 将项目的根目录添加到 sys.path
 sys.path.insert(0, os.path.abspath("../../"))
 
+autodoc_typehints = "none"
 
 project = "BOAT-Jittor"
 copyright = "2024, Yaohua Liu"
