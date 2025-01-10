@@ -1,8 +1,16 @@
-Package Documentation
-=====================
+BOAT Structure
+==============
 
-Main packages
--------------
+Core Problem module
+--------------------
+
+.. automodule:: boat.boat_opt
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Main Subpackages
+----------------
 
 .. toctree::
    :maxdepth: 4
@@ -12,13 +20,11 @@ Main packages
    boat.hyper_ol
    boat.utils
 
-Main modules
-------------
+Extension with Operation\_Registry
+----------------------------------
 
-boat.boat\_opt module
----------------------
-
-.. automodule:: boat.boat_opt
+.. automodule:: boat.operation_registry
    :members:
    :undoc-members:
    :show-inheritance:
+

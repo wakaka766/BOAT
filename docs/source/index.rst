@@ -10,7 +10,7 @@ Welcome to BOAT Documentation
 
 .. image:: _static/flow.gif
    :alt: BOAT Framework
-   :width: 800px
+   :width: 1000px
    :align: center
 
 In this section, we explain the core components of BOAT, how to install it, and how to use it for your optimization tasks. The main contents are organized as follows.
