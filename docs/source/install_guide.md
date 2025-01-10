@@ -3,13 +3,13 @@
 ##  🔨 **Installation**
 To install BOAT with *PyPi*, use the following command:
 ```bash
-pip install boat
+pip install boat-jit
 ```
 or you can install the latest version from the source code on *GitHub*:
 ```bash
 git clone https://github.com/callous-youth/BOAT.git
 cd BOAT
-python setup.py install
+python setup_jit.py install
 ```
 
 ##  ⚡ **How to Use BOAT**
@@ -21,7 +21,7 @@ BOAT relies on two key configuration files:
 ```python
 import os
 import json
-import boat
+import boat_jit as boat
 
 # Load configuration files
 with open("path_to_configs/boat_config.json", "r") as f:
@@ -42,8 +42,8 @@ upper_model = UpperModel(*args, **kwargs)  # Replace with your upper-level model
 lower_model = LowerModel(*args, **kwargs)  # Replace with your lower-level model
 
 # Define optimizers
-upper_opt = torch.optim.Adam(upper_model.parameters(), lr=0.01)
-lower_opt = torch.optim.SGD(lower_model.parameters(), lr=0.01)
+upper_opt = jit.nn.Adam(upper_model.parameters(), lr=0.01)
+lower_opt = jit.nn.SGD(lower_model.parameters(), lr=0.01)
 ```
 
 ### **3. Customize BOAT Configuration**

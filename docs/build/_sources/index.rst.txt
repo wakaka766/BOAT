@@ -21,7 +21,7 @@ In this section, we explain the core components of BOAT, how to install it, and 
 
    description.md
    install_guide.md
-   boat.rst
+   boat_jit.rst
 
 Running Example
 ----------------------------
@@ -32,9 +32,7 @@ The running examples of data hypercleaning, meta learning and l2 regularization 
    :maxdepth: 2
    :caption: Example:
 
-   data_hyper_cleaning_example.md
    l2_regularization_example.md
-   meta_learning_example.md
 
 Indices and tables
 ==================

@@ -129,7 +129,7 @@ def evaluate(x, w, testset):
 
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
-# parent_folder = os.path.dirname(base_folder)
+
 
 with open(os.path.join(base_folder, "configs_jit/boat_config_l2.json"), "r") as f:
     boat_config = json.load(f)
