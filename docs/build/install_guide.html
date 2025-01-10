@@ -97,13 +97,13 @@
 <section id="installation">
 <h2>🔨 <strong>Installation</strong><a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>To install BOAT with <em>PyPi</em>, use the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boat
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boat-ms
 </pre></div>
 </div>
 <p>or you can install the latest version from the source code on <em>GitHub</em>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/callous-youth/BOAT.git
 <span class="nb">cd</span><span class="w"> </span>BOAT
-python<span class="w"> </span>setup.py<span class="w"> </span>install
+python<span class="w"> </span>setup_ms.py<span class="w"> </span>install
 </pre></div>
 </div>
 </section>
@@ -118,7 +118,7 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">boat</span>
+<span class="kn">import</span> <span class="nn">boat_ms</span> <span class="k">as</span> <span class="nn">boat</span>
 
 <span class="c1"># Load configuration files</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;path_to_configs/boat_config.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -132,15 +132,15 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 <section id="define-models-and-optimizers">
 <h3><strong>2. Define Models and Optimizers</strong><a class="headerlink" href="#define-models-and-optimizers" title="Link to this heading"></a></h3>
 <p>You need to specify both the upper-level and lower-level models along with their respective optimizers.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mindspore</span> 
 
 <span class="c1"># Define models</span>
 <span class="n">upper_model</span> <span class="o">=</span> <span class="n">UpperModel</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># Replace with your upper-level model</span>
 <span class="n">lower_model</span> <span class="o">=</span> <span class="n">LowerModel</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># Replace with your lower-level model</span>
 
 <span class="c1"># Define optimizers</span>
-<span class="n">upper_opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">upper_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-<span class="n">lower_opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lower_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">upper_opt</span> <span class="o">=</span> <span class="n">mindspore</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">upper_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">lower_opt</span> <span class="o">=</span> <span class="n">mindspore</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lower_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -148,18 +148,15 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 <h3><strong>3. Customize BOAT Configuration</strong><a class="headerlink" href="#customize-boat-configuration" title="Link to this heading"></a></h3>
 <p>Modify the boat_config to include your dynamic and hyper-gradient methods, as well as model and variable details.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example dynamic and hyper-gradient methods Combination.</span>
-<span class="n">dynamic_method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NGD&quot;</span><span class="p">,</span> <span class="s2">&quot;DI&quot;</span><span class="p">,</span> <span class="s2">&quot;GDA&quot;</span><span class="p">]</span>  <span class="c1"># Dynamic Methods (Demo Only)</span>
-<span class="n">hyper_method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RGT&quot;</span><span class="p">,</span><span class="s2">&quot;RAD&quot;</span><span class="p">]</span>          <span class="c1"># Hyper-Gradient Methods (Demo Only)</span>
+<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;fo_gm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;MESM&quot;</span> <span class="c1"># FOGM supports only</span>
 
 <span class="c1"># Add methods and model details to the configuration</span>
-<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;dynamic_op&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dynamic_method</span>
-<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;hyper_op&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hyper_method</span>
 <span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;lower_level_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lower_model</span>
 <span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;upper_level_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">upper_model</span>
 <span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;lower_level_opt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lower_opt</span>
 <span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;upper_level_opt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">upper_opt</span>
-<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;lower_level_var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">lower_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
-<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;upper_level_var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">upper_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;lower_level_var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lower_model</span><span class="o">.</span><span class="n">trainable_params</span><span class="p">()</span>
+<span class="n">boat_config</span><span class="p">[</span><span class="s2">&quot;upper_level_var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">upper_model</span><span class="o">.</span><span class="n">trainable_params</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

@@ -3,13 +3,13 @@
 ##  🔨 **Installation**
 To install BOAT with *PyPi*, use the following command:
 ```bash
-pip install boat
+pip install boat-ms
 ```
 or you can install the latest version from the source code on *GitHub*:
 ```bash
 git clone https://github.com/callous-youth/BOAT.git
 cd BOAT
-python setup.py install
+python setup_ms.py install
 ```
 
 ##  ⚡ **How to Use BOAT**
@@ -21,7 +21,7 @@ BOAT relies on two key configuration files:
 ```python
 import os
 import json
-import boat
+import boat_ms as boat
 
 # Load configuration files
 with open("path_to_configs/boat_config.json", "r") as f:
@@ -35,15 +35,15 @@ with open("path_to_configs/loss_config.json", "r") as f:
 You need to specify both the upper-level and lower-level models along with their respective optimizers.
 
 ```python
-import torch
+import mindspore 
 
 # Define models
 upper_model = UpperModel(*args, **kwargs)  # Replace with your upper-level model
 lower_model = LowerModel(*args, **kwargs)  # Replace with your lower-level model
 
 # Define optimizers
-upper_opt = torch.optim.Adam(upper_model.parameters(), lr=0.01)
-lower_opt = torch.optim.SGD(lower_model.parameters(), lr=0.01)
+upper_opt = mindspore.nn.Adam(upper_model.parameters(), lr=0.01)
+lower_opt = mindspore.optim.SGD(lower_model.parameters(), lr=0.01)
 ```
 
 ### **3. Customize BOAT Configuration**
@@ -51,18 +51,15 @@ Modify the boat_config to include your dynamic and hyper-gradient methods, as we
 
 ```python
 # Example dynamic and hyper-gradient methods Combination.
-dynamic_method = ["NGD", "DI", "GDA"]  # Dynamic Methods (Demo Only)
-hyper_method = ["RGT","RAD"]          # Hyper-Gradient Methods (Demo Only)
+boat_config["fo_gm"] = "MESM" # FOGM supports only
 
 # Add methods and model details to the configuration
-boat_config["dynamic_op"] = dynamic_method
-boat_config["hyper_op"] = hyper_method
 boat_config["lower_level_model"] = lower_model
 boat_config["upper_level_model"] = upper_model
 boat_config["lower_level_opt"] = lower_opt
 boat_config["upper_level_opt"] = upper_opt
-boat_config["lower_level_var"] = list(lower_model.parameters())
-boat_config["upper_level_var"] = list(upper_model.parameters())
+boat_config["lower_level_var"] = lower_model.trainable_params()
+boat_config["upper_level_var"] = upper_model.trainable_params()
 ```
 
 ### **4. Initialize the BOAT Problem**
