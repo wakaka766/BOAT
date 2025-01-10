@@ -1,7 +1,7 @@
 BOAT Structure
 ==============
 
-Core Problem module
+Core Problem Class
 --------------------
 
 .. automodule:: boat.boat_opt

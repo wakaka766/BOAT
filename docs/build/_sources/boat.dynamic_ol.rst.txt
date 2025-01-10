@@ -4,6 +4,22 @@ boat.dynamic\_ol
 Submodules
 ----------
 
+boat.dynamic\_ol.dynamical\_system
+-----------------------------------------
+
+.. automodule:: boat.dynamic_ol.dynamical_system
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+boat.dynamic\_ol.sequential\_ds
+--------------------------------------
+
+.. automodule:: boat.dynamic_ol.sequential_ds
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 boat.dynamic\_ol.di
 --------------------------
 
@@ -20,13 +36,7 @@ boat.dynamic\_ol.dm
    :undoc-members:
    :show-inheritance:
 
-boat.dynamic\_ol.dynamical\_system
------------------------------------------
 
-.. automodule:: boat.dynamic_ol.dynamical_system
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 boat.dynamic\_ol.gda
 ---------------------------
@@ -40,22 +50,6 @@ boat.dynamic\_ol.ngd
 ---------------------------
 
 .. automodule:: boat.dynamic_ol.ngd
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-boat.dynamic\_ol.sequential\_ds
---------------------------------------
-
-.. automodule:: boat.dynamic_ol.sequential_ds
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: boat.dynamic_ol
    :members:
    :undoc-members:
    :show-inheritance:

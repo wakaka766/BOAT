@@ -12,10 +12,3 @@ boat.utils.op\_utils module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: boat.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:

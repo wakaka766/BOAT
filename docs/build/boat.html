@@ -50,7 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">BOAT Structure</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-boat.boat_opt">Core Problem module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-boat.boat_opt">Core Problem Class</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#boat.boat_opt.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#boat.boat_opt.Problem.build_ll_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ll_solver()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#boat.boat_opt.Problem.build_ul_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ul_solver()</span></code></a></li>
@@ -110,7 +110,7 @@
   <section id="boat-structure">
 <h1>BOAT Structure<a class="headerlink" href="#boat-structure" title="Link to this heading"></a></h1>
 <section id="module-boat.boat_opt">
-<span id="core-problem-module"></span><h2>Core Problem module<a class="headerlink" href="#module-boat.boat_opt" title="Link to this heading"></a></h2>
+<span id="core-problem-class"></span><h2>Core Problem Class<a class="headerlink" href="#module-boat.boat_opt" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="boat.boat_opt.Problem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.boat_opt.</span></span><span class="sig-name descname"><span class="pre">Problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/boat_opt.html#Problem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.boat_opt.Problem" title="Link to this definition"></a></dt>
@@ -204,6 +204,25 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="boat.dynamic_ol.html">boat.dynamic_ol</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol.dynamical_system">boat.dynamic_ol.dynamical_system</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.dynamical_system.DynamicalSystem"><code class="docutils literal notranslate"><span class="pre">DynamicalSystem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.dynamical_system.DynamicalSystem.optimize"><code class="docutils literal notranslate"><span class="pre">DynamicalSystem.optimize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol.sequential_ds">boat.dynamic_ol.sequential_ds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS"><code class="docutils literal notranslate"><span class="pre">SequentialDS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.gradient_instances"><code class="docutils literal notranslate"><span class="pre">SequentialDS.gradient_instances</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.custom_order"><code class="docutils literal notranslate"><span class="pre">SequentialDS.custom_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.result_store"><code class="docutils literal notranslate"><span class="pre">SequentialDS.result_store</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.optimize"><code class="docutils literal notranslate"><span class="pre">SequentialDS.optimize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.makes_functional_dynamical_system"><code class="docutils literal notranslate"><span class="pre">makes_functional_dynamical_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.validate_and_adjust_order"><code class="docutils literal notranslate"><span class="pre">validate_and_adjust_order()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol.di">boat.dynamic_ol.di</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.di.DI"><code class="docutils literal notranslate"><span class="pre">DI</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.di.DI.optimize"><code class="docutils literal notranslate"><span class="pre">DI.optimize()</span></code></a></li>
@@ -214,13 +233,6 @@
 <li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol.dm">boat.dynamic_ol.dm</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.dm.DM"><code class="docutils literal notranslate"><span class="pre">DM</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.dm.DM.optimize"><code class="docutils literal notranslate"><span class="pre">DM.optimize()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol.dynamical_system">boat.dynamic_ol.dynamical_system</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.dynamical_system.DynamicalSystem"><code class="docutils literal notranslate"><span class="pre">DynamicalSystem</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.dynamical_system.DynamicalSystem.optimize"><code class="docutils literal notranslate"><span class="pre">DynamicalSystem.optimize()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -239,19 +251,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol.sequential_ds">boat.dynamic_ol.sequential_ds</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS"><code class="docutils literal notranslate"><span class="pre">SequentialDS</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.gradient_instances"><code class="docutils literal notranslate"><span class="pre">SequentialDS.gradient_instances</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.custom_order"><code class="docutils literal notranslate"><span class="pre">SequentialDS.custom_order</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.result_store"><code class="docutils literal notranslate"><span class="pre">SequentialDS.result_store</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.SequentialDS.optimize"><code class="docutils literal notranslate"><span class="pre">SequentialDS.optimize()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.makes_functional_dynamical_system"><code class="docutils literal notranslate"><span class="pre">makes_functional_dynamical_system()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html#boat.dynamic_ol.sequential_ds.validate_and_adjust_order"><code class="docutils literal notranslate"><span class="pre">validate_and_adjust_order()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="boat.dynamic_ol.html#module-boat.dynamic_ol">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="boat.fogm.html">boat.fogm</a><ul>
@@ -284,11 +283,26 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat.fogm.html#module-boat.fogm">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="boat.hyper_ol.html">boat.hyper_ol</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol.hyper_gradient">boat.hyper_ol.hyper_gradient</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.hyper_gradient.HyperGradient"><code class="docutils literal notranslate"><span class="pre">HyperGradient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.hyper_gradient.HyperGradient.compute_gradients"><code class="docutils literal notranslate"><span class="pre">HyperGradient.compute_gradients()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol.sequential_hg">boat.hyper_ol.sequential_hg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.SequentialHG"><code class="docutils literal notranslate"><span class="pre">SequentialHG</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients"><code class="docutils literal notranslate"><span class="pre">SequentialHG.compute_gradients()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.makes_functional_hyper_operation"><code class="docutils literal notranslate"><span class="pre">makes_functional_hyper_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.validate_and_adjust_order"><code class="docutils literal notranslate"><span class="pre">validate_and_adjust_order()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol.cg">boat.hyper_ol.cg</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.cg.CG"><code class="docutils literal notranslate"><span class="pre">CG</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.cg.CG.ll_lr"><code class="docutils literal notranslate"><span class="pre">CG.ll_lr</span></code></a></li>
@@ -318,13 +332,6 @@
 <li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol.foa">boat.hyper_ol.foa</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.foa.FOA"><code class="docutils literal notranslate"><span class="pre">FOA</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.foa.FOA.compute_gradients"><code class="docutils literal notranslate"><span class="pre">FOA.compute_gradients()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol.hyper_gradient">boat.hyper_ol.hyper_gradient</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.hyper_gradient.HyperGradient"><code class="docutils literal notranslate"><span class="pre">HyperGradient</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.hyper_gradient.HyperGradient.compute_gradients"><code class="docutils literal notranslate"><span class="pre">HyperGradient.compute_gradients()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -379,15 +386,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol.sequential_hg">boat.hyper_ol.sequential_hg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.SequentialHG"><code class="docutils literal notranslate"><span class="pre">SequentialHG</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients"><code class="docutils literal notranslate"><span class="pre">SequentialHG.compute_gradients()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.makes_functional_hyper_operation"><code class="docutils literal notranslate"><span class="pre">makes_functional_hyper_operation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html#boat.hyper_ol.sequential_hg.validate_and_adjust_order"><code class="docutils literal notranslate"><span class="pre">validate_and_adjust_order()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="boat.hyper_ol.html#module-boat.hyper_ol">Module contents</a></li>
 </ul>
 </li>
@@ -428,7 +426,6 @@
 <li class="toctree-l3"><a class="reference internal" href="boat.utils.html#boat.utils.op_utils.update_tensor_grads"><code class="docutils literal notranslate"><span class="pre">update_tensor_grads()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat.utils.html#module-boat.utils">Module contents</a></li>
 </ul>
 </li>
 </ul>

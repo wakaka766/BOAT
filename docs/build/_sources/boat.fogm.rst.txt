@@ -36,10 +36,3 @@ boat.fogm.vsm
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: boat.fogm
-   :members:
-   :undoc-members:
-   :show-inheritance:

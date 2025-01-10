@@ -237,6 +237,19 @@
 <div class="viewcode-block" id="l2_reg">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.l2_reg">[docs]</a>
 <span class="k">def</span> <span class="nf">l2_reg</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the L2 regularization term for a list of parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parameters : List[torch.Tensor]</span>
+<span class="sd">        List of tensors for which the L2 regularization term is computed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    torch.Tensor</span>
+<span class="sd">        The L2 regularization loss value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
         <span class="n">loss</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
@@ -249,6 +262,33 @@
 <span class="k">def</span> <span class="nf">grad_unused_zero</span><span class="p">(</span>
     <span class="n">output</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">grad_outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute gradients for the given inputs, substituting zeros for unused gradients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output : torch.Tensor</span>
+<span class="sd">        The output tensor for which gradients are computed.</span>
+
+<span class="sd">    inputs : List[torch.Tensor]</span>
+<span class="sd">        List of input tensors with respect to which gradients are computed.</span>
+
+<span class="sd">    grad_outputs : torch.Tensor, optional</span>
+<span class="sd">        Gradient outputs to compute the gradients of the inputs, by default None.</span>
+
+<span class="sd">    retain_graph : bool, optional</span>
+<span class="sd">        If True, the computation graph is retained after the gradient computation,</span>
+<span class="sd">        by default False.</span>
+
+<span class="sd">    create_graph : bool, optional</span>
+<span class="sd">        If True, constructs the graph for higher-order gradient computations,</span>
+<span class="sd">        by default False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[torch.Tensor]</span>
+<span class="sd">        Gradients for the inputs, with unused gradients replaced by zeros.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">grads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
         <span class="n">output</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">,</span>
@@ -270,6 +310,22 @@
 <div class="viewcode-block" id="list_tensor_matmul">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.list_tensor_matmul">[docs]</a>
 <span class="k">def</span> <span class="nf">list_tensor_matmul</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform element-wise multiplication and summation for two lists of tensors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list1 : List[torch.Tensor]</span>
+<span class="sd">        First list of tensors.</span>
+
+<span class="sd">    list2 : List[torch.Tensor]</span>
+<span class="sd">        Second list of tensors.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    torch.Tensor</span>
+<span class="sd">        Result of the element-wise multiplication and summation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">t1</span><span class="p">,</span> <span class="n">t2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">t1</span> <span class="o">*</span> <span class="n">t2</span><span class="p">)</span>
@@ -280,6 +336,22 @@
 <div class="viewcode-block" id="list_tensor_norm">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.list_tensor_norm">[docs]</a>
 <span class="k">def</span> <span class="nf">list_tensor_norm</span><span class="p">(</span><span class="n">list_tensor</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the p-norm of a list of tensors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_tensor : List[torch.Tensor]</span>
+<span class="sd">        List of tensors for which the norm is computed.</span>
+
+<span class="sd">    p : int, optional</span>
+<span class="sd">        Order of the norm, by default 2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    torch.Tensor</span>
+<span class="sd">        The computed p-norm of the list of tensors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">list_tensor</span><span class="p">:</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
@@ -290,6 +362,19 @@
 <div class="viewcode-block" id="require_model_grad">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.require_model_grad">[docs]</a>
 <span class="k">def</span> <span class="nf">require_model_grad</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enable gradient computation for all parameters in the given model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : torch.nn.Module, optional</span>
+<span class="sd">        The model whose parameters require gradient computation.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If the model is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;The module is not defined!&quot;</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
         <span class="n">param</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
@@ -299,6 +384,17 @@
 <div class="viewcode-block" id="update_grads">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.update_grads">[docs]</a>
 <span class="k">def</span> <span class="nf">update_grads</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update gradients of a model with the given gradients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grads : List[torch.Tensor]</span>
+<span class="sd">        Gradients to be applied to the model&#39;s parameters.</span>
+
+<span class="sd">    model : torch.nn.Module</span>
+<span class="sd">        Model whose gradients are updated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">p</span>
@@ -310,6 +406,17 @@
 <div class="viewcode-block" id="update_tensor_grads">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.update_tensor_grads">[docs]</a>
 <span class="k">def</span> <span class="nf">update_tensor_grads</span><span class="p">(</span><span class="n">hparams</span><span class="p">,</span> <span class="n">grads</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update gradients of hyperparameters with the given gradients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hparams : List[torch.Tensor]</span>
+<span class="sd">        Hyperparameters whose gradients are updated.</span>
+
+<span class="sd">    grads : List[torch.Tensor]</span>
+<span class="sd">        Gradients to be applied to the hyperparameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">hparams</span><span class="p">,</span> <span class="n">grads</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">l</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">g</span>
@@ -321,6 +428,19 @@
 <div class="viewcode-block" id="stop_grads">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.stop_grads">[docs]</a>
 <span class="k">def</span> <span class="nf">stop_grads</span><span class="p">(</span><span class="n">grads</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stop gradient computation for the given gradients.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grads : List[torch.Tensor]</span>
+<span class="sd">        Gradients to be detached from the computation graph.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[torch.Tensor]</span>
+<span class="sd">        Gradients detached from the computation graph.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="k">if</span> <span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">grad</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">grads</span>
@@ -331,6 +451,17 @@
 <div class="viewcode-block" id="average_grad">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.average_grad">[docs]</a>
 <span class="k">def</span> <span class="nf">average_grad</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average gradients over a batch.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : torch.nn.Module</span>
+<span class="sd">        Model whose gradients are averaged.</span>
+
+<span class="sd">    batch_size : int</span>
+<span class="sd">        The batch size used for averaging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
         <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span> <span class="o">/</span> <span class="n">batch_size</span></div>
 
@@ -339,6 +470,19 @@
 <div class="viewcode-block" id="stop_model_grad">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.stop_model_grad">[docs]</a>
 <span class="k">def</span> <span class="nf">stop_model_grad</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disable gradient computation for all parameters in the given model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : torch.nn.Module, optional</span>
+<span class="sd">        The model whose parameters no longer require gradient computation.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If the model is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;The module is not defined!&quot;</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
         <span class="n">param</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
@@ -348,6 +492,22 @@
 <div class="viewcode-block" id="copy_parameter_from_list">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.copy_parameter_from_list">[docs]</a>
 <span class="k">def</span> <span class="nf">copy_parameter_from_list</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copy parameters from a list to a model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : torch.nn.Module</span>
+<span class="sd">        Target model to which parameters are copied.</span>
+
+<span class="sd">    z : List[torch.Tensor]</span>
+<span class="sd">        List of source parameters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    torch.nn.Module</span>
+<span class="sd">        The updated model with copied parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">z</span><span class="p">):</span>
         <span class="n">p</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">y</span></div>
@@ -357,6 +517,25 @@
 <div class="viewcode-block" id="get_outer_gradients">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.get_outer_gradients">[docs]</a>
 <span class="k">def</span> <span class="nf">get_outer_gradients</span><span class="p">(</span><span class="n">outer_loss</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the gradients of the outer-level loss with respect to parameters and hyperparameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    outer_loss : Tensor</span>
+<span class="sd">        The outer-level loss.</span>
+<span class="sd">    params : List[Tensor]</span>
+<span class="sd">        List of tensors representing parameters.</span>
+<span class="sd">    hparams : List[Tensor]</span>
+<span class="sd">        List of tensors representing hyperparameters.</span>
+<span class="sd">    retain_graph : bool, optional</span>
+<span class="sd">        Whether to retain the computation graph, by default True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[List[Tensor], List[Tensor]]</span>
+<span class="sd">        Gradients with respect to parameters and hyperparameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">grad_outer_w</span> <span class="o">=</span> <span class="n">grad_unused_zero</span><span class="p">(</span><span class="n">outer_loss</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="n">retain_graph</span><span class="p">)</span>
     <span class="n">grad_outer_hparams</span> <span class="o">=</span> <span class="n">grad_unused_zero</span><span class="p">(</span>
         <span class="n">outer_loss</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="n">retain_graph</span>
@@ -365,12 +544,23 @@
     <span class="k">return</span> <span class="n">grad_outer_w</span><span class="p">,</span> <span class="n">grad_outer_hparams</span></div>
 
 
-
 <div class="viewcode-block" id="cat_list_to_tensor">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.cat_list_to_tensor">[docs]</a>
 <span class="k">def</span> <span class="nf">cat_list_to_tensor</span><span class="p">(</span><span class="n">list_tx</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">xx</span><span class="o">.</span><span class="n">view</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">list_tx</span><span class="p">])</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Concatenate a list of tensors into a single tensor.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_tx : List[Tensor]</span>
+<span class="sd">        List of tensors to concatenate.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tensor</span>
+<span class="sd">        The concatenated tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">xx</span><span class="o">.</span><span class="n">view</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">list_tx</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="neumann">
@@ -384,7 +574,31 @@
     <span class="n">fp_map</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]],</span>
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute hypergradients using Neumann series approximation.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : List[Tensor]</span>
+<span class="sd">        List of lower-level parameters.</span>
+<span class="sd">    hparams : List[Tensor]</span>
+<span class="sd">        List of upper-level hyperparameters.</span>
+<span class="sd">    upper_loss : Tensor</span>
+<span class="sd">        The upper-level loss.</span>
+<span class="sd">    lower_loss : Tensor</span>
+<span class="sd">        The lower-level loss.</span>
+<span class="sd">    k : int</span>
+<span class="sd">        Number of iterations for Neumann approximation.</span>
+<span class="sd">    fp_map : Callable</span>
+<span class="sd">        Fixed-point mapping function.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for early stopping, by default 1e-10.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[Tensor]</span>
+<span class="sd">        Hypergradients for the upper-level hyperparameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">grad_outer_w</span><span class="p">,</span> <span class="n">grad_outer_hparams</span> <span class="o">=</span> <span class="n">get_outer_gradients</span><span class="p">(</span><span class="n">upper_loss</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">hparams</span><span class="p">)</span>
 
     <span class="n">w_mapped</span> <span class="o">=</span> <span class="n">fp_map</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">lower_loss</span><span class="p">)</span>
@@ -403,7 +617,6 @@
     <span class="k">return</span> <span class="n">grads</span></div>
 
 
-
 <div class="viewcode-block" id="conjugate_gradient">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.conjugate_gradient">[docs]</a>
 <span class="k">def</span> <span class="nf">conjugate_gradient</span><span class="p">(</span>
@@ -415,38 +628,68 @@
     <span class="n">fp_map</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]],</span>
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
-    <span class="kn">import</span> <span class="nn">time</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute hypergradients using the conjugate gradient method.</span>
 
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : List[Tensor]</span>
+<span class="sd">        List of lower-level parameters.</span>
+<span class="sd">    hparams : List[Tensor]</span>
+<span class="sd">        List of upper-level hyperparameters.</span>
+<span class="sd">    upper_loss : Tensor</span>
+<span class="sd">        The upper-level loss.</span>
+<span class="sd">    lower_loss : Tensor</span>
+<span class="sd">        The lower-level loss.</span>
+<span class="sd">    K : int</span>
+<span class="sd">        Maximum number of iterations for the conjugate gradient method.</span>
+<span class="sd">    fp_map : Callable</span>
+<span class="sd">        Fixed-point mapping function.</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for early stopping, by default 1e-10.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[Tensor]</span>
+<span class="sd">        Hypergradients for the upper-level hyperparameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">grad_outer_w</span><span class="p">,</span> <span class="n">grad_outer_hparams</span> <span class="o">=</span> <span class="n">get_outer_gradients</span><span class="p">(</span><span class="n">upper_loss</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">hparams</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step 2 time:&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span><span class="p">)</span>
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
     <span class="n">w_mapped</span> <span class="o">=</span> <span class="n">fp_map</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">lower_loss</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step 3 time:&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">dfp_map_dw</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
         <span class="n">Jfp_mapTv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
             <span class="n">w_mapped</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">grad_outputs</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="o">-</span> <span class="n">j</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">Jfp_mapTv</span><span class="p">)]</span>
-
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">vs</span> <span class="o">=</span> <span class="n">cg_step</span><span class="p">(</span><span class="n">dfp_map_dw</span><span class="p">,</span> <span class="n">grad_outer_w</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step 4 cg time:&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span><span class="p">)</span>
-    <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">grads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">w_mapped</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">grad_outputs</span><span class="o">=</span><span class="n">vs</span><span class="p">)</span>
     <span class="n">grads</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">+</span> <span class="n">v</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">grad_outer_hparams</span><span class="p">)]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step 5 grad time:&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">grads</span></div>
-
 
 
 <div class="viewcode-block" id="cg_step">
 <a class="viewcode-back" href="../../../boat.utils.html#boat.utils.op_utils.cg_step">[docs]</a>
 <span class="k">def</span> <span class="nf">cg_step</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1.0e-5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform the conjugate gradient optimization step.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ax : Callable</span>
+<span class="sd">        Function to compute the matrix-vector product.</span>
+<span class="sd">    b : List[Tensor]</span>
+<span class="sd">        Right-hand side of the linear system.</span>
+<span class="sd">    max_iter : int, optional</span>
+<span class="sd">        Maximum number of iterations, by default 100.</span>
+<span class="sd">    epsilon : float, optional</span>
+<span class="sd">        Tolerance for early stopping, by default 1.0e-5.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    List[Tensor]</span>
+<span class="sd">        Solution vector for the linear system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x_last</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span> <span class="k">for</span> <span class="n">bb</span> <span class="ow">in</span> <span class="n">b</span><span class="p">]</span>
     <span class="n">r_last</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span> <span class="k">for</span> <span class="n">bb</span> <span class="ow">in</span> <span class="n">b</span><span class="p">]</span>
     <span class="n">p_last</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_last</span><span class="p">]</span>

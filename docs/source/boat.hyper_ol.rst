@@ -4,6 +4,24 @@ boat.hyper\_ol
 Submodules
 ----------
 
+boat.hyper\_ol.hyper\_gradient
+-------------------------------------
+
+.. automodule:: boat.hyper_ol.hyper_gradient
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+boat.hyper\_ol.sequential\_hg
+------------------------------------
+
+.. automodule:: boat.hyper_ol.sequential_hg
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 boat.hyper\_ol.cg
 ------------------------
 
@@ -28,13 +46,6 @@ boat.hyper\_ol.foa
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.hyper\_gradient
--------------------------------------
-
-.. automodule:: boat.hyper_ol.hyper_gradient
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 boat.hyper\_ol.iad
 -------------------------
@@ -84,13 +95,6 @@ boat.hyper\_ol.rgt
    :undoc-members:
    :show-inheritance:
 
-boat.hyper\_ol.sequential\_hg
-------------------------------------
-
-.. automodule:: boat.hyper_ol.sequential_hg
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 Module contents
 ---------------

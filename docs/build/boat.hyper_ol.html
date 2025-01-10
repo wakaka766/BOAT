@@ -50,23 +50,23 @@
 <li class="toctree-l1"><a class="reference internal" href="description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="boat.html">BOAT Structure</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="boat.html#module-boat.boat_opt">Core Problem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boat.html#module-boat.boat_opt">Core Problem Class</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="boat.html#main-subpackages">Main Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html">boat.dynamic_ol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="boat.fogm.html">boat.fogm</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">boat.hyper_ol</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.hyper_gradient">boat.hyper_ol.hyper_gradient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.sequential_hg">boat.hyper_ol.sequential_hg</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.cg">boat.hyper_ol.cg</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.fd">boat.hyper_ol.fd</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.foa">boat.hyper_ol.foa</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.hyper_gradient">boat.hyper_ol.hyper_gradient</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.iad">boat.hyper_ol.iad</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.iga">boat.hyper_ol.iga</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.ns">boat.hyper_ol.ns</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.ptt">boat.hyper_ol.ptt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.rad">boat.hyper_ol.rad</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.rgt">boat.hyper_ol.rgt</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol.sequential_hg">boat.hyper_ol.sequential_hg</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.hyper_ol">Module contents</a></li>
 </ul>
 </li>
@@ -113,6 +113,113 @@
 <h1>boat.hyper_ol<a class="headerlink" href="#boat-hyper-ol" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-boat.hyper_ol.hyper_gradient">
+<span id="boat-hyper-ol-hyper-gradient"></span><h2>boat.hyper_ol.hyper_gradient<a class="headerlink" href="#module-boat.hyper_ol.hyper_gradient" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="boat.hyper_ol.hyper_gradient.HyperGradient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.hyper_gradient.</span></span><span class="sig-name descname"><span class="pre">HyperGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/hyper_gradient.html#HyperGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.hyper_gradient.HyperGradient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for computing hyper-gradients of upper-level variables in bilevel optimization problems.</p>
+<p>This class provides an abstract interface for hyper-gradient computation that can be extended for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ll_objective</strong> (<em>callable</em>) – The lower-level objective function of the bilevel optimization problem.</p></li>
+<li><p><strong>ul_objective</strong> (<em>callable</em>) – The upper-level objective function of the bilevel optimization problem.</p></li>
+<li><p><strong>ul_model</strong> (<em>torch.nn.Module</em>) – The upper-level model of the bilevel optimization problem.</p></li>
+<li><p><strong>ll_model</strong> (<em>torch.nn.Module</em>) – The lower-level model of the bilevel optimization problem.</p></li>
+<li><p><strong>ll_var</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – A list of variables optimized with the lower-level objective.</p></li>
+<li><p><strong>ul_var</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – A list of variables optimized with the upper-level objective.</p></li>
+<li><p><strong>solver_config</strong> (<em>dict</em>) – Dictionary containing configurations for the solver.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="boat.hyper_ol.hyper_gradient.HyperGradient.compute_gradients">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/hyper_gradient.html#HyperGradient.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.hyper_gradient.HyperGradient.compute_gradients" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-boat.hyper_ol.sequential_hg">
+<span id="boat-hyper-ol-sequential-hg"></span><h2>boat.hyper_ol.sequential_hg<a class="headerlink" href="#module-boat.hyper_ol.sequential_hg" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.SequentialHG">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">SequentialHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordered_instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#SequentialHG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for managing sequential hyper-gradient operations.</p>
+<p>This class dynamically organizes and executes a sequence of hyper-gradient computations using user-defined and validated orders of gradient operators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ordered_instances</strong> (<em>List</em><em>[</em><em>object</em><em>]</em>) – A list of instantiated gradient operator objects, ordered as per the adjusted sequence.</p></li>
+<li><p><strong>custom_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The user-defined order of gradient operators.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients">
+<span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#SequentialHG.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients" title="Link to this definition"></a></dt>
+<dd><p>Compute hyper-gradients sequentially using the ordered instances.</p>
+<p>This method processes the hyper-gradients in the defined order, passing intermediate results between consecutive gradient operators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments required for gradient computations.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries containing results for each gradient operator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.makes_functional_hyper_operation">
+<span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">makes_functional_hyper_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="boat.hyper_ol.sequential_hg.SequentialHG"><span class="pre">SequentialHG</span></a></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#makes_functional_hyper_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.makes_functional_hyper_operation" title="Link to this definition"></a></dt>
+<dd><p>Dynamically create a SequentialHG object with ordered gradient operators.</p>
+<p>This function validates the user-defined operator order, adjusts it to conform with predefined gradient rules, and dynamically loads the corresponding operator classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>custom_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The user-defined order of gradient operators.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments required for initializing gradient operator instances.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of SequentialHG containing the ordered gradient operators and result management.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="boat.hyper_ol.sequential_hg.SequentialHG">SequentialHG</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.validate_and_adjust_order">
+<span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">validate_and_adjust_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#validate_and_adjust_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.validate_and_adjust_order" title="Link to this definition"></a></dt>
+<dd><p>Validate and adjust the custom order to match the predefined gradient order. This function ensures that the user-defined order adheres to the predefined grouping rules and adjusts it accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>custom_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The user-provided order of gradient operators.</p></li>
+<li><p><strong>gradient_order</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The predefined order of gradient operator groups.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Adjusted order of gradient operators following the predefined rules.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-boat.hyper_ol.cg">
 <span id="boat-hyper-ol-cg"></span><h2>boat.hyper_ol.cg<a class="headerlink" href="#module-boat.hyper_ol.cg" title="Link to this heading"></a></h2>
@@ -438,35 +545,6 @@ It serves as the lower-level model for optimization.</p></li>
 </dd>
 </dl>
 </dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-boat.hyper_ol.hyper_gradient">
-<span id="boat-hyper-ol-hyper-gradient"></span><h2>boat.hyper_ol.hyper_gradient<a class="headerlink" href="#module-boat.hyper_ol.hyper_gradient" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="boat.hyper_ol.hyper_gradient.HyperGradient">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.hyper_gradient.</span></span><span class="sig-name descname"><span class="pre">HyperGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/hyper_gradient.html#HyperGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.hyper_gradient.HyperGradient" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Base class for computing hyper-gradients of upper-level variables in bilevel optimization problems.</p>
-<p>This class provides an abstract interface for hyper-gradient computation that can be extended for specific methods such as Conjugate Gradient, Finite Differentiation, or First-Order Approximation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_objective</strong> (<em>callable</em>) – The lower-level objective function of the bilevel optimization problem.</p></li>
-<li><p><strong>ul_objective</strong> (<em>callable</em>) – The upper-level objective function of the bilevel optimization problem.</p></li>
-<li><p><strong>ul_model</strong> (<em>torch.nn.Module</em>) – The upper-level model of the bilevel optimization problem.</p></li>
-<li><p><strong>ll_model</strong> (<em>torch.nn.Module</em>) – The lower-level model of the bilevel optimization problem.</p></li>
-<li><p><strong>ll_var</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – A list of variables optimized with the lower-level objective.</p></li>
-<li><p><strong>ul_var</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – A list of variables optimized with the upper-level objective.</p></li>
-<li><p><strong>solver_config</strong> (<em>dict</em>) – Dictionary containing configurations for the solver.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="boat.hyper_ol.hyper_gradient.HyperGradient.compute_gradients">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/hyper_gradient.html#HyperGradient.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.hyper_gradient.HyperGradient.compute_gradients" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -935,84 +1013,6 @@ It serves as the lower-level model for optimization.</p></li>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-</section>
-<section id="module-boat.hyper_ol.sequential_hg">
-<span id="boat-hyper-ol-sequential-hg"></span><h2>boat.hyper_ol.sequential_hg<a class="headerlink" href="#module-boat.hyper_ol.sequential_hg" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.SequentialHG">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">SequentialHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordered_instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#SequentialHG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class for managing sequential hyper-gradient operations.</p>
-<p>This class dynamically organizes and executes a sequence of hyper-gradient computations using user-defined and validated orders of gradient operators.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ordered_instances</strong> (<em>List</em><em>[</em><em>object</em><em>]</em>) – A list of instantiated gradient operator objects, ordered as per the adjusted sequence.</p></li>
-<li><p><strong>custom_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The user-defined order of gradient operators.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients">
-<span class="sig-name descname"><span class="pre">compute_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#SequentialHG.compute_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.SequentialHG.compute_gradients" title="Link to this definition"></a></dt>
-<dd><p>Compute hyper-gradients sequentially using the ordered instances.</p>
-<p>This method processes the hyper-gradients in the defined order, passing intermediate results between consecutive gradient operators.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments required for gradient computations.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of dictionaries containing results for each gradient operator.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[Dict]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.makes_functional_hyper_operation">
-<span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">makes_functional_hyper_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="boat.hyper_ol.sequential_hg.SequentialHG"><span class="pre">SequentialHG</span></a></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#makes_functional_hyper_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.makes_functional_hyper_operation" title="Link to this definition"></a></dt>
-<dd><p>Dynamically create a SequentialHG object with ordered gradient operators.</p>
-<p>This function validates the user-defined operator order, adjusts it to conform with predefined gradient rules, and dynamically loads the corresponding operator classes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>custom_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The user-defined order of gradient operators.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional arguments required for initializing gradient operator instances.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of SequentialHG containing the ordered gradient operators and result management.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#boat.hyper_ol.sequential_hg.SequentialHG" title="boat.hyper_ol.sequential_hg.SequentialHG">SequentialHG</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="boat.hyper_ol.sequential_hg.validate_and_adjust_order">
-<span class="sig-prename descclassname"><span class="pre">boat.hyper_ol.sequential_hg.</span></span><span class="sig-name descname"><span class="pre">validate_and_adjust_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/hyper_ol/sequential_hg.html#validate_and_adjust_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.hyper_ol.sequential_hg.validate_and_adjust_order" title="Link to this definition"></a></dt>
-<dd><p>Validate and adjust the custom order to match the predefined gradient order. This function ensures that the user-defined order adheres to the predefined grouping rules and adjusts it accordingly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>custom_order</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The user-provided order of gradient operators.</p></li>
-<li><p><strong>gradient_order</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – The predefined order of gradient operator groups.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Adjusted order of gradient operators following the predefined rules.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[str]</p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>

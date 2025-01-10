@@ -50,7 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="boat.html">BOAT Structure</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="boat.html#module-boat.boat_opt">Core Problem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boat.html#module-boat.boat_opt">Core Problem Class</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="boat.html#main-subpackages">Main Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html">boat.dynamic_ol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="boat.fogm.html">boat.fogm</a></li>
@@ -58,7 +58,6 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">boat.utils package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat.utils.op_utils">boat.utils.op_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-boat.utils">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -212,86 +211,303 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.average_grad">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">average_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#average_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.average_grad" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Average gradients over a batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – Model whose gradients are averaged.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – The batch size used for averaging.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.cat_list_to_tensor">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">cat_list_to_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_tx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#cat_list_to_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.cat_list_to_tensor" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Concatenate a list of tensors into a single tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list_tx</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of tensors to concatenate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The concatenated tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.cg_step">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">cg_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#cg_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.cg_step" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Perform the conjugate gradient optimization step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Ax</strong> (<em>Callable</em>) – Function to compute the matrix-vector product.</p></li>
+<li><p><strong>b</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – Right-hand side of the linear system.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of iterations, by default 100.</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance for early stopping, by default 1.0e-5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Solution vector for the linear system.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.conjugate_gradient">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">conjugate_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/utils/op_utils.html#conjugate_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.conjugate_gradient" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute hypergradients using the conjugate gradient method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of lower-level parameters.</p></li>
+<li><p><strong>hparams</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of upper-level hyperparameters.</p></li>
+<li><p><strong>upper_loss</strong> (<em>Tensor</em>) – The upper-level loss.</p></li>
+<li><p><strong>lower_loss</strong> (<em>Tensor</em>) – The lower-level loss.</p></li>
+<li><p><strong>K</strong> (<em>int</em>) – Maximum number of iterations for the conjugate gradient method.</p></li>
+<li><p><strong>fp_map</strong> (<em>Callable</em>) – Fixed-point mapping function.</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance for early stopping, by default 1e-10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hypergradients for the upper-level hyperparameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.copy_parameter_from_list">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">copy_parameter_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#copy_parameter_from_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.copy_parameter_from_list" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Copy parameters from a list to a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>torch.nn.Module</em>) – Target model to which parameters are copied.</p></li>
+<li><p><strong>z</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – List of source parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated model with copied parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.get_outer_gradients">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">get_outer_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outer_loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hparams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#get_outer_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.get_outer_gradients" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute the gradients of the outer-level loss with respect to parameters and hyperparameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outer_loss</strong> (<em>Tensor</em>) – The outer-level loss.</p></li>
+<li><p><strong>params</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of tensors representing parameters.</p></li>
+<li><p><strong>hparams</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of tensors representing hyperparameters.</p></li>
+<li><p><strong>retain_graph</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to retain the computation graph, by default True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Gradients with respect to parameters and hyperparameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[List[Tensor], List[Tensor]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.grad_unused_zero">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">grad_unused_zero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#grad_unused_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.grad_unused_zero" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute gradients for the given inputs, substituting zeros for unused gradients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<em>torch.Tensor</em>) – The output tensor for which gradients are computed.</p></li>
+<li><p><strong>inputs</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – List of input tensors with respect to which gradients are computed.</p></li>
+<li><p><strong>grad_outputs</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Gradient outputs to compute the gradients of the inputs, by default None.</p></li>
+<li><p><strong>retain_graph</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the computation graph is retained after the gradient computation,
+by default False.</p></li>
+<li><p><strong>create_graph</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, constructs the graph for higher-order gradient computations,
+by default False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Gradients for the inputs, with unused gradients replaced by zeros.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[torch.Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.l2_reg">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">l2_reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#l2_reg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.l2_reg" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute the L2 regularization term for a list of parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – List of tensors for which the L2 regularization term is computed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The L2 regularization loss value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.list_tensor_matmul">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">list_tensor_matmul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#list_tensor_matmul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.list_tensor_matmul" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Perform element-wise multiplication and summation for two lists of tensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list1</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – First list of tensors.</p></li>
+<li><p><strong>list2</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Second list of tensors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result of the element-wise multiplication and summation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.list_tensor_norm">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">list_tensor_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#list_tensor_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.list_tensor_norm" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute the p-norm of a list of tensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_tensor</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – List of tensors for which the norm is computed.</p></li>
+<li><p><strong>p</strong> (<em>int</em><em>, </em><em>optional</em>) – Order of the norm, by default 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The computed p-norm of the list of tensors.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.neumann">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">neumann</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/boat/utils/op_utils.html#neumann"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.neumann" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Compute hypergradients using Neumann series approximation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of lower-level parameters.</p></li>
+<li><p><strong>hparams</strong> (<em>List</em><em>[</em><em>Tensor</em><em>]</em>) – List of upper-level hyperparameters.</p></li>
+<li><p><strong>upper_loss</strong> (<em>Tensor</em>) – The upper-level loss.</p></li>
+<li><p><strong>lower_loss</strong> (<em>Tensor</em>) – The lower-level loss.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Number of iterations for Neumann approximation.</p></li>
+<li><p><strong>fp_map</strong> (<em>Callable</em>) – Fixed-point mapping function.</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance for early stopping, by default 1e-10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hypergradients for the upper-level hyperparameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.require_model_grad">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">require_model_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#require_model_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.require_model_grad" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Enable gradient computation for all parameters in the given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>torch.nn.Module</em><em>, </em><em>optional</em>) – The model whose parameters require gradient computation.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the model is None.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.stop_grads">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">stop_grads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grads</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#stop_grads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.stop_grads" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Stop gradient computation for the given gradients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>grads</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Gradients to be detached from the computation graph.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Gradients detached from the computation graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[torch.Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.stop_model_grad">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">stop_model_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#stop_model_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.stop_model_grad" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Disable gradient computation for all parameters in the given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>torch.nn.Module</em><em>, </em><em>optional</em>) – The model whose parameters no longer require gradient computation.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the model is None.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.update_grads">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">update_grads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#update_grads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.update_grads" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update gradients of a model with the given gradients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grads</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Gradients to be applied to the model’s parameters.</p></li>
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – Model whose gradients are updated.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat.utils.op_utils.update_tensor_grads">
 <span class="sig-prename descclassname"><span class="pre">boat.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">update_tensor_grads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hparams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grads</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat/utils/op_utils.html#update_tensor_grads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat.utils.op_utils.update_tensor_grads" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update gradients of hyperparameters with the given gradients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hparams</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Hyperparameters whose gradients are updated.</p></li>
+<li><p><strong>grads</strong> (<em>List</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Gradients to be applied to the hyperparameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
-</section>
-<section id="module-boat.utils">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-boat.utils" title="Link to this heading"></a></h2>
 </section>
 </section>
 
