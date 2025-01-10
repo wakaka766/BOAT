@@ -36,7 +36,7 @@ boat\_jit.dynamic\_ol.gda
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.dynamic\_ol.ngd module
+boat\_jit.dynamic\_ol.ngd
 --------------------------------
 
 .. automodule:: boat_jit.dynamic_ol.ngd
@@ -44,7 +44,7 @@ boat\_jit.dynamic\_ol.ngd module
    :undoc-members:
    :show-inheritance:
 
-boat\_jit.dynamic\_ol.sequential\_ds module
+boat\_jit.dynamic\_ol.sequential\_ds
 -------------------------------------------
 
 .. automodule:: boat_jit.dynamic_ol.sequential_ds
