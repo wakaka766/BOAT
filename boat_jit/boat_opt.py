@@ -60,6 +60,7 @@ class Problem:
             - "upper_level_model": The upper-level model to be optimized.
             - "lower_level_var": Variables in the lower-level model.
             - "upper_level_var": Variables in the upper-level model.
+            - "device": Device configuration (e.g., "cpu", "cuda").
         :type config: Dict[str, Any]
 
         :param loss_config: Loss function configuration dictionary.
@@ -122,8 +123,7 @@ class Problem:
                 ll_model=self._ll_model,
                 ul_model=self._ul_model,
                 lower_loop=self._lower_loop,
-                solver_config=self.boat_configs,
-            )
+                solver_config=self.boat_configs)
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
                 for _ in range(len(self._lower_init_opt.param_groups)):
@@ -134,9 +134,7 @@ class Problem:
                         "DI"
                     ]["lr"]
         else:
-            self._fo_gm_solver = get_registered_operation(
-                "%s" % self.boat_configs["fo_gm"]
-            )(
+            self._fo_gm_solver = get_registered_operation("%s" % self.boat_configs["fo_gm"])(
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
                 ll_model=self._ll_model,
@@ -185,34 +183,45 @@ class Problem:
         """
         Run a single iteration of the bi-level optimization process.
 
-        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the lower-level (LL) objective.
-            Example:
+        :param ll_feed_dict: Dictionary containing the real-time data and parameters
+            fed for the construction of the lower-level (LL) objective.
+
+            Example::
+
                 {
                     "image": train_images,
                     "text": train_texts,
                     "target": train_labels  # Optional
                 }
+
         :type ll_feed_dict: Dict[str, Tensor]
 
-        :param ul_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the upper-level (UL) objective.
-            Example:
+        :param ul_feed_dict: Dictionary containing the real-time data and parameters
+            fed for the construction of the upper-level (UL) objective.
+
+            Example::
+
                 {
                     "image": val_images,
                     "text": val_texts,
                     "target": val_labels  # Optional
                 }
+
         :type ul_feed_dict: Dict[str, Tensor]
 
         :param current_iter: The current iteration number.
         :type current_iter: int
 
         :notes:
-            - When `accumulate_grad` is set to True, you need to pack the data of each batch based on the format above.
-            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of dictionaries, i.e., `[Dict[str, Tensor]]`.
+            - When `accumulate_grad` is set to True, you need to pack the data of
+              each batch based on the format above.
+            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of
+              dictionaries, i.e., `[Dict[str, Tensor]]`.
 
         :returns: A tuple containing:
-            - loss (float): The loss value for the current iteration.
-            - run_time (float): The total time taken for the iteration.
+            - **loss** (*float*): The loss value for the current iteration.
+            - **run_time** (*float*): The total time taken for the iteration.
+
         :rtype: tuple
         """
         self._log_results_dict["upper_loss"] = []
@@ -247,7 +256,7 @@ class Problem:
                                 ll_feed_dict=batch_ll_feed_dict,
                                 ul_feed_dict=batch_ll_feed_dict,
                                 auxiliary_model=auxiliary_model,
-                                max_loss_iter=max_loss_iter,
+                                max_loss_iter=max_loss_iter
                             )
                         )
                         backward_time = time.perf_counter() - backward_time
@@ -263,7 +272,7 @@ class Problem:
                         ul_feed_dict=ul_feed_dict,
                         auxiliary_model=auxiliary_model,
                         auxiliary_opt=auxiliary_opt,
-                        current_iter=current_iter,
+                        current_iter=current_iter
                     )
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time

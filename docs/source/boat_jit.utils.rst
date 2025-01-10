@@ -1,10 +1,10 @@
-boat\_jit.utils
+boat\_jit.utils package
 =======================
 
 Submodules
 ----------
 
-boat\_jit.utils.op\_utils
+boat\_jit.utils.op\_utils module
 --------------------------------
 
 .. automodule:: boat_jit.utils.op_utils

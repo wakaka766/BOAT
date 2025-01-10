@@ -20,28 +20,35 @@ from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class DM(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure of the Dual Multiplier (DM) _`[1]`.
+    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1],
+    Gradient Descent Aggregation (GDA) [2], and Dual Multiplier (DM) [3].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: Jittor.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: Jittor.Module
-        :param lower_loop: Number of iterations for lower-level optimization.
-        :type lower_loop: int
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
-
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    lower_loop : int
+        The number of iterations for the lower-level optimization process.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the optimization solver, including
+        hyperparameters and specific settings for NGD, GDA, and DM.
 
     References
     ----------
-    _`[1]` Liu R, Liu Y, Yao W, et al. Averaged method of multipliers for bi-level optimization without lower-level
-    strong convexity [C]. In ICML, 2023.
+    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter
+        optimization and meta-learning," ICML, 2018.
+
+    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level
+        programming beyond lower-level singleton," ICML, 2020.
+
+    [3] Liu R, Liu Y, Yao W, et al., "Averaged method of multipliers for bi-level optimization without lower-level
+        strong convexity," ICML, 2023.
     """
 
     def __init__(
@@ -54,9 +61,7 @@ class DM(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(DM, self).__init__(
-            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
-        )
+        super(DM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
@@ -85,34 +90,50 @@ class DM(DynamicalSystem):
         **kwargs
     ):
         """
-        Execute the lower-level optimization procedure with the data from feed_dict and patched models.
+        Executes the lower-level optimization procedure with support for NGD, GDA, and RAD operations.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. Typically includes:
+                - "data" : Training input data.
+                - "target" : Training target data (optional, depending on the task).
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. Typically includes:
+                - "data" : Validation input data.
+                - "target" : Validation target data (optional, depending on the task).
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower model wrapped by the `higher` library. Used for differentiable optimization.
+        auxiliary_opt : DifferentiableOptimizer
+            A patched optimizer for the lower-level model, wrapped by the `higher` library. Enables differentiable optimization steps.
+        current_iter : int
+            The current iteration number in the optimization process.
+        next_operation : str, optional
+            Specifies the next operation in the optimization process. Must be `None` for NGD. (default: None)
+        kwargs : dict
+            Additional keyword arguments for the optimization process.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        Returns
+        -------
+        int
+            Returns `-1` upon successful completion of the optimization process.
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        Notes
+        -----
+        - For GDA operations, this method supports three strategies: 's1', 's2', and 's3'.
+        - When using RAD in `hyper_op`, a higher-order gradient adjustment is applied to the auxiliary variables.
+        - Ensure that `next_operation` is `None` for NGD, as it does not support additional operations.
 
-        :param auxiliary_opt: A patched optimizer for the lower-level model,
-            wrapped by the `higher` library. This optimizer allows for differentiable optimization.
-        :type auxiliary_opt: DifferentiableOptimizer
+        Raises
+        ------
+        AssertionError
+            If `next_operation` is not `None` for NGD or if an unsupported strategy is specified for GDA.
 
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
-
-        :param next_operation: The next operation to be executed in the optimization process.
-        :type next_operation: str
-
-        :param kwargs: Additional arguments for the optimization process.
-        :type kwargs: dict
-
-        :returns: None
+        References
+        ----------
+        [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter optimization and meta-learning", in ICML, 2018.
+        [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton", in ICML, 2020.
+        [3] Liu R, Liu Y, Yao W, et al. "Averaged method of multipliers for bi-level optimization without lower-level strong convexity", in ICML, 2023.
         """
         assert next_operation is None, "NGD does not support next_operation"
         if "gda_loss" in kwargs:
@@ -148,9 +169,9 @@ class DM(DynamicalSystem):
                 )
             elif self.strategy == "s3":
                 self.alpha = self.mu0 * 1 / (current_iter + 1) ** (1 / self.p)
-                self.eta = (current_iter + 1) ** (
-                    -0.5 * self.tau
-                ) * self.ll_opt.defaults["lr"]
+                self.eta = (current_iter + 1) ** (-0.5 * self.tau) * self.ll_opt.defaults[
+                    "lr"
+                ]
                 x_lr = (
                     (current_iter + 1) ** (-1.5 * self.tau)
                     * self.alpha**3
@@ -161,18 +182,14 @@ class DM(DynamicalSystem):
         else:
             gda_loss = None
             assert (
-                self.strategy == "s1"
+                    self.strategy == "s1"
             ), "Only 's1' strategy is supported for DM without GDA operation."
 
-            x_lr = (
-                self.ul_opt.defaults["lr"]
-                * (current_iter + 1) ** (-self.tau)
-                * self.ll_opt.defaults["lr"]
-            )
+            x_lr = self.ul_opt.defaults["lr"]* (current_iter + 1) ** (-self.tau) * self.ll_opt.defaults["lr"]
             eta = (
-                self.eta
-                * (current_iter + 1) ** (-0.5 * self.tau)
-                * self.ll_opt.defaults["lr"]
+                    self.eta
+                    * (current_iter + 1) ** (-0.5 * self.tau)
+                    * self.ll_opt.defaults["lr"]
             )
             for params in self.auxiliary_v_opt.param_groups:
                 params["lr"] = eta
@@ -193,7 +210,8 @@ class DM(DynamicalSystem):
                 ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model
             )
         else:
-            loss_full = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+            loss_full = self.ll_objective(ll_feed_dict,self.ul_model, auxiliary_model
+            )
 
         grad_y_temp = jit.grad(
             loss_full, list(auxiliary_model.parameters()), retain_graph=True

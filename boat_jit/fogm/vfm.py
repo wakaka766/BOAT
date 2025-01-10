@@ -17,33 +17,40 @@ from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class VFM(DynamicalSystem):
     """
-    Implements the optimization procedure of Value-function based First-Order Method (VFM) _`[1]`.
+    Implements the optimization procedure of Value-function based First-Order Method (VFM) [1].
 
     Parameters
     ----------
-    :param ll_objective: The lower-level objective of the BLO problem.
-    :type ll_objective: callable
-    :param ul_objective: The upper-level objective of the BLO problem.
-    :type ul_objective: callable
-    :param ll_model: The lower-level model of the BLO problem.
-    :type ll_model: Jittor.Module
-    :param ul_model: The upper-level model of the BLO problem.
-    :type ul_model: Jittor.Module
-    :param ll_var: The list of lower-level variables of the BLO problem.
-    :type ll_var: List
-    :param ul_var: The list of upper-level variables of the BLO problem.
-    :type ul_var: List
-    :param lower_loop: Number of iterations for lower-level optimization.
-    :type lower_loop: int
-    :param solver_config: Dictionary containing solver configurations.
-    :type solver_config: dict
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        A list of lower-level variables of the BLO problem.
+    ul_var : List[torch.Tensor]
+        A list of upper-level variables of the BLO problem.
+    lower_loop : int
+        The number of iterations for lower-level optimization.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the solver. Expected keys include:
 
+        - "lower_level_opt" (torch.optim.Optimizer): Optimizer for the lower-level model.
+        - "VFM" (Dict): Configuration for the VFM algorithm:
+            - "y_hat_lr" (float): Learning rate for optimizing the surrogate variable `y_hat`.
+            - "eta" (float): Step size for value-function updates.
+            - "u1" (float): Hyperparameter controlling the penalty in the value function.
+        - "device" (str): Device on which computations are performed, e.g., "cpu" or "cuda".
 
     References
     ----------
-    _`[1]` R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based
-    Interior-point Method for Non-convex Bi-level Optimization", in ICML, 2021.
+    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based
+        Interior-point Method for Non-convex Bi-level Optimization," in ICML, 2021.
     """
+
 
     def __init__(
         self,
@@ -56,9 +63,7 @@ class VFM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VFM, self).__init__(
-            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
-        )
+        super(VFM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
         self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
@@ -135,7 +140,9 @@ class VFM(DynamicalSystem):
         # Compute dot product
         dot = (delta_F * delta_f).sum()
 
-        scaling_factor = jit.nn.relu((self.u1 * loss - dot) / (norm_dq + 1e-8))  #
+        scaling_factor = jit.nn.relu(
+            (self.u1 * loss - dot) / (norm_dq + 1e-8)
+        )  #
         d = delta_F + scaling_factor * delta_f
 
         y_grad = []

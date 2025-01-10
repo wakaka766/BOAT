@@ -5,9 +5,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>boat_jit.hyper_ol.rgt &mdash; BOAT 0.0.1 documentation</title>
+  <title>boat_jit.hyper_ol.rgt &mdash; BOAT-Jittor 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=a96ec788" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -29,7 +30,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            BOAT
+            BOAT-Jittor
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -43,7 +44,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../boat_jit.html">boat_jit package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boat_jit.html">BOAT Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -56,7 +57,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">BOAT</a>
+          <a href="../../../index.html">BOAT-Jittor</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -136,29 +137,27 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.</span>
 
-<span class="sd">        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.</span>
-<span class="sd">            It typically includes training data, targets, and other information required to compute the LL objective.</span>
-<span class="sd">        :type ll_feed_dict: Dict</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ll_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</span>
+<span class="sd">        ul_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</span>
+<span class="sd">        auxiliary_model : _MonkeyPatchBase</span>
+<span class="sd">            A patched lower model wrapped by the `higher` library. It serves as the lower-level model for optimization.</span>
+<span class="sd">        max_loss_iter : int</span>
+<span class="sd">            The number of iterations used for backpropagation.</span>
+<span class="sd">        next_operation : str</span>
+<span class="sd">            The next operator for the calculation of the hypergradient.</span>
+<span class="sd">        hyper_gradient_finished : bool</span>
+<span class="sd">            A boolean flag indicating whether the hypergradient computation is finished.</span>
 
-<span class="sd">        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            It typically includes validation data, targets, and other information required to compute the UL objective.</span>
-<span class="sd">        :type ul_feed_dict: Dict</span>
-
-<span class="sd">        :param auxiliary_model: A patched lower model wrapped by the `higher` library.</span>
-<span class="sd">            It serves as the lower-level model for optimization.</span>
-<span class="sd">        :type auxiliary_model: _MonkeyPatchBase</span>
-
-<span class="sd">        :param max_loss_iter: The number of iteration used for backpropagation.</span>
-<span class="sd">        :type max_loss_iter: int</span>
-
-<span class="sd">        :param next_operation: The next operator for the calculation of the hypergradient.</span>
-<span class="sd">        :type next_operation: str</span>
-
-<span class="sd">        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.</span>
-<span class="sd">        :type  hyper_gradient_finished: bool</span>
-
-<span class="sd">        :returns: the current upper-level objective</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            The current upper-level objective.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">assert</span> <span class="n">hyper_gradient_finished</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Hypergradient computation should not be finished&quot;</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">truncate_iter</span> <span class="o">&gt;</span> <span class="mi">0</span>

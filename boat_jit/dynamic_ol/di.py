@@ -10,28 +10,32 @@ from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class DI(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure of the Dynamic Initialization (DI) _`[1]`.
+    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1]
+    and Gradient Descent Aggregation (GDA) [2].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: Jittor.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: Jittor.Module
-        :param lower_loop: Number of iterations for lower-level optimization.
-        :type lower_loop: int
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
-
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    lower_loop : int
+        The number of iterations for the lower-level optimization process.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the optimization solver, including
+        hyperparameters and specific settings for NGD and GDA.
 
     References
     ----------
-    _`[1]` R. Liu, Y. Liu, S. Zeng, and J. Zhang, "Towards Gradient-based Bilevel
-     Optimization with Non-convex Followers and Beyond", in NeurIPS, 2021.
+    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter
+        optimization and meta-learning," ICML, 2018.
+
+    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level
+        programming beyond lower-level singleton," ICML, 2020.
     """
 
     def __init__(
@@ -44,9 +48,7 @@ class DI(DynamicalSystem):
         solver_config: Dict[str, Any],
     ):
 
-        super(DI, self).__init__(
-            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
-        )
+        super(DI, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
 
     def optimize(
         self,
@@ -59,41 +61,53 @@ class DI(DynamicalSystem):
         **kwargs
     ):
         """
-        Execute the lower-level optimization procedure with the data from feed_dict and patched models.
+        Executes the lower-level optimization procedure using the provided data and models.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict[str, Any]
+            Dictionary containing the lower-level data used for optimization. Typically includes:
+            - "data" : The input data for lower-level optimization.
+            - "target" : The target output (optional, depending on the task).
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        ul_feed_dict : Dict[str, Any]
+            Dictionary containing the upper-level data used for optimization. Typically includes:
+            - "data" : The input data for upper-level optimization.
+            - "target" : The target output (optional, depending on the task).
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower model wrapped by the `higher` library. Serves as the lower-level model
+            for optimization in a differentiable way.
 
-        :param auxiliary_opt: A patched optimizer for the lower-level model,
-            wrapped by the `higher` library. This optimizer allows for differentiable optimization.
-        :type auxiliary_opt: DifferentiableOptimizer
+        auxiliary_opt : DifferentiableOptimizer
+            A patched optimizer for the lower-level model, wrapped by the `higher` library.
+            Allows for differentiable optimization steps.
 
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
+        current_iter : int
+            The current iteration number of the optimization process.
 
-        :param next_operation: The next operation to be executed in the optimization process.
-        :type next_operation: str
+        next_operation : str
+            Specifies the next operation to execute during the optimization process.
+            Must not be None.
 
-        :param kwargs: Additional arguments for the optimization process.
-        :type kwargs: dict
+        **kwargs : dict
+            Additional arguments passed to the optimization procedure.
 
-        :returns: None
+        Returns
+        -------
+        Dict
+            A dictionary containing the input parameters and any additional keyword arguments.
+
+        Raises
+        ------
+        AssertionError
+            If `next_operation` is not defined.
+
+        Notes
+        -----
+        Ensure that `next_operation` is defined before calling this function to specify the
+        next operation in the optimization pipeline.
         """
         assert next_operation is not None, "Next operation should be defined."
-        return {
-            "ll_feed_dict": ll_feed_dict,
-            "ul_feed_dict": ul_feed_dict,
-            "auxiliary_model": auxiliary_model,
-            "auxiliary_opt": auxiliary_opt,
-            "current_iter": current_iter,
-            **kwargs,
-        }
+        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
+                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, **kwargs}

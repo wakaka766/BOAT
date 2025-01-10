@@ -18,7 +18,6 @@ class SequentialHG:
     custom_order : List[str]
         The user-defined order of gradient operators.
     """
-
     def __init__(self, ordered_instances: List[object], custom_order: List[str]):
         self.gradient_instances = ordered_instances
         self.custom_order = custom_order

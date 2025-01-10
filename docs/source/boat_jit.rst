@@ -1,4 +1,4 @@
-BOAT-Jittor Structure
+BOAT Structure
 =================
 
 Core Problem Class
@@ -19,7 +19,6 @@ Main Subpackages
 
    boat_jit.dynamic_ol
    boat_jit.fogm
-   boat_jit.higher_jit
    boat_jit.hyper_ol
    boat_jit.utils
 

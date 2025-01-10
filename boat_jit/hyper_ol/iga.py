@@ -11,29 +11,45 @@ from boat_jit.hyper_ol.hyper_gradient import HyperGradient
 @register_class
 class IGA(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with  Implicit Gradient Approximation (IGA) _`[1]`.
+    Computes the hyper-gradient of the upper-level variables using Implicit Gradient Approximation (IGA) [1].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: Jittor.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: Jittor.Module
-        :param ll_var: List of variables optimized with the lower-level objective.
-        :type ll_var: List
-        :param ul_var:  of variables optimized with the upper-level objective.
-        :type ul_var: List
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        List of variables optimized with the lower-level objective.
+    ul_var : List[torch.Tensor]
+        List of variables optimized with the upper-level objective.
+    solver_config : Dict[str, Any]
+        Dictionary containing solver configurations, including:
+
+        - `alpha_init` (float): Initial learning rate for GDA.
+        - `alpha_decay` (float): Decay factor for the GDA learning rate.
+        - Optional `gda_loss` (Callable): Custom loss function for GDA, if applicable.
+        - `dynamic_op` (List[str]): Specifies dynamic operations, e.g., "DI" for dynamic initialization.
+
+    Attributes
+    ----------
+    alpha : float
+        Initial learning rate for GDA operations, if applicable.
+    alpha_decay : float
+        Decay factor applied to the GDA learning rate.
+    gda_loss : Callable, optional
+        Custom loss function for GDA operations, if specified in `solver_config`.
+    dynamic_initialization : bool
+        Indicates whether dynamic initialization is enabled, based on `dynamic_op`.
 
     References
     ----------
-    _`[1]` Liu R, Gao J, Liu X, et al. Learning with constraint learning: New perspective, solution strategy and
-    various applications[J]. IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.
+    [1] Liu R, Gao J, Liu X, et al., "Learning with constraint learning: New perspective, solution strategy and
+        various applications," IEEE Transactions on Pattern Analysis and Machine Intelligence, 2024.
     """
 
     def __init__(
@@ -46,15 +62,7 @@ class IGA(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IGA, self).__init__(
-            ll_objective,
-            ul_objective,
-            ul_model,
-            ll_model,
-            ll_var,
-            ul_var,
-            solver_config,
-        )
+        super(IGA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.gda_loss = solver_config["gda_loss"]
@@ -71,54 +79,68 @@ class IGA(HyperGradient):
         **kwargs
     ):
         """
-        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
+        Compute the hyper-gradients of the upper-level variables using the given feed dictionaries and patched models.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization, including training data,
+            targets, and other information required for the LL objective computation.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization, including validation data,
+            targets, and other information required for the UL objective computation.
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower-level model wrapped by the `higher` library, enabling differentiable optimization.
+        max_loss_iter : int, optional
+            The number of iterations used for backpropagation, by default 0.
+        hyper_gradient_finished : bool, optional
+            A flag indicating whether the hypergradient computation is finished, by default False.
+        next_operation : str, optional
+            The next operator for hypergradient calculation. Not supported in this implementation, by default None.
+        **kwargs : dict
+            Additional arguments, such as:
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+            - `lower_model_params` : List[torch.nn.Parameter]
+                List of parameters for the lower-level model.
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        Returns
+        -------
+        Dict
+            A dictionary containing:
 
-        :param max_loss_iter: The number of iteration used for backpropagation.
-        :type max_loss_iter: int
+            - `upper_loss` : torch.Tensor
+                The upper-level objective value after optimization.
+            - `hyper_gradient_finished` : bool
+                Indicates whether the hypergradient computation is complete.
 
-        :param next_operation: The next operator for the calculation of the hypergradient.
-        :type next_operation: str
+        Notes
+        -----
+        - This implementation calculates the Gauss-Newton (GN) loss to refine the gradients using second-order approximations.
+        - If `dynamic_initialization` is enabled, the gradients of the lower-level variables are updated with time-dependent parameters.
+        - Updates are performed on both lower-level and upper-level variables using computed gradients.
 
-        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
-        :type  hyper_gradient_finished: bool
-
-        :returns: the current upper-level objective
+        Raises
+        ------
+        AssertionError
+            If `next_operation` is not None, as this implementation does not support additional operations.
         """
         assert next_operation is None, "FD does not support next_operation"
-        lower_model_params = kwargs.get(
-            "lower_model_params", list(auxiliary_model.parameters())
-        )
+        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha * self.alpha_decay**max_loss_iter
             lower_loss = self.gda_loss(
-                ll_feed_dict,
-                ul_feed_dict,
-                self.ul_model,
-                auxiliary_model,
-                params=lower_model_params,
+                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
             )
         else:
-            lower_loss = self.ll_objective(
-                ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
-            )
-        dfy = jit.grad(lower_loss, lower_model_params, retain_graph=True)
-
-        upper_loss = self.ul_objective(
-            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+        dfy = jit.grad(
+            lower_loss, lower_model_params, retain_graph=True
         )
-        dFy = jit.grad(upper_loss, lower_model_params, retain_graph=True)
+
+        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+        dFy = jit.grad(
+            upper_loss, lower_model_params, retain_graph=True
+        )
 
         # calculate GN loss
         gFyfy = 0
@@ -138,4 +160,4 @@ class IGA(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}

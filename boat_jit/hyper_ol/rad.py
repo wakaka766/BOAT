@@ -11,29 +11,30 @@ from boat_jit.hyper_ol.hyper_gradient import HyperGradient
 @register_class
 class RAD(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with Reverse Auto Differentiation (RAD) _`[1]`.
+    Computes the hyper-gradient of the upper-level variables using Reverse Auto Differentiation (RAD) [1].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: Jittor.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: Jittor.Module
-        :param ll_var: List of variables optimized with the lower-level objective.
-        :type ll_var: List
-        :param ul_var:  of variables optimized with the upper-level objective.
-        :type ul_var: List
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        List of variables optimized with the lower-level objective.
+    ul_var : List[torch.Tensor]
+        List of variables optimized with the upper-level objective.
+    solver_config : Dict[str, Any]
+        Dictionary containing solver configurations, including optional dynamic operation settings.
 
     References
     ----------
-    _`[1]` Franceschi, Luca, et al. Forward and reverse gradient-based hyperparameter optimization. in ICML, 2017.
+    [1] Franceschi, Luca, et al. "Forward and reverse gradient-based hyperparameter optimization." in ICML, 2017.
     """
+
 
     def __init__(
         self,
@@ -45,15 +46,7 @@ class RAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(RAD, self).__init__(
-            ll_objective,
-            ul_objective,
-            ul_model,
-            ll_model,
-            ll_var,
-            ul_var,
-            solver_config,
-        )
+        super(RAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
     def compute_gradients(
@@ -66,37 +59,44 @@ class RAD(HyperGradient):
         **kwargs
     ):
         """
-        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
+        Compute the hyper-gradients of the upper-level variables using the provided data and patched models.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization.
+            Typically includes training data, targets, and other information required to compute the lower-level objective.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization.
+            Typically includes validation data, targets, and other information required to compute the upper-level objective.
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
-            It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower model wrapped by the `higher` library. It serves as the lower-level model for optimization.
 
-        :param max_loss_iter: The number of iteration used for backpropagation.
-        :type max_loss_iter: int
+        max_loss_iter : int, optional
+            The number of iterations used for backpropagation. Default is 0.
 
-        :param next_operation: The next operator for the calculation of the hypergradient.
-        :type next_operation: str
+        next_operation : str, optional
+            The next operator for the calculation of the hypergradient. Default is None.
 
-        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
-        :type  hyper_gradient_finished: bool
+        **kwargs : dict
+            Additional keyword arguments passed to the method.
 
-        :returns: the current upper-level objective
+        Returns
+        -------
+        Dict
+            A dictionary containing:
+            - `upper_loss`: The current upper-level objective.
+            - `hyper_gradient_finished`: Flag indicating if the hypergradient computation is finished.
         """
         assert next_operation is None, "RAD does not support any further operations."
-        lower_model_params = kwargs.get(
-            "lower_model_params", list(auxiliary_model.parameters())
-        )
+        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
         upper_loss = self.ul_objective(
-            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            ul_feed_dict,
+            self.ul_model,
+            auxiliary_model,
+            params=lower_model_params
         )
         grads_upper = jit.grad(
             upper_loss, self.ul_var, retain_graph=self.dynamic_initialization
@@ -107,4 +107,4 @@ class RAD(HyperGradient):
             grads_lower = jit.grad(upper_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ll_var, grads_lower)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}

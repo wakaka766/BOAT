@@ -9,31 +9,29 @@ from boat_jit.hyper_ol.hyper_gradient import HyperGradient
 @register_class
 class FOA(HyperGradient):
     """
-    Calculation of the hyper gradient of the upper-level variables with First-Order Approximation (FOA) _`[1]`
-    based on the Initialization-based Auto Differentiation (IAD) _`[2]`.
+    Computes the hyper-gradient of the upper-level variables using First-Order Approximation (FOA) [1], leveraging Initialization-based Auto Differentiation (IAD) [2].
 
     Parameters
     ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: Jittor.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: Jittor.Module
-        :param ll_var: List of variables optimized with the lower-level objective.
-        :type ll_var: List
-        :param ul_var:  of variables optimized with the upper-level objective.
-        :type ul_var: List
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: dict
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : torch.nn.Module
+        The lower-level model of the BLO problem.
+    ul_model : torch.nn.Module
+        The upper-level model of the BLO problem.
+    ll_var : List[torch.Tensor]
+        List of variables optimized with the lower-level objective.
+    ul_var : List[torch.Tensor]
+        List of variables optimized with the upper-level objective.
+    solver_config : Dict[str, Any]
+        Dictionary containing solver configurations.
 
     References
     ----------
-    _`[1]` Nichol A. On first-order meta-learning algorithms[J]. arXiv preprint arXiv:1803.02999, 2018.
-    _`[2]` Finn C, Abbeel P, Levine S. Model-agnostic meta-learning for fast
-    adaptation of deep networks[C]. in ICML, 2017.
+    [1] Nichol A., "On first-order meta-learning algorithms," arXiv preprint arXiv:1803.02999, 2018.
+    [2] Finn C., Abbeel P., Levine S., "Model-agnostic meta-learning for fast adaptation of deep networks", in ICML, 2017.
     """
 
     def __init__(
@@ -46,15 +44,7 @@ class FOA(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(FOA, self).__init__(
-            ll_objective,
-            ul_objective,
-            ul_model,
-            ll_model,
-            ll_var,
-            ul_var,
-            solver_config,
-        )
+        super(FOA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
 
     def compute_gradients(
         self,
@@ -67,40 +57,46 @@ class FOA(HyperGradient):
         **kwargs
     ):
         """
-        Compute the hyper-gradients of the upper-level variables with the data from feed_dict and patched models.
+        Compute the hyper-gradients of the upper-level variables using the data from feed_dict and patched models.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization.
             It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization.
             It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
 
-        :param auxiliary_model: A patched lower model wrapped by the `higher` library.
+        auxiliary_model : _MonkeyPatchBase
+            A patched lower-level model wrapped by the `higher` library.
             It serves as the lower-level model for optimization.
-        :type auxiliary_model: _MonkeyPatchBase
 
-        :param max_loss_iter: The number of iteration used for backpropagation.
-        :type max_loss_iter: int
+        max_loss_iter : int, optional
+            The number of iterations used for backpropagation, by default 0.
 
-        :param next_operation: The next operator for the calculation of the hypergradient.
-        :type next_operation: str
+        hyper_gradient_finished : bool, optional
+            A boolean flag indicating whether the hypergradient computation is finished, by default False.
 
-        :param hyper_gradient_finished: A boolean flag indicating whether the hypergradient computation is finished.
-        :type  hyper_gradient_finished: bool
+        next_operation : str, optional
+            The next operator for the calculation of the hypergradient, by default None.
 
-        :returns: the current upper-level objective
+        kwargs : dict
+            Additional keyword arguments.
+
+        Returns
+        -------
+        Dict
+            A dictionary containing information required for the next step in the hypergradient computation,
+            including the feed dictionaries, auxiliary model, iteration count, and other optional arguments.
+
+        Raises
+        ------
+        AssertionError
+            If `next_operation` is not defined or if `hyper_gradient_finished` is True.
         """
         assert next_operation is None, "FOA does not support next_operation"
-        assert (
-            hyper_gradient_finished is False
-        ), "Hypergradient computation should not be finished"
-        return {
-            "ll_feed_dict": ll_feed_dict,
-            "ul_feed_dict": ul_feed_dict,
-            "auxiliary_model": auxiliary_model,
-            "max_loss_iter": max_loss_iter,
-            "hyper_gradient_finished": False,
-            **kwargs,
-        }
+        assert hyper_gradient_finished is False, "Hypergradient computation should not be finished"
+        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
+                'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': False, **kwargs}
