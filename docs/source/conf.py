@@ -28,14 +28,17 @@ extensions = [
     "myst_parser",  # 支持 Markdown (可选)
 ]
 
-templates_path = ["_templates"]
-exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "sphinx_rtd_theme"
-
-# html_theme = 'alabaster'
 html_static_path = ["_static"]
+html_css_files = [
+    "custom.css",  # 引入自定义 CSS
+]
+# html_theme = 'alabaster'
+
+html_context = {
+    "extrahead": '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">',
+}

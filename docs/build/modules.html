@@ -4,9 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>boat &mdash; BOAT 0.0.1 documentation</title>
+  <title>boat_ms &mdash; BOAT 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=751030aa" />
 
   
   <!--[if lt IE 9]>
@@ -46,13 +47,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="boat.html">Package Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boat_ms.html">BOAT-MS Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="data_hyper_cleaning_example.html">Data HyperCleaning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="l2_regularization_example.html">L2 Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="meta_learning_example.html">Meta-Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="l2_regularization_example.html">L2 Regularization with MindSpore</a></li>
 </ul>
 
         </div>
@@ -69,7 +68,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">boat</li>
+      <li class="breadcrumb-item active">boat_ms</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -79,58 +78,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="boat">
-<h1>boat<a class="headerlink" href="#boat" title="Link to this heading"></a></h1>
+  <section id="boat-ms">
+<h1>boat_ms<a class="headerlink" href="#boat-ms" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="boat.html">Package Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="boat.html#main-packages">Main packages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="boat.dynamic_ol.html">boat.dynamic_ol package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat-dynamic-ol-di-module">boat.dynamic_ol.di module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat-dynamic-ol-dm-module">boat.dynamic_ol.dm module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat-dynamic-ol-dynamical-system-module">boat.dynamic_ol.dynamical_system module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat-dynamic-ol-gda-module">boat.dynamic_ol.gda module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat-dynamic-ol-ngd-module">boat.dynamic_ol.ngd module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#boat-dynamic-ol-sequential-ds-module">boat.dynamic_ol.sequential_ds module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.dynamic_ol.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="boat.fogm.html">boat.fogm package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.fogm.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.fogm.html#boat-fogm-mesm-module">boat.fogm.mesm module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.fogm.html#boat-fogm-pgdm-module">boat.fogm.pgdm module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.fogm.html#boat-fogm-vfm-module">boat.fogm.vfm module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.fogm.html#boat-fogm-vsm-module">boat.fogm.vsm module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.fogm.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="boat.hyper_ol.html">boat.hyper_ol package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-cg-module">boat.hyper_ol.cg module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-fd-module">boat.hyper_ol.fd module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-foa-module">boat.hyper_ol.foa module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-hyper-gradient-module">boat.hyper_ol.hyper_gradient module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-iad-module">boat.hyper_ol.iad module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-iga-module">boat.hyper_ol.iga module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-ns-module">boat.hyper_ol.ns module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-ptt-module">boat.hyper_ol.ptt module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-rad-module">boat.hyper_ol.rad module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-rgt-module">boat.hyper_ol.rgt module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#boat-hyper-ol-sequential-hg-module">boat.hyper_ol.sequential_hg module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.hyper_ol.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="boat.utils.html">boat.utils package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="boat.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.utils.html#boat-utils-op-utils-module">boat.utils.op_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="boat.utils.html#module-contents">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boat_ms.html">BOAT-MS Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="boat_ms.html#module-boat_ms.boat_opt">Core Problem Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.html#boat_ms.boat_opt.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.html#boat_ms.boat_opt.Problem.build_ll_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ll_solver()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.html#boat_ms.boat_opt.Problem.build_ul_solver"><code class="docutils literal notranslate"><span class="pre">Problem.build_ul_solver()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.html#boat_ms.boat_opt.Problem.run_iter"><code class="docutils literal notranslate"><span class="pre">Problem.run_iter()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="boat.html#main-modules">Main modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="boat.html#boat-boat-opt-module">boat.boat_opt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boat_ms.html#main-subpackages">Main Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.dynamic_ol.html">boat_ms.dynamic_ol</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.dynamic_ol.html#module-boat_ms.dynamic_ol.dynamical_system">boat_ms.dynamic_ol.dynamical_system</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.fogm.html">boat_ms.fogm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.fogm.html#module-boat_ms.fogm.mesm">boat_ms.fogm.mesm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.fogm.html#module-boat_ms.fogm.pgdm">boat_ms.fogm.pgdm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.fogm.html#module-boat_ms.fogm.vfm">boat_ms.fogm.vfm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.fogm.html#module-boat_ms.fogm.vsm">boat_ms.fogm.vsm</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.utils.html">boat_ms.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="boat_ms.utils.html#module-boat_ms.utils.op_utils">boat_ms.utils.op_utils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boat_ms.html#module-boat_ms.operation_registry">Extension with Operation_Registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.html#boat_ms.operation_registry.get_registered_operation"><code class="docutils literal notranslate"><span class="pre">get_registered_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.html#boat_ms.operation_registry.register_class"><code class="docutils literal notranslate"><span class="pre">register_class()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

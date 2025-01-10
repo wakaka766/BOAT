@@ -1,0 +1,432 @@
+/* 调整内容区域的左侧内边距，避免被导航栏遮盖 */
+.wy-nav-content {
+    margin-left: 30px;  /* 默认导航栏宽度约为 260px，可根据需要调整 */
+    max-width: calc(100% - 0px); /* 避免内容宽度超出屏幕 */
+}
+
+/* 保证导航栏和内容区域之间没有重叠 */
+.wy-nav-side {
+    z-index: 1000; /* 确保导航栏位于内容区域之上 */
+}
+
+/*!* 可选：设置全局背景颜色或边框，方便调试 *!*/
+/*body {*/
+/*    background-color: #ffffff; !* 可选：设置背景为纯白 *!*/
+/*}*/
+
+
+/*!* 设置导航栏背景颜色和阴影 *!*/
+/*.wy-nav-side {*/
+/*    background-color: #2e3440; !* 深色背景 *!*/
+/*    color: #eceff4; !* 浅色文字 *!*/
+/*    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); !* 添加右侧阴影 *!*/
+/*}*/
+
+/*!* 导航栏中的链接 *!*/
+/*.wy-nav-side a {*/
+/*    color: #88c0d0; !* 柔和的浅蓝色 *!*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*!* 鼠标悬停效果 *!*/
+/*.wy-nav-side a:hover {*/
+/*    color: #81a1c1; !* 更深的蓝色 *!*/
+/*    text-decoration: underline;*/
+/*}*/
+
+
+/*!* 设置内容区域的背景色和边距 *!*/
+/*.wy-nav-content {*/
+/*    background-color: #ffffff; !* 纯白背景 *!*/
+/*    padding: 20px; !* 增加内容与边框的间距 *!*/
+/*    line-height: 1.8; !* 增大行间距 *!*/
+/*    font-size: 16px; !* 更大的字体，提升可读性 *!*/
+/*}*/
+
+/*!* 内容标题样式 *!*/
+/*.wy-nav-content h1,*/
+/*.wy-nav-content h2,*/
+/*.wy-nav-content h3 {*/
+/*    color: #2e3440; !* 深色标题 *!*/
+/*    border-bottom: 2px solid #d8dee9; !* 添加底边框 *!*/
+/*    padding-bottom: 5px;*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+
+/*!* 代码块背景色和边框 *!*/
+/*.highlight pre {*/
+/*    background-color: #f4f4f4; !* 浅灰背景 *!*/
+/*    border: 1px solid #d8dee9; !* 边框颜色 *!*/
+/*    padding: 10px;*/
+/*    border-radius: 5px; !* 圆角 *!*/
+/*}*/
+
+/*!* 代码字体和颜色 *!*/
+/*.highlight code {*/
+/*    font-family: "Fira Code", "Courier New", monospace;*/
+/*    font-size: 14px;*/
+/*    color: #bf616a; !* 柔和的红色 *!*/
+/*}*/
+
+
+/*!* 顶部标题栏 *!*/
+/*.wy-side-nav-search {*/
+/*    background-color: #3b4252;*/
+/*    color: #eceff4;*/
+/*    padding: 10px;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*!* 页脚样式 *!*/
+/*footer {*/
+/*    background-color: #2e3440;*/
+/*    color: #d8dee9;*/
+/*    text-align: center;*/
+/*    padding: 10px 0;*/
+/*    font-size: 12px;*/
+/*}*/
+
+/*!* 页脚中的链接 *!*/
+/*footer a {*/
+/*    color: #88c0d0;*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*!* 卡片样式 *!*/
+/*.card {*/
+/*    border: 1px solid #d8dee9;*/
+/*    background-color: #f9f9f9;*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); !* 添加阴影 *!*/
+/*    margin: 20px 0;*/
+/*}*/
+
+/*!* 卡片标题 *!*/
+/*.card-title {*/
+/*    font-size: 18px;*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 10px;*/
+/*    color: #2e3440;*/
+/*}*/
+
+/*!* 卡片内容 *!*/
+/*.card-content {*/
+/*    font-size: 14px;*/
+/*    line-height: 1.6;*/
+/*    color: #4c566a;*/
+/*}*/
+
+
+/*!* 响应式导航栏 *!*/
+/*@media (max-width: 768px) {*/
+/*    .wy-nav-side {*/
+/*        display: none; !* 小屏幕隐藏导航栏 *!*/
+/*    }*/
+
+/*    .wy-nav-content {*/
+/*        margin-left: 0;*/
+/*        max-width: 100%;*/
+/*        padding: 10px;*/
+/*    }*/
+/*}*/
+
+/*!* 响应式标题字体 *!*/
+/*@media (max-width: 768px) {*/
+/*    .wy-nav-content h1 {*/
+/*        font-size: 24px;*/
+/*    }*/
+
+/*    .wy-nav-content h2 {*/
+/*        font-size: 20px;*/
+/*    }*/
+/*}*/
+
+
+/*body {*/
+/*    font-family: "Roboto", sans-serif;*/
+/*}*/
+
+/*!* 应用 Google Fonts 到整个文档 *!*/
+/*body {*/
+/*    font-family: "Roboto", sans-serif;*/
+/*}*/
+
+/*!* 标题字体加粗 *!*/
+/*h1, h2, h3, h4, h5, h6 {*/
+/*    font-family: "Roboto", sans-serif;*/
+/*    font-weight: 700;*/
+/*}*/
+
+
+/*!* 修改标题的字体大小 *!*/
+/*h1 {*/
+/*    font-size: 2.5em;*/
+/*    color: #5A9;*/
+/*}*/
+
+/*!* 改变导航栏背景颜色 *!*/
+/*.furo-sidebar {*/
+/*    background-color: #f4f4f4;*/
+/*}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.wy-side-nav-search {
+    background-color: #2c3e50; /* 更深的导航栏背景色 */
+    color: #ecf0f1; /* 浅色文字 */
+}
+
+.wy-menu-vertical a {
+    color: #ecf0f1; /* 链接文字颜色 */
+}
+
+.wy-menu-vertical a:hover {
+    color: #e74c3c; /* 悬停时的链接颜色 */
+    text-decoration: underline;
+}
+
+
+
+
+
+.wy-nav-content {
+    max-width: 90%; /* 增加内容宽度 */
+    margin: auto; /* 居中显示 */
+    padding: 20px;
+    line-height: 1.8; /* 行间距 */
+}
+
+.wy-nav-content h1,
+.wy-nav-content h2,
+.wy-nav-content h3 {
+    color: #3498db; /* 标题颜色 */
+    border-bottom: 2px solid #e74c3c; /* 底边框颜色 */
+    padding-bottom: 5px;
+    font-family: "Roboto", sans-serif; /* 使用更现代的字体 */
+}
+
+
+.wy-side-nav-search {
+    background-color: #2c3e50; /* 更深的导航栏背景色 */
+    color: #ecf0f1; /* 浅色文字 */
+}
+
+.wy-menu-vertical a {
+    color: #ecf0f1; /* 链接文字颜色 */
+}
+
+.wy-menu-vertical a:hover {
+    color: #e74c3c; /* 悬停时的链接颜色 */
+    text-decoration: underline;
+}
+
+.highlight pre {
+    background-color: #f4f4f4;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.highlight code {
+    color: #e74c3c; /* 字体颜色 */
+    font-family: "Fira Code", monospace; /* 更好的代码字体 */
+}
+
+
+footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 12px;
+}
+
+footer a {
+    color: #1abc9c;
+    text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!* 导航栏中的链接 *!*/
+/*.wy-nav-side a {*/
+/*    color: #88c0d0; !* 柔和的浅蓝色 *!*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*!* 鼠标悬停效果 *!*/
+/*.wy-nav-side a:hover {*/
+/*    color: #81a1c1; !* 更深的蓝色 *!*/
+/*    text-decoration: underline;*/
+/*}*/
+
+/*!* 设置内容区域的背景色和边距 *!*/
+/*.wy-nav-content {*/
+/*    background-color: #ffffff; !* 纯白背景 *!*/
+/*    padding: 20px; !* 增加内容与边框的间距 *!*/
+/*    line-height: 1.8; !* 增大行间距 *!*/
+/*    font-size: 16px; !* 更大的字体，提升可读性 *!*/
+/*}*/
+
+/*!* 内容标题样式 *!*/
+/*.wy-nav-content h1,*/
+/*.wy-nav-content h2,*/
+/*.wy-nav-content h3 {*/
+/*    color: #2e3440; !* 深色标题 *!*/
+/*    border-bottom: 2px solid #d8dee9; !* 添加底边框 *!*/
+/*    padding-bottom: 5px;*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+/*!* 代码块背景色和边框 *!*/
+/*.highlight pre {*/
+/*    background-color: #f4f4f4; !* 浅灰背景 *!*/
+/*    border: 1px solid #d8dee9; !* 边框颜色 *!*/
+/*    padding: 10px;*/
+/*    border-radius: 5px; !* 圆角 *!*/
+/*}*/
+
+/*!* 代码字体和颜色 *!*/
+/*.highlight code {*/
+/*    font-family: "Fira Code", "Courier New", monospace;*/
+/*    font-size: 14px;*/
+/*    color: #bf616a; !* 柔和的红色 *!*/
+/*}*/
+
+/*!* 顶部标题栏 *!*/
+/*.wy-side-nav-search {*/
+/*    background-color: #3b4252;*/
+/*    color: #eceff4;*/
+/*    padding: 10px;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*!* 页脚样式 *!*/
+/*footer {*/
+/*    background-color: #2e3440;*/
+/*    color: #d8dee9;*/
+/*    text-align: center;*/
+/*    padding: 10px 0;*/
+/*    font-size: 12px;*/
+/*}*/
+
+/*!* 页脚中的链接 *!*/
+/*footer a {*/
+/*    color: #88c0d0;*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*!* 卡片样式 *!*/
+/*.card {*/
+/*    border: 1px solid #d8dee9;*/
+/*    background-color: #f9f9f9;*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); !* 添加阴影 *!*/
+/*    margin: 20px 0;*/
+/*}*/
+
+/*!* 卡片标题 *!*/
+/*.card-title {*/
+/*    font-size: 18px;*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 10px;*/
+/*    color: #2e3440;*/
+/*}*/
+
+/*!* 卡片内容 *!*/
+/*.card-content {*/
+/*    font-size: 14px;*/
+/*    line-height: 1.6;*/
+/*    color: #4c566a;*/
+/*}*/
+
+/*!* 响应式导航栏 *!*/
+/*@media (max-width: 768px) {*/
+/*    .wy-nav-side {*/
+/*        display: none; !* 小屏幕隐藏导航栏 *!*/
+/*    }*/
+
+/*    .wy-nav-content {*/
+/*        margin-left: 0;*/
+/*        max-width: 100%;*/
+/*        padding: 10px;*/
+/*    }*/
+/*}*/
+
+/*!* 响应式标题字体 *!*/
+/*@media (max-width: 768px) {*/
+/*    .wy-nav-content h1 {*/
+/*        font-size: 24px;*/
+/*    }*/
+
+/*    .wy-nav-content h2 {*/
+/*        font-size: 20px;*/
+/*    }*/
+/*}*/
+
+/*!* 应用 Google Fonts 到整个文档 *!*/
+/*body {*/
+/*    font-family: "Roboto", sans-serif;*/
+/*}*/
+
+/*!* 标题字体加粗 *!*/
+/*h1, h2, h3, h4, h5, h6 {*/
+/*    font-family: "Roboto", sans-serif;*/
+/*    font-weight: 700;*/
+/*}*/
+
+/*!* 修改标题的字体大小 *!*/
+/*h1 {*/
+/*    font-size: 2.5em;*/
+/*    color: #5A9;*/
+/*}*/
+
+/*!* 改变导航栏背景颜色 *!*/
+/*.furo-sidebar {*/
+/*    background-color: #f4f4f4;*/
+/*}*/
+
+
+
+

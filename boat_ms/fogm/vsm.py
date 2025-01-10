@@ -9,6 +9,43 @@ from boat_ms.dynamic_ol.dynamical_system import DynamicalSystem
 
 @register_class
 class VSM(DynamicalSystem):
+    """
+    Implements the optimization procedure of Value-function based Sequential Method (VSM) [1].
+
+    Parameters
+    ----------
+    ll_objective : Callable
+        The lower-level objective function of the BLO problem.
+    ul_objective : Callable
+        The upper-level objective function of the BLO problem.
+    ll_model : mindspore.nn.Cell
+        The lower-level model of the BLO problem.
+    ul_model : mindspore.nn.Cell
+        The upper-level model of the BLO problem.
+    ll_var : List[mindspore.Tensor]
+        A list of lower-level variables of the BLO problem.
+    ul_var : List[mindspore.Tensor]
+        A list of upper-level variables of the BLO problem.
+    lower_loop : int
+        The number of iterations for lower-level optimization.
+    solver_config : Dict[str, Any]
+        A dictionary containing configurations for the solver. Expected keys include:
+
+        - "lower_level_opt" (mindspore.nn.optim.Optimizer): Optimizer for the lower-level model.
+        - "VSM" (Dict): Configuration for the VSM algorithm:
+            - "z_loop" (int): Number of iterations for optimizing the auxiliary variable `z`.
+            - "ll_l2_reg" (float): L2 regularization coefficient for the lower-level model.
+            - "ul_l2_reg" (float): L2 regularization coefficient for the upper-level model.
+            - "ul_ln_reg" (float): Logarithmic regularization coefficient for the upper-level model.
+            - "reg_decay" (float): Decay rate for the regularization coefficients.
+            - "z_lr" (float): Learning rate for optimizing the auxiliary variable `z`.
+        - "device" (str): Device on which computations are performed, e.g., "cpu" or "cuda".
+
+    References
+    ----------
+    [1] Liu B, Ye M, Wright S, et al. "BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach,"
+        in NeurIPS, 2022.
+    """
     def __init__(
         self,
         ll_objective: Callable,
@@ -40,8 +77,17 @@ class VSM(DynamicalSystem):
         Execute the optimization procedure with the data from feed_dict.
 
         :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+            It typically includes training data, targets, and other information required to compute the LL objective.
+        :type ll_feed_dict: Dict
+
         :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+            It typically includes validation data, targets, and other information required to compute the UL objective.
+        :type ul_feed_dict: Dict
+
         :param current_iter: The current iteration number of the optimization process.
+        :type current_iter: int
+
+        :returns: None
         """
         reg_decay = self.reg_decay * current_iter + 1
 

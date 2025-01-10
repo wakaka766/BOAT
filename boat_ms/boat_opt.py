@@ -42,13 +42,15 @@ class Problem:
 
         :param config: Configuration dictionary for the optimization setup.
             - "fo_gm": First Order Gradient based Method (optional), e.g., ["VSM"], ["VFM"], ["MESM"].
+            - "dynamic_op": List of dynamic operations (optional), e.g., ["NGD"], ["NGD", "GDA"], ["NGD", "GDA", "DI"].
+            - "hyper_op": Hyper-optimization method (optional), e.g., ["RAD"], ["RAD", "PTT"], ["IAD", "NS", "PTT"].
             - "lower_level_loss": Configuration for the lower-level loss function based on the json file configuration.
             - "upper_level_loss": Configuration for the upper-level loss function based on the json file configuration.
             - "lower_level_model": The lower-level model to be optimized.
-            - "upper_level_model": The upper-level model to be optimized.
+            - "upper_level_model": The upper-level model to be optimized.s
             - "lower_level_var": Variables in the lower-level model.
             - "upper_level_var": Variables in the upper-level model.
-            - "device": Device configuration (e.g., "CPU", "GPU").
+            - "device": Device configuration (e.g., "cpu", "cuda").
         :type config: Dict[str, Any]
 
         :param loss_config: Loss function configuration dictionary.
@@ -125,30 +127,45 @@ class Problem:
         """
         Run a single iteration of the bi-level optimization process.
 
-        :param ll_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the lower-level (LL) objective.
-            Example:
+        :param ll_feed_dict: Dictionary containing the real-time data and parameters
+            fed for the construction of the lower-level (LL) objective.
+
+            Example::
+
                 {
                     "image": train_images,
                     "text": train_texts,
                     "target": train_labels  # Optional
                 }
+
         :type ll_feed_dict: Dict[str, Tensor]
 
-        :param ul_feed_dict: Dictionary containing the real-time data and parameters fed for the construction of the upper-level (UL) objective.
-            Example:
+        :param ul_feed_dict: Dictionary containing the real-time data and parameters
+            fed for the construction of the upper-level (UL) objective.
+
+            Example::
+
                 {
                     "image": val_images,
                     "text": val_texts,
                     "target": val_labels  # Optional
                 }
+
         :type ul_feed_dict: Dict[str, Tensor]
 
         :param current_iter: The current iteration number.
         :type current_iter: int
 
+        :notes:
+            - When `accumulate_grad` is set to True, you need to pack the data of
+              each batch based on the format above.
+            - In that case, pass `ll_feed_dict` and `ul_feed_dict` as lists of
+              dictionaries, i.e., `[Dict[str, Tensor]]`.
+
         :returns: A tuple containing:
-            - loss (float): The loss value for the current iteration.
-            - run_time (float): The total time taken for the iteration.
+            - **loss** (*float*): The loss value for the current iteration.
+            - **run_time** (*float*): The total time taken for the iteration.
+
         :rtype: tuple
         """
         self._log_results_dict["upper_loss"] = []
