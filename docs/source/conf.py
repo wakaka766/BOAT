@@ -52,6 +52,12 @@ html_context = {
 import sys
 from unittest.mock import MagicMock
 
-MOCK_MODULES = ['jittor']
+MOCK_MODULES = [
+    'jittor',
+    'jittor.optim',
+    'jittor.nn',
+    'jittor.compiler',
+    'jittor.utils',
+]
 sys.modules.update((mod_name, MagicMock()) for mod_name in MOCK_MODULES)
 
