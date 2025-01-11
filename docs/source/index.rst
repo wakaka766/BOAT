@@ -13,7 +13,7 @@ Welcome to BOAT-Torch Documentation
    :width: 800px
    :align: center
 
-In this section, we explain the core components of BOAT, how to install the PyTorch version, and how to use it for your optimization tasks. The main contents are organized as follows.
+In this section, we explain the core components of BOAT, how to install the Jittor version, and how to use it for your optimization tasks. The main contents are organized as follows.
 
 .. toctree::
    :maxdepth: 2
@@ -26,7 +26,7 @@ In this section, we explain the core components of BOAT, how to install the PyTo
 Running Example
 ----------------------------
 
-The running examples of data hypercleaning, meta learning and l2 regularization are organized as follows.
+The running example of l2 regularization is organized as follows.
 
 .. toctree::
    :maxdepth: 2
