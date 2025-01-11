@@ -54,7 +54,8 @@ To install BOAT, use the following command:
 ```bash
 pip install boat-jit 
 or 
-python setup_jit.py install 
+git clone -b boat_jit --single-branch https://github.com/callous-youth/BOAT.git
+pip install -e .
 ```
 
 ##  ⚡ **How to Use BOAT**
@@ -67,7 +68,7 @@ BOAT relies on two key configuration files:
 ```python
 import os
 import json
-import boat
+import boat_jit as boat
 
 # Load configuration files
 with open("path_to_configs/boat_config.json", "r") as f:

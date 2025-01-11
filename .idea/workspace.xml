@@ -6,76 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/boat_opt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/boat_opt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/di.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/dynamical_system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/gda.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/dynamic_ol/ngd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/mesm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/pgdm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vfm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/fogm/vsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/cg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/fd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/foa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/hyper_gradient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/iga.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ns.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/ptt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/rad.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/rad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/rgt.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/rgt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/hyper_ol/sequential_hg.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/hyper_ol/sequential_hg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_jit/utils/op_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.buildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.buildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.dynamic_ol.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.dynamic_ol.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.fogm.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.fogm.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.higher_jit.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.higher_jit.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.hyper_ol.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.hyper_ol.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.utils.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_jit.utils.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/environment.pickle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_modules/boat_jit/dynamic_ol/dm.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_modules/boat_jit/dynamic_ol/dm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_modules/boat_jit/higher_jit/patch.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_modules/boat_jit/higher_jit/patch.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_modules/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_modules/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_sources/boat_jit.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/boat_jit.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/basic.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/basic.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/css/theme.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/css/theme.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/doctools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/doctools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/documentation_options.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/documentation_options.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/js/versions.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/js/versions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/language_data.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/language_data.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/pygments.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/pygments.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/searchtools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/searchtools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/sphinx_highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/sphinx_highlight.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.dynamic_ol.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.dynamic_ol.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.fogm.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.fogm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.higher_jit.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.higher_jit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.hyper_ol.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.hyper_ol.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_jit.utils.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_jit.utils.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/description.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/description.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/genindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/install_guide.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/install_guide.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/l2_regularization_example.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/l2_regularization_example.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/modules.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/modules.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/objects.inv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/py-modindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/searchindex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.dynamic_ol.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_jit.dynamic_ol.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.fogm.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_jit.fogm.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.higher_jit.rst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.hyper_ol.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_jit.hyper_ol.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_jit.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_jit.utils.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_jit.utils.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/index.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/install_guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/install_guide.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
