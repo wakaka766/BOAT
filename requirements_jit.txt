@@ -1,7 +1,10 @@
-setuptools
-numpy
-typing
+# Core dependencies
+setuptools           # Package building and distribution
+numpy                # Numerical computations
 
-tqdm
-scikit-learn >= 1.3
-jittor
+# Utilities
+tqdm                 # Progress bar
+scikit-learn >= 1.3  # Machine learning toolkit
+
+# Deep learning
+jittor               # High-performance deep learning framework
