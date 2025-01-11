@@ -22,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="BOAT Structure" href="boat.html" />
+    <link rel="next" title="BOAT Structure" href="boat_torch.html" />
     <link rel="prev" title="BOAT Introduction" href="description.html" /> 
 </head>
 
@@ -61,7 +61,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="boat.html">BOAT Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boat_torch.html">BOAT Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -99,13 +99,15 @@
 <section id="installation">
 <h2>🔨 <strong>Installation</strong><a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>To install BOAT with <em>PyPi</em>, use the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boat
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boat-torch
 </pre></div>
 </div>
 <p>or you can install the latest version from the source code on <em>GitHub</em>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/callous-youth/BOAT.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>boat-torch<span class="w"> </span>
+or<span class="w"> </span>run<span class="w"> </span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/callous-youth/BOAT.git
 <span class="nb">cd</span><span class="w"> </span>BOAT
-python<span class="w"> </span>setup.py<span class="w"> </span>install
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
@@ -120,7 +122,7 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">boat</span>
+<span class="kn">import</span> <span class="nn">boat_torch</span> <span class="k">as</span> <span class="nn">boat</span>
 
 <span class="c1"># Load configuration files</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;path_to_configs/boat_config.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -208,7 +210,7 @@ python<span class="w"> </span>setup.py<span class="w"> </span>install
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="description.html" class="btn btn-neutral float-left" title="BOAT Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="boat.html" class="btn btn-neutral float-right" title="BOAT Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="boat_torch.html" class="btn btn-neutral float-right" title="BOAT Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

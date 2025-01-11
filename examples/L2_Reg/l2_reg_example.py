@@ -1,7 +1,7 @@
 import argparse
 import numpy as np
 import torch
-import boat
+import boat_torch as boat
 import os
 import json
 import sys

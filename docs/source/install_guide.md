@@ -3,13 +3,15 @@
 ##  🔨 **Installation**
 To install BOAT with *PyPi*, use the following command:
 ```bash
-pip install boat
+pip install boat-torch
 ```
 or you can install the latest version from the source code on *GitHub*:
 ```bash
+pip install boat-torch 
+or run 
 git clone https://github.com/callous-youth/BOAT.git
 cd BOAT
-python setup.py install
+pip install -e .
 ```
 
 ##  ⚡ **How to Use BOAT**
@@ -21,7 +23,7 @@ BOAT relies on two key configuration files:
 ```python
 import os
 import json
-import boat
+import boat_torch as boat
 
 # Load configuration files
 with open("path_to_configs/boat_config.json", "r") as f:

@@ -1,6 +1,6 @@
 import os
 import torch
-import boat
+import boat_torch as boat
 from torchmeta.toy.helpers import sinusoid
 from torchmeta.utils.data import BatchMetaDataLoader
 

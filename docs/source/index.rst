@@ -21,7 +21,7 @@ In this section, we explain the core components of BOAT, how to install it, and 
 
    description.md
    install_guide.md
-   boat.rst
+   boat_torch.rst
 
 Running Example
 ----------------------------

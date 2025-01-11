@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import torch
-import boat
+import boat_torch as boat
 from torch import nn
 from torchmeta.toy.helpers import sinusoid
 from torchmeta.utils.data import BatchMetaDataLoader

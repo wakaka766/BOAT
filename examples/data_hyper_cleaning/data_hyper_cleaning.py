@@ -3,16 +3,16 @@ import os
 import json
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-import boat
+import boat_torch as boat
 import torch
 import torch.nn.functional as F
 from util_file import data_splitting, initialize, accuary, Binarization
-from boat.utils import HyperGradientRules, DynamicalSystemRules
+from boat_torch.utils import HyperGradientRules, DynamicalSystemRules
 from torchvision.datasets import MNIST
 
 base_folder = os.path.dirname(os.path.abspath(__file__))
 parent_folder = os.path.dirname(base_folder)
-dataset = MNIST(root=os.path.join(parent_folder, "data/"), train=True, download=True)
+dataset = MNIST(root=os.path.join(parent_folder, "./data"), train=True, download=True)
 tr, val, test = data_splitting(dataset, 5000, 5000, 10000)
 tr.data_polluting(0.5)
 tr.data_flatten()

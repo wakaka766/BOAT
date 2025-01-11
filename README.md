@@ -65,7 +65,11 @@ BOAT enables efficient implementation and adaptation of advanced BLO techniques 
 ##  🔨 **Installation**
 To install BOAT, use the following command:
 ```bash
-pip install boat
+pip install boat-torch 
+or run 
+git clone https://github.com/callous-youth/BOAT.git
+cd BOAT
+pip install -e .
 ```
 
 ##  ⚡ **How to Use BOAT**
@@ -78,7 +82,7 @@ BOAT relies on two key configuration files:
 ```python
 import os
 import json
-import boat
+import boat_torch as torch
 
 # Load configuration files
 with open("path_to_configs/boat_config.json", "r") as f:

@@ -4,7 +4,6 @@ myst-parser
 m2r
 numpy
 setuptools
-typing
 tqdm
 higher
 torch >=1.4

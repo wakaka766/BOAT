@@ -1,7 +1,7 @@
-boat
-====
+boat_torch
+==========
 
 .. toctree::
    :maxdepth: 4
 
-   boat
+   boat_torch

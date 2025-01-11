@@ -2,7 +2,7 @@ import argparse
 import numpy as np
 import os
 import torch
-import boat
+import boat_torch as boat
 import torch.nn as nn
 import torch.nn.functional as F
 from sklearn.model_selection import train_test_split

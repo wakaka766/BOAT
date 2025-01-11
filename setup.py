@@ -14,13 +14,13 @@ def get_install_requirements():
 
 
 setup(
-    name="boat",
+    name="boat-torch",
     version="0.0.1",
     packages=find_packages(),
     long_description=long_description,
     url="https://github.com/callous-youth/BOAT",
     license="MIT",
-    keywords=["Bilevel-optimization", "Learning and vision", "Python", "Deep learning"],
+    keywords=["Bilevel-optimization", "Learning and vision", "Python", "Deep learning", "PyTorch"],
     install_requires=get_install_requirements(),
     classifiers=[
         "License :: OSI Approved :: MIT License",

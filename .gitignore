@@ -1,4 +1,7 @@
 data_hyper_cleaning/data_hyper_cleaning_local.py
+data_hyper_cleaning/dhl_example.py
 meta_learning/meta_learning_local.py
+meta_learning/ml_exmaple.py
 L2_Reg/l2_regularization_local.py
+L2_Reg/l2_reg_example.py
 examples/data

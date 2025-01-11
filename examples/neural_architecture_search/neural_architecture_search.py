@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch.utils
 import torchvision.datasets as dset
 import torch.backends.cudnn as cudnn
-import boat
+import boat_torch as boat
 from torch.autograd import Variable
 from model_search import Network
 

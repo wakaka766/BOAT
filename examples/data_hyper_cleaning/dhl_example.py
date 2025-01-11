@@ -3,7 +3,7 @@ import os
 import json
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-import boat
+import boat_torch as boat
 import torch
 from .util_file import data_splitting, initialize
 from torchvision.datasets import MNIST
