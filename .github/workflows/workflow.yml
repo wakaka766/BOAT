@@ -27,8 +27,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         pip install pytest-cov
-        pytest --cov=/home/runner/work/BOAT/BOAT/boat --cov-report=term-missing -v /home/runner/work/BOAT/BOAT/examples/data_hyper_cleaning/test_data_hyper_cleaning.py
-        pytest --cov=/home/runner/work/BOAT/BOAT/boat --cov-report=term-missing --cov-append -v /home/runner/work/BOAT/BOAT/examples/meta_learning/test_meta_learning.py
+        pytest --cov=/home/runner/work/BOAT/BOAT/boat_torch --cov-report=term-missing -v /home/runner/work/BOAT/BOAT/examples/data_hyper_cleaning/test_data_hyper_cleaning.py
+        pytest --cov=/home/runner/work/BOAT/BOAT/boat_torch --cov-report=term-missing --cov-append -v /home/runner/work/BOAT/BOAT/examples/meta_learning/test_meta_learning.py
 
     - name: Statistics
       if: success()
