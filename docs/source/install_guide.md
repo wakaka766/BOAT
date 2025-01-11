@@ -7,9 +7,10 @@ pip install boat-ms
 ```
 or you can install the latest version from the source code on *GitHub*:
 ```bash
-git clone https://github.com/callous-youth/BOAT.git
-cd BOAT
-python setup_ms.py install
+pip install boat-ms
+or run 
+git clone -b boat_ms --single-branch https://github.com/callous-youth/BOAT.git
+pip install -e . 
 ```
 
 ##  ⚡ **How to Use BOAT**

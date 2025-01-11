@@ -53,6 +53,9 @@ BOAT enables efficient implementation and adaptation of advanced BLO techniques 
 To install BOAT, use the following command:
 ```bash
 pip install boat-ms
+or run 
+git clone -b boat_ms --single-branch https://github.com/callous-youth/BOAT.git
+pip install -e . 
 ```
 
 ##  ⚡ **How to Use BOAT**
