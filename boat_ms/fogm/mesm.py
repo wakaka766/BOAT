@@ -147,4 +147,4 @@ class MESM(DynamicalSystem):
             wrapped_ul_objective, self.ul_model.trainable_params()
         )()
         self.ul_opt(grad_x_parameters)
-        return lower_loss
+        return lower_loss.item()

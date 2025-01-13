@@ -168,4 +168,4 @@ class VFM(DynamicalSystem):
             new_param = param - self.y_hat_lr * grad
             param.set_data(new_param)
 
-        return F_y
+        return F_y.item()

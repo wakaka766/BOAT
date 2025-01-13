@@ -156,4 +156,4 @@ class PGDM(DynamicalSystem):
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
 
-        return F_y
+        return F_y.item()

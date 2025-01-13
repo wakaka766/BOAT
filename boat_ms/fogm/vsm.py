@@ -279,4 +279,4 @@ class VSM(DynamicalSystem):
         # 使用优化器更新参数
         self.ul_opt(ul_grads)
 
-        return loss_x_value
+        return loss_x_value.item()
