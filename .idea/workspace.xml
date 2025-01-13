@@ -6,41 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="971b336e-2e78-4813-9e5c-fd2fa6a1ceed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/dynamic_ol/dynamical_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/dynamic_ol/dynamical_system.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/fogm/mesm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/mesm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/fogm/pgdm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/pgdm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/fogm/vfm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/vfm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/fogm/vsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/fogm/vsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boat_ms/utils/op_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/boat_ms/utils/op_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.dynamic_ol.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.dynamic_ol.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.fogm.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.fogm.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.utils.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/boat_ms.utils.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/environment.pickle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/.doctrees/install_guide.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/.doctrees/install_guide.doctree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_sources/boat_ms.dynamic_ol.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/boat_ms.dynamic_ol.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_sources/boat_ms.fogm.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/boat_ms.fogm.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_sources/boat_ms.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/boat_ms.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_sources/boat_ms.utils.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/boat_ms.utils.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_sources/install_guide.md.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_sources/install_guide.md.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/css/theme.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/css/theme.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/doctools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/doctools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/searchtools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/searchtools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/_static/sphinx_highlight.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/_static/sphinx_highlight.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_ms.dynamic_ol.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_ms.dynamic_ol.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_ms.fogm.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_ms.fogm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_ms.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_ms.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/boat_ms.utils.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/boat_ms.utils.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/genindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/install_guide.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/install_guide.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/modules.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/modules.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/objects.inv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/py-modindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/build/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/build/searchindex.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/source/boat_ms.dynamic_ol.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_ms.dynamic_ol.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_ms.fogm.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_ms.fogm.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_ms.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_ms.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/boat_ms.utils.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/boat_ms.utils.rst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,16 +112,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/boat_jit/dynamic_ol/di.py</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backbone_py$l2_regularization__1_.coverage" NAME="l2_regularization (1) Coverage Results" MODIFIED="1734747674125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/L2_Reg" />
