@@ -10,8 +10,7 @@ from boat_jit.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class DI(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1]
-    and Gradient Descent Aggregation (GDA) [2].
+    Implements the lower-level optimization procedure for Dynamic Initialization [1].
 
     Parameters
     ----------
@@ -19,9 +18,9 @@ class DI(DynamicalSystem):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
     lower_loop : int
         The number of iterations for the lower-level optimization process.
@@ -31,11 +30,8 @@ class DI(DynamicalSystem):
 
     References
     ----------
-    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter
-        optimization and meta-learning," ICML, 2018.
+    [1] Liu R., Liu Y., Zeng S., et al. "Towards gradient-based bilevel optimization with non-convex followers and beyond," in NeurIPS, 2021.
 
-    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level
-        programming beyond lower-level singleton," ICML, 2020.
     """
 
     def __init__(
@@ -47,8 +43,9 @@ class DI(DynamicalSystem):
         lower_loop: int,
         solver_config: Dict[str, Any],
     ):
-
-        super(DI, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(DI, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
 
     def optimize(
         self,
@@ -109,5 +106,11 @@ class DI(DynamicalSystem):
         next operation in the optimization pipeline.
         """
         assert next_operation is not None, "Next operation should be defined."
-        return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                'auxiliary_opt': auxiliary_opt,"current_iter": current_iter, **kwargs}
+        return {
+            "ll_feed_dict": ll_feed_dict,
+            "ul_feed_dict": ul_feed_dict,
+            "auxiliary_model": auxiliary_model,
+            "auxiliary_opt": auxiliary_opt,
+            "current_iter": current_iter,
+            **kwargs,
+        }

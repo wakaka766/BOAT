@@ -19,13 +19,13 @@ class IGA(HyperGradient):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
-    ll_var : List[torch.Tensor]
+    ll_var : List[jittor.Var]
         List of variables optimized with the lower-level objective.
-    ul_var : List[torch.Tensor]
+    ul_var : List[jittor.Var]
         List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations, including:
@@ -62,7 +62,15 @@ class IGA(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IGA, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(IGA, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
         self.gda_loss = solver_config["gda_loss"]
@@ -125,22 +133,28 @@ class IGA(HyperGradient):
             If `next_operation` is not None, as this implementation does not support additional operations.
         """
         assert next_operation is None, "FD does not support next_operation"
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
         if self.gda_loss is not None:
             ll_feed_dict["alpha"] = self.alpha * self.alpha_decay**max_loss_iter
             lower_loss = self.gda_loss(
-                ll_feed_dict, ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+                ll_feed_dict,
+                ul_feed_dict,
+                self.ul_model,
+                auxiliary_model,
+                params=lower_model_params,
             )
         else:
-            lower_loss = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
-        dfy = jit.grad(
-            lower_loss, lower_model_params, retain_graph=True
-        )
+            lower_loss = self.ll_objective(
+                ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            )
+        dfy = jit.grad(lower_loss, lower_model_params, retain_graph=True)
 
-        upper_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
-        dFy = jit.grad(
-            upper_loss, lower_model_params, retain_graph=True
+        upper_loss = self.ul_objective(
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
+        dFy = jit.grad(upper_loss, lower_model_params, retain_graph=True)
 
         # calculate GN loss
         gFyfy = 0
@@ -160,4 +174,4 @@ class IGA(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}

@@ -11,7 +11,7 @@ from boat_jit.hyper_ol.hyper_gradient import HyperGradient
 @register_class
 class IAD(HyperGradient):
     """
-    Implements the optimization procedure of the Naive Gradient Descent (NGD) [1].
+    Computes the hyper-gradient of the upper-level variables using Initialization-based Auto Differentiation (IAD) [1].
 
     Parameters
     ----------
@@ -19,37 +19,22 @@ class IAD(HyperGradient):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
-    lower_loop : int
-        The number of iterations for lower-level optimization.
+    ll_var : List[jittor.Var]
+        List of variables optimized with the lower-level objective.
+    ul_var : List[jittor.Var]
+        List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
-        A dictionary containing configurations for the solver. Expected keys include:
-
-        - "lower_level_opt" (torch.optim.Optimizer): The optimizer for the lower-level model.
-        - "hyper_op" (List[str]): A list of hyper-gradient operations to apply, such as "PTT" or "FOA".
-        - "RGT" (Dict): Configuration for Truncated Gradient Iteration (RGT):
-            - "truncate_iter" (int): The number of iterations to truncate the gradient computation.
-
-    Attributes
-    ----------
-    truncate_max_loss_iter : bool
-        Indicates whether to truncate based on a maximum loss iteration (enabled if "PTT" is in `hyper_op`).
-    truncate_iters : int
-        The number of iterations for gradient truncation, derived from `solver_config["RGT"]["truncate_iter"]`.
-    ll_opt : torch.optim.Optimizer
-        The optimizer used for the lower-level model.
-    foa : bool
-        Indicates whether First-Order Approximation (FOA) is applied, based on `hyper_op` configuration.
+        Dictionary containing solver configurations.
 
     References
     ----------
-    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel
-        programming for hyperparameter optimization and meta-learning", in ICML, 2018.
+    [1] Finn C., Abbeel P., Levine S., "Model-agnostic meta-learning for fast adaptation of deep networks", in ICML, 2017.
     """
-    
+
     def __init__(
         self,
         ll_objective: Callable,
@@ -60,7 +45,15 @@ class IAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(IAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(IAD, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
 
     def compute_gradients(
         self,
@@ -97,14 +90,27 @@ class IAD(HyperGradient):
         """
 
         if next_operation is not None:
-            lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+            lower_model_params = kwargs.get(
+                "lower_model_params", list(auxiliary_model.parameters())
+            )
             hparams = list(auxiliary_model.parameters(time=0))
-            return {'ll_feed_dict': ll_feed_dict, 'ul_feed_dict': ul_feed_dict, 'auxiliary_model': auxiliary_model,
-                    'max_loss_iter': max_loss_iter, 'hyper_gradient_finished': hyper_gradient_finished,
-                    'hparams': hparams, 'lower_model_params': lower_model_params, **kwargs}
+            return {
+                "ll_feed_dict": ll_feed_dict,
+                "ul_feed_dict": ul_feed_dict,
+                "auxiliary_model": auxiliary_model,
+                "max_loss_iter": max_loss_iter,
+                "hyper_gradient_finished": hyper_gradient_finished,
+                "hparams": hparams,
+                "lower_model_params": lower_model_params,
+                **kwargs,
+            }
         else:
-            lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
-            ul_loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+            lower_model_params = kwargs.get(
+                "lower_model_params", list(auxiliary_model.parameters())
+            )
+            ul_loss = self.ul_objective(
+                ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+            )
             grads_upper = jit.grad(ul_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ul_var, grads_upper)
-            return {'upper_loss': ul_loss, 'hyper_gradient_finished': True}
+            return {"upper_loss": ul_loss, "hyper_gradient_finished": True}

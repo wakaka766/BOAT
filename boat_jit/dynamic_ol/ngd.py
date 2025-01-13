@@ -19,16 +19,16 @@ class NGD(DynamicalSystem):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
     lower_loop : int
         The number of iterations for lower-level optimization.
     solver_config : Dict[str, Any]
         A dictionary containing configurations for the solver. Expected keys include:
 
-        - "lower_level_opt" (torch.optim.Optimizer): The optimizer for the lower-level model.
+        - "lower_level_opt" (jittor.optim.Optimizer): The optimizer for the lower-level model.
         - "hyper_op" (List[str]): A list of hyper-gradient operations to apply, such as "PTT" or "FOA".
         - "RGT" (Dict): Configuration for Truncated Gradient Iteration (RGT):
             - "truncate_iter" (int): The number of iterations to truncate the gradient computation.
@@ -48,8 +48,9 @@ class NGD(DynamicalSystem):
         lower_loop: int,
         solver_config: Dict[str, Any],
     ):
-
-        super(NGD, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(NGD, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.truncate_max_loss_iter = "PTT" in solver_config["hyper_op"]
         self.truncate_iters = solver_config["RGT"]["truncate_iter"]
         self.ll_opt = solver_config["lower_level_opt"]
@@ -71,20 +72,16 @@ class NGD(DynamicalSystem):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization.
-            Typically includes training data, targets, and other information required to compute the lower-level (LL) objective.
+            Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the lower-level (LL) objective.
 
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization.
-            Typically includes validation data, targets, and other information required to compute the upper-level (UL) objective.
+            Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the upper-level (UL) objective.
 
         auxiliary_model : _MonkeyPatchBase
-            A patched lower-level model wrapped by the `higher` library.
-            Used for differentiable optimization in the lower-level procedure.
+            A patched lower-level model wrapped by the `higher` library. Used for differentiable optimization in the lower-level procedure.
 
         auxiliary_opt : DifferentiableOptimizer
-            A patched optimizer for the lower-level model, wrapped by the `higher` library.
-            Enables differentiable optimization.
+            A patched optimizer for the lower-level model, wrapped by the `higher` library. Enables differentiable optimization.
 
         current_iter : int
             The current iteration number of the optimization process.
@@ -113,7 +110,9 @@ class NGD(DynamicalSystem):
                     )
                     alpha = alpha * alpha_decay
                 else:
-                    loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+                    loss_f = self.ll_objective(
+                        ll_feed_dict, self.ul_model, auxiliary_model
+                    )
                 self.ll_opt.step(loss_f)
             for x, y in zip(self.ll_model.parameters(), auxiliary_model.parameters()):
                 y.update(x.clone())
@@ -131,7 +130,9 @@ class NGD(DynamicalSystem):
                     )
                     alpha = alpha * alpha_decay
                 else:
-                    loss_f = self.ll_objective(ll_feed_dict, self.ul_model, auxiliary_model)
+                    loss_f = self.ll_objective(
+                        ll_feed_dict, self.ul_model, auxiliary_model
+                    )
                 auxiliary_opt.step(loss_f)
                 upper_loss = self.ul_objective(
                     ul_feed_dict, self.ul_model, auxiliary_model

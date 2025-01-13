@@ -6,6 +6,7 @@ class ResultStore:
     """
     A simple class to store and manage intermediate results of hyper-gradient computation.
     """
+
     def __init__(self):
         self.results = []
 
@@ -32,11 +33,11 @@ class ResultStore:
         return self.results
 
 
-
 class DynamicalSystemRules:
     """
     A class to store and manage gradient operator rules.
     """
+
     # Default static gradient operator order
     _gradient_order = [
         ["GDA", "DI"],
@@ -70,16 +71,18 @@ class DynamicalSystemRules:
         ValueError
             If the new order is invalid.
         """
-        if not isinstance(new_order, list) or not all(isinstance(group, list) for group in new_order):
+        if not isinstance(new_order, list) or not all(
+            isinstance(group, list) for group in new_order
+        ):
             raise ValueError("Gradient order must be a list of lists.")
         DynamicalSystemRules._gradient_order = new_order
-
 
 
 class HyperGradientRules:
     """
     A class to store and manage gradient operator rules.
     """
+
     # Default static gradient operator order
     _gradient_order = [
         ["PTT", "FOA", "RGT"],
@@ -114,7 +117,9 @@ class HyperGradientRules:
         ValueError
             If the new order is invalid.
         """
-        if not isinstance(new_order, list) or not all(isinstance(group, list) for group in new_order):
+        if not isinstance(new_order, list) or not all(
+            isinstance(group, list) for group in new_order
+        ):
             raise ValueError("Gradient order must be a list of lists.")
         HyperGradientRules._gradient_order = new_order
 
@@ -454,7 +459,9 @@ def custom_grad(outputs, inputs, grad_outputs=None, retain_graph=False):
     elif not isinstance(grad_outputs, (tuple, list)):
         grad_outputs = (grad_outputs,)
 
-    assert len(outputs) == len(grad_outputs), "outputs and grad_outputs must have the same length."
+    assert len(outputs) == len(
+        grad_outputs
+    ), "outputs and grad_outputs must have the same length."
 
     total_output = sum(
         (output * grad_output).sum()
@@ -507,7 +514,9 @@ def neumann(params, hparams, upper_loss, lower_loss, k, fp_map, tol=1e-10):
     return grads
 
 
-def conjugate_gradient(params, hparams, upper_loss, lower_loss, K, fp_map, tol=1e-10, stochastic=False):
+def conjugate_gradient(
+    params, hparams, upper_loss, lower_loss, K, fp_map, tol=1e-10, stochastic=False
+):
     """
     Compute hyperparameter gradients using the Conjugate Gradient method.
 
@@ -542,9 +551,13 @@ def conjugate_gradient(params, hparams, upper_loss, lower_loss, K, fp_map, tol=1
     def dfp_map_dw(xs):
         if stochastic:
             w_mapped_in = fp_map(params, lower_loss)
-            Jfp_mapTv = custom_grad(w_mapped_in, params, grad_outputs=xs, retain_graph=False)
+            Jfp_mapTv = custom_grad(
+                w_mapped_in, params, grad_outputs=xs, retain_graph=False
+            )
         else:
-            Jfp_mapTv = custom_grad(w_mapped, params, grad_outputs=xs, retain_graph=True)
+            Jfp_mapTv = custom_grad(
+                w_mapped, params, grad_outputs=xs, retain_graph=True
+            )
         return [v - j for v, j in zip(xs, Jfp_mapTv)]
 
     vs = cg_step(dfp_map_dw, grad_outer_w, max_iter=K, epsilon=tol)

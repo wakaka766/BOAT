@@ -19,13 +19,13 @@ class FD(HyperGradient):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
-    ll_var : List[torch.Tensor]
+    ll_var : List[jittor.Var]
         List of variables optimized with the lower-level objective.
-    ul_var : List[torch.Tensor]
+    ul_var : List[jittor.Var]
         List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations. Expected keys include:
@@ -57,7 +57,6 @@ class FD(HyperGradient):
     [1] H. Liu, K. Simonyan, Y. Yang, "DARTS: Differentiable Architecture Search," in ICLR, 2019.
     """
 
-
     def __init__(
         self,
         ll_objective: Callable,
@@ -68,7 +67,15 @@ class FD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(FD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(FD, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.ll_lr = solver_config["lower_level_opt"].defaults["lr"]
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
         self._r = solver_config["FD"]["r"]
@@ -125,8 +132,12 @@ class FD(HyperGradient):
             If `next_operation` is not None, as FD does not support `next_operation`.
         """
         assert next_operation is None, "FD does not support next_operation"
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
-        loss = self.ul_objective(ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params)
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
+        loss = self.ul_objective(
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
+        )
         dalpha = jit.grad(loss, list(self.ul_var), retain_graph=True)
         vector = jit.grad(
             loss,
@@ -147,7 +158,7 @@ class FD(HyperGradient):
 
         update_tensor_grads(self.ul_var, dalpha)
 
-        return {'upper_loss': loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": loss, "hyper_gradient_finished": True}
 
     def _hessian_vector_product(self, vector, ll_feed_dict, ul_feed_dict):
         """

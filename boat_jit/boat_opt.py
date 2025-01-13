@@ -123,18 +123,21 @@ class Problem:
                 ll_model=self._ll_model,
                 ul_model=self._ul_model,
                 lower_loop=self._lower_loop,
-                solver_config=self.boat_configs)
+                solver_config=self.boat_configs,
+            )
             if "DI" in self.boat_configs["dynamic_op"]:
                 self._lower_init_opt = copy.deepcopy(self._lower_opt)
                 for _ in range(len(self._lower_init_opt.param_groups)):
-                    self._lower_init_opt.param_groups[_]["params"] = (
-                        self._lower_opt.param_groups[_]["params"]
-                    )
+                    self._lower_init_opt.param_groups[_][
+                        "params"
+                    ] = self._lower_opt.param_groups[_]["params"]
                     self._lower_init_opt.param_groups[_]["lr"] = self.boat_configs[
                         "DI"
                     ]["lr"]
         else:
-            self._fo_gm_solver = get_registered_operation("%s" % self.boat_configs["fo_gm"])(
+            self._fo_gm_solver = get_registered_operation(
+                "%s" % self.boat_configs["fo_gm"]
+            )(
                 ll_objective=self._ll_loss,
                 ul_objective=self._ul_loss,
                 ll_model=self._ll_model,
@@ -256,7 +259,7 @@ class Problem:
                                 ll_feed_dict=batch_ll_feed_dict,
                                 ul_feed_dict=batch_ll_feed_dict,
                                 auxiliary_model=auxiliary_model,
-                                max_loss_iter=max_loss_iter
+                                max_loss_iter=max_loss_iter,
                             )
                         )
                         backward_time = time.perf_counter() - backward_time
@@ -272,7 +275,7 @@ class Problem:
                         ul_feed_dict=ul_feed_dict,
                         auxiliary_model=auxiliary_model,
                         auxiliary_opt=auxiliary_opt,
-                        current_iter=current_iter
+                        current_iter=current_iter,
                     )
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
@@ -314,7 +317,6 @@ class Problem:
         return self._log_results_dict["upper_loss"], run_time
 
     def check_status(self):
-
         if "DM" in self.boat_configs["dynamic_op"]:
             assert (self.boat_configs["hyper_op"] == ["RAD"]) or (
                 self.boat_configs["hyper_op"] == ["CG"]

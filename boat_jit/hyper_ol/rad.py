@@ -19,13 +19,13 @@ class RAD(HyperGradient):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
-    ll_var : List[torch.Tensor]
+    ll_var : List[jittor.Var]
         List of variables optimized with the lower-level objective.
-    ul_var : List[torch.Tensor]
+    ul_var : List[jittor.Var]
         List of variables optimized with the upper-level objective.
     solver_config : Dict[str, Any]
         Dictionary containing solver configurations, including optional dynamic operation settings.
@@ -34,7 +34,6 @@ class RAD(HyperGradient):
     ----------
     [1] Franceschi, Luca, et al. "Forward and reverse gradient-based hyperparameter optimization." in ICML, 2017.
     """
-
 
     def __init__(
         self,
@@ -46,7 +45,15 @@ class RAD(HyperGradient):
         ul_var: List,
         solver_config: Dict,
     ):
-        super(RAD, self).__init__(ll_objective, ul_objective, ul_model, ll_model, ll_var, ul_var, solver_config)
+        super(RAD, self).__init__(
+            ll_objective,
+            ul_objective,
+            ul_model,
+            ll_model,
+            ll_var,
+            ul_var,
+            solver_config,
+        )
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
     def compute_gradients(
@@ -91,12 +98,11 @@ class RAD(HyperGradient):
             - `hyper_gradient_finished`: Flag indicating if the hypergradient computation is finished.
         """
         assert next_operation is None, "RAD does not support any further operations."
-        lower_model_params = kwargs.get("lower_model_params", list(auxiliary_model.parameters()))
+        lower_model_params = kwargs.get(
+            "lower_model_params", list(auxiliary_model.parameters())
+        )
         upper_loss = self.ul_objective(
-            ul_feed_dict,
-            self.ul_model,
-            auxiliary_model,
-            params=lower_model_params
+            ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
         grads_upper = jit.grad(
             upper_loss, self.ul_var, retain_graph=self.dynamic_initialization
@@ -107,4 +113,4 @@ class RAD(HyperGradient):
             grads_lower = jit.grad(upper_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ll_var, grads_lower)
 
-        return {'upper_loss': upper_loss, 'hyper_gradient_finished': True}
+        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}

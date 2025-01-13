@@ -229,7 +229,7 @@ def main():
             self.x = jit.init.constant([n_feats], "float32", 0.0).clone()
 
         def execute(self):
-            """对应 PyTorch 的 forward 方法"""
+            """forward"""
             return self.x
 
     class LowerModel(jit.Module):
@@ -240,7 +240,7 @@ def main():
             )
 
         def execute(self):
-            """对应 PyTorch 的 forward 方法"""
+            """forward"""
             return self.y
 
     upper_model = UpperModel(trainset[0].shape[-1])

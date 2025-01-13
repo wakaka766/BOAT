@@ -197,7 +197,6 @@ def _make_functional(
     params_offset: int,
     root_patched: _typing.Optional[_MonkeyPatchBase] = None,
 ) -> _typing.Tuple[int, _MonkeyPatchBase, _typing.Type[_MonkeyPatchBase]]:
-
     if isinstance(module, _MonkeyPatchBase):
         raise ValueError(
             "Monkey-patching monkey-patched modules is untested uncharted "
@@ -382,7 +381,6 @@ def _make_functional(
 
         # Call true_forward after some checks
         with _warnings.catch_warnings():
-
             # If running RNNs on GPU, surpress the warnings due to flattening
             # not happening here. Maybe we should raise a warning of our own?
             is_RNN = isinstance(module, jit.nn.RNN)

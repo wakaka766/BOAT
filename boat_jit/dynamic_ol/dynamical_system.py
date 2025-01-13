@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict
 from boat_jit.utils import DynamicalSystemRules, ResultStore
+
 importlib = __import__("importlib")
 
 from boat_jit.operation_registry import register_class
@@ -8,7 +9,9 @@ from boat_jit.operation_registry import register_class
 
 @register_class
 class DynamicalSystem(object):
-    def __init__(self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config) -> None:
+    def __init__(
+        self, ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+    ) -> None:
         """
         Abstract class for defining lower-level optimization procedures in Bilevel Optimization (BLO).
 
@@ -18,9 +21,9 @@ class DynamicalSystem(object):
             The lower-level objective function of the BLO problem.
         ul_objective : Callable
             The upper-level objective function of the BLO problem.
-        ll_model : torch.nn.Module
+        ll_model : jittor.Module
             The lower-level model of the BLO problem.
-        ul_model : torch.nn.Module
+        ul_model : jittor.Module
             The upper-level model of the BLO problem.
         lower_loop : int
             The number of iterations for lower-level optimization.
@@ -38,4 +41,3 @@ class DynamicalSystem(object):
     @abc.abstractmethod
     def optimize(self, **kwargs):
         pass
-

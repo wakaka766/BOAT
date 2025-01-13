@@ -25,13 +25,13 @@ class VSM(DynamicalSystem):
         The lower-level objective function of the BLO problem.
     ul_objective : Callable
         The upper-level objective function of the BLO problem.
-    ll_model : torch.nn.Module
+    ll_model : jittor.Module
         The lower-level model of the BLO problem.
-    ul_model : torch.nn.Module
+    ul_model : jittor.Module
         The upper-level model of the BLO problem.
-    ll_var : List[torch.Tensor]
+    ll_var : List[jittor.Var]
         A list of lower-level variables of the BLO problem.
-    ul_var : List[torch.Tensor]
+    ul_var : List[jittor.Var]
         A list of upper-level variables of the BLO problem.
     lower_loop : int
         The number of iterations for lower-level optimization.
@@ -65,7 +65,9 @@ class VSM(DynamicalSystem):
         ul_var: List,
         solver_config: Dict[str, Any],
     ):
-        super(VSM, self).__init__(ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config)
+        super(VSM, self).__init__(
+            ll_objective, ul_objective, lower_loop, ul_model, ll_model, solver_config
+        )
         self.ll_opt = solver_config["lower_level_opt"]
         self.ll_var = ll_var
         self.ul_var = ul_var
@@ -81,18 +83,20 @@ class VSM(DynamicalSystem):
         """
         Execute the optimization procedure with the data from feed_dict.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization.
             It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
-
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization.
             It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
+        current_iter : int
+            The current iteration number of the optimization process.
 
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
-
-        :returns: None
+        Returns
+        -------
+        The upper-level loss
         """
 
         reg_decay = self.reg_decay * current_iter + 1
