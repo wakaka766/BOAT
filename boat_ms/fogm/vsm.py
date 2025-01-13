@@ -43,9 +43,9 @@ class VSM(DynamicalSystem):
 
     References
     ----------
-    [1] Liu B, Ye M, Wright S, et al. "BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach,"
-        in NeurIPS, 2022.
+    [1] Liu B, Ye M, Wright S, et al. "BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach," in NeurIPS, 2022.
     """
+
     def __init__(
         self,
         ll_objective: Callable,
@@ -79,17 +79,15 @@ class VSM(DynamicalSystem):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization. Typically includes
-            training data, targets, and other information required to compute the LL objective.
+            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization. Typically includes
-            validation data, targets, and other information required to compute the UL objective.
+            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
         current_iter : int
             The current iteration number of the optimization process.
 
         Returns
         -------
-        None
+        The upper-level loss.
         """
 
         reg_decay = self.reg_decay * current_iter + 1

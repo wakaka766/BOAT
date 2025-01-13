@@ -123,8 +123,7 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] Liu R, Liu Z, Yao W, et al. &quot;Moreau Envelope for Nonconvex Bi-Level Optimization:</span>
-<span class="sd">        A Single-loop and Hessian-free Solution Strategy,&quot; ICML, 2024.</span>
+<span class="sd">    [1] Liu R, Liu Z, Yao W, et al. &quot;Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy,&quot; ICML, 2024.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -159,25 +158,20 @@
 <a class="viewcode-back" href="../../../boat_ms.fogm.html#boat_ms.fogm.mesm.MESM.optimize">[docs]</a>
     <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ll_feed_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">ul_feed_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">current_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Execute the optimization procedure using the provided data and model configurations.</span>
+<span class="sd">        Execute the optimization procedure with the data from feed_dict.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        ll_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the lower-level data used for optimization.</span>
-<span class="sd">            Typically includes training data, targets, and other information required</span>
-<span class="sd">            to compute the lower-level (LL) objective.</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</span>
 <span class="sd">        ul_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            Typically includes validation data, targets, and other information required</span>
-<span class="sd">            to compute the upper-level (UL) objective.</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</span>
 <span class="sd">        current_iter : int</span>
 <span class="sd">            The current iteration number of the optimization process.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        mindspore.Tensor</span>
-<span class="sd">            The upper-level loss value for the current iteration.</span>
+<span class="sd">        The upper-level loss.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">current_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

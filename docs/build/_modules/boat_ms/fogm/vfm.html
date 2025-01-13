@@ -122,8 +122,7 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, &quot;A Value-Function-based</span>
-<span class="sd">        Interior-point Method for Non-convex Bi-level Optimization,&quot; in ICML, 2021.</span>
+<span class="sd">    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, &quot;A Value-Function-based Interior-point Method for Non-convex Bi-level Optimization,&quot; in ICML, 2021.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -157,17 +156,15 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        ll_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes</span>
-<span class="sd">            training data, targets, and other information required to compute the LL objective.</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</span>
 <span class="sd">        ul_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes</span>
-<span class="sd">            validation data, targets, and other information required to compute the UL objective.</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</span>
 <span class="sd">        current_iter : int</span>
 <span class="sd">            The current iteration number of the optimization process.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        None</span>
+<span class="sd">        The upper-level loss.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">y_hat</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ll_model</span><span class="p">)</span>

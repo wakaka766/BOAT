@@ -1,6 +1,7 @@
 from typing import List, Callable
 from mindspore import ops
 
+
 def l2_reg(params):
     """
     Compute the L2 regularization loss.
@@ -20,6 +21,7 @@ def l2_reg(params):
         loss += ops.ReduceSum()(ops.Pow()(param, 2))
     return loss
 
+
 def require_model_grad(model=None):
     """
     Ensure all parameters of a MindSpore model require gradients.
@@ -38,6 +40,7 @@ def require_model_grad(model=None):
     for param in model.trainable_params():
         param.requires_grad = True
 
+
 def update_grads(grads, model):
     """
     Update gradients for a model's parameters.
@@ -55,6 +58,7 @@ def update_grads(grads, model):
         else:
             param.grad += grad
 
+
 def update_tensor_grads(hparams, grads):
     """
     Update gradients for hyperparameters.
@@ -71,6 +75,7 @@ def update_tensor_grads(hparams, grads):
             param.set_grad(grad)
         else:
             param.grad += grad
+
 
 def stop_grads(grads):
     """
@@ -91,6 +96,7 @@ def stop_grads(grads):
         for grad in grads
     ]
 
+
 def average_grad(model, batch_size):
     """
     Average the gradients of all model parameters by the batch size.
@@ -105,6 +111,7 @@ def average_grad(model, batch_size):
     for param in model.trainable_params():
         if param.grad is not None:
             param.grad /= batch_size
+
 
 def stop_model_grad(model=None):
     """
@@ -123,6 +130,7 @@ def stop_model_grad(model=None):
     assert model is not None, "The module is not defined!"
     for param in model.trainable_params():
         param.requires_grad = False
+
 
 def copy_parameter_from_list(model, param_list):
     """

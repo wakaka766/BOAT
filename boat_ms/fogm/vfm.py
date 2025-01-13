@@ -40,8 +40,7 @@ class VFM(DynamicalSystem):
 
     References
     ----------
-    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based
-        Interior-point Method for Non-convex Bi-level Optimization," in ICML, 2021.
+    [1] R. Liu, X. Liu, X. Yuan, S. Zeng and J. Zhang, "A Value-Function-based Interior-point Method for Non-convex Bi-level Optimization," in ICML, 2021.
     """
 
     def __init__(
@@ -73,17 +72,15 @@ class VFM(DynamicalSystem):
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization. It typically includes
-            training data, targets, and other information required to compute the LL objective.
+            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization. It typically includes
-            validation data, targets, and other information required to compute the UL objective.
+            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
         current_iter : int
             The current iteration number of the optimization process.
 
         Returns
         -------
-        None
+        The upper-level loss.
         """
 
         y_hat = copy.deepcopy(self.ll_model)

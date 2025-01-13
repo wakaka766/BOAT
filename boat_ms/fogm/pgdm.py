@@ -41,17 +41,17 @@ class PGDM(DynamicalSystem):
         A dictionary containing solver configurations. Expected keys include:
 
         - "lower_level_opt": The optimizer for the lower-level model.
-        - "MESM" (Dict): A dictionary containing the following keys:
-            - "eta": Learning rate for the MESM optimization procedure.
-            - "gamma_1": Regularization parameter for the MESM algorithm.
-            - "c0": Initial constant for the update steps.
+        - "PGDM" (Dict): A dictionary containing the following keys:
             - "y_hat_lr": Learning rate for optimizing the surrogate variable `y_hat`.
+            - "gamma_init": Initial value of the hyperparameter `gamma`.
+            - "gamma_max": Maximum value of the hyperparameter `gamma`.
+            - "gamma_argmax_step": Step size of the hyperparameter `gamma`.
 
     References
     ----------
-    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization:
-        A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
+    [1] Shen H, Chen T. "On penalty-based bilevel gradient descent method," in ICML, 2023.
     """
+
     def __init__(
         self,
         ll_objective: Callable,
@@ -80,30 +80,20 @@ class PGDM(DynamicalSystem):
 
     def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
-        Implements the optimization procedure of Penalty-based Gradient Descent Method (PGDM) [1].
+        Execute the optimization procedure with the data from feed_dict.
 
         Parameters
         ----------
-        ll_objective : Callable
-            The lower-level objective of the BLO problem.
-        ul_objective : Callable
-            The upper-level objective of the BLO problem.
-        ll_model : mindspore.nn.Cell
-            The lower-level model of the BLO problem.
-        ul_model : mindspore.nn.Cell
-            The upper-level model of the BLO problem.
-        ll_var : List[mindspore.Tensor]
-            The list of lower-level variables of the BLO problem.
-        ul_var : List[mindspore.Tensor]
-            The list of upper-level variables of the BLO problem.
-        lower_loop : int
-            Number of iterations for lower-level optimization.
-        solver_config : Dict[str, Any]
-            Dictionary containing solver configurations.
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
+        current_iter : int
+            The current iteration number of the optimization process.
 
-        References
-        ----------
-        [1] Shen H, Chen T. "On penalty-based bilevel gradient descent method," in ICML, 2023.
+        Returns
+        -------
+        The upper-level loss.
         """
 
         y_hat = copy.deepcopy(self.ll_model)

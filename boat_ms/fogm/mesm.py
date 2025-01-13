@@ -41,8 +41,7 @@ class MESM(DynamicalSystem):
 
     References
     ----------
-    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization:
-        A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
+    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
     """
 
     def __init__(
@@ -75,25 +74,20 @@ class MESM(DynamicalSystem):
 
     def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
-        Execute the optimization procedure using the provided data and model configurations.
+        Execute the optimization procedure with the data from feed_dict.
 
         Parameters
         ----------
         ll_feed_dict : Dict
-            Dictionary containing the lower-level data used for optimization.
-            Typically includes training data, targets, and other information required
-            to compute the lower-level (LL) objective.
+            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.
         ul_feed_dict : Dict
-            Dictionary containing the upper-level data used for optimization.
-            Typically includes validation data, targets, and other information required
-            to compute the upper-level (UL) objective.
+            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.
         current_iter : int
             The current iteration number of the optimization process.
 
         Returns
         -------
-        mindspore.Tensor
-            The upper-level loss value for the current iteration.
+        The upper-level loss.
         """
 
         if current_iter == 0:

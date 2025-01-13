@@ -125,9 +125,9 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] Liu B, Ye M, Wright S, et al. &quot;BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach,&quot;</span>
-<span class="sd">        in NeurIPS, 2022.</span>
+<span class="sd">    [1] Liu B, Ye M, Wright S, et al. &quot;BOME! Bilevel Optimization Made Easy: A Simple First-Order Approach,&quot; in NeurIPS, 2022.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ll_objective</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
@@ -163,17 +163,15 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        ll_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the lower-level data used for optimization. Typically includes</span>
-<span class="sd">            training data, targets, and other information required to compute the LL objective.</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</span>
 <span class="sd">        ul_feed_dict : Dict</span>
-<span class="sd">            Dictionary containing the upper-level data used for optimization. Typically includes</span>
-<span class="sd">            validation data, targets, and other information required to compute the UL objective.</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</span>
 <span class="sd">        current_iter : int</span>
 <span class="sd">            The current iteration number of the optimization process.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        None</span>
+<span class="sd">        The upper-level loss.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">reg_decay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_decay</span> <span class="o">*</span> <span class="n">current_iter</span> <span class="o">+</span> <span class="mi">1</span>
