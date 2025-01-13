@@ -46,7 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../boat.html">BOAT Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boat_torch.html">BOAT-Torch Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -159,20 +159,21 @@
 <a class="viewcode-back" href="../../../boat_torch.fogm.html#boat_torch.fogm.vsm.VSM.optimize">[docs]</a>
     <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ll_feed_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">ul_feed_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">current_iter</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Execute the optimization procedure with the data from feed_dict.</span>
+<span class="sd">        Executes the optimization procedure using the provided data and model configurations.</span>
 
-<span class="sd">        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.</span>
-<span class="sd">            It typically includes training data, targets, and other information required to compute the LL objective.</span>
-<span class="sd">        :type ll_feed_dict: Dict</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ll_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.</span>
+<span class="sd">        ul_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.</span>
+<span class="sd">        current_iter : int</span>
+<span class="sd">            The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.</span>
 
-<span class="sd">        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            It typically includes validation data, targets, and other information required to compute the UL objective.</span>
-<span class="sd">        :type ul_feed_dict: Dict</span>
-
-<span class="sd">        :param current_iter: The current iteration number of the optimization process.</span>
-<span class="sd">        :type current_iter: int</span>
-
-<span class="sd">        :returns: None</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            This method performs in-place optimization and does not return a value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">reg_decay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_decay</span> <span class="o">*</span> <span class="n">current_iter</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">for</span> <span class="n">z_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_loop</span><span class="p">):</span>

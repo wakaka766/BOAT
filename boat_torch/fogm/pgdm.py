@@ -15,44 +15,38 @@ from boat_torch.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class PGDM(DynamicalSystem):
     """
-    Implements the optimization procedure of Moreau Envelope based Single-loop Method (MESM) [1].
+    Implements the optimization procedure of Penalty-based Gradient Descent Method (PGDM) [1].
 
     Parameters
     ----------
     ll_objective : Callable
         The lower-level objective of the BLO problem.
-
     ul_objective : Callable
         The upper-level objective of the BLO problem.
-
     ll_model : torch.nn.Module
         The lower-level model of the BLO problem.
-
     ul_model : torch.nn.Module
         The upper-level model of the BLO problem.
-
     ll_var : List[torch.Tensor]
         The list of lower-level variables of the BLO problem.
-
     ul_var : List[torch.Tensor]
         The list of upper-level variables of the BLO problem.
-
     lower_loop : int
         Number of iterations for lower-level optimization.
-
     solver_config : Dict[str, Any]
         A dictionary containing solver configurations. Expected keys include:
 
         - "lower_level_opt": The optimizer for the lower-level model.
-        - "MESM" (Dict): A dictionary containing the following keys:
-            - "eta": Learning rate for the MESM optimization procedure.
-            - "gamma_1": Regularization parameter for the MESM algorithm.
-            - "c0": Initial constant for the update steps.
+        - "PGDM" (Dict): A dictionary containing the following keys:
             - "y_hat_lr": Learning rate for optimizing the surrogate variable `y_hat`.
+            - "gamma_init": Initial value of the hyperparameter `gamma`.
+            - "gamma_max": Maximum value of the hyperparameter `gamma`.
+            - "gamma_argmax_step": Step size of the hyperparameter `gamma`.
+
 
     References
     ----------
-    [1] Liu R, Liu Z, Yao W, et al. "Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy," ICML, 2024.
+    [1] Shen H, Chen T. "On penalty-based bilevel gradient descent method," in ICML, 2023.
     """
 
     def __init__(
@@ -81,31 +75,23 @@ class PGDM(DynamicalSystem):
 
     def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
-        Implements the optimization procedure of Penalty-based Gradient Descent Method (PGDM) [1].
+        Executes the optimization procedure using the provided data and model configurations.
 
         Parameters
         ----------
-        :param ll_objective: The lower-level objective of the BLO problem.
-        :type ll_objective: Callable
-        :param ul_objective: The upper-level objective of the BLO problem.
-        :type ul_objective: Callable
-        :param ll_model: The lower-level model of the BLO problem.
-        :type ll_model: torch.nn.Module
-        :param ul_model: The upper-level model of the BLO problem.
-        :type ul_model: torch.nn.Module
-        :param ll_var: The list of lower-level variables of the BLO problem.
-        :type ll_var: List[torch.Tensor]
-        :param ul_var: The list of upper-level variables of the BLO problem.
-        :type ul_var: List[torch.Tensor]
-        :param lower_loop: Number of iterations for lower-level optimization.
-        :type lower_loop: int
-        :param solver_config: Dictionary containing solver configurations.
-        :type solver_config: Dict[str, Any]
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.
+        current_iter : int
+            The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.
 
-        References
-        ----------
-        [1] Shen H, Chen T. "On penalty-based bilevel gradient descent method," in ICML, 2023.
+        Returns
+        -------
+        None
+            This method performs in-place optimization and does not return a value.
         """
+
         y_hat = copy.deepcopy(self.ll_model).to(self.device)
         y_hat_opt = torch.optim.SGD(list(y_hat.parameters()), lr=self.y_hat_lr)
 

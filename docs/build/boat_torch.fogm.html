@@ -49,7 +49,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="boat_torch.html">BOAT Structure</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="boat_torch.html">BOAT-Torch Structure</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="boat_torch.html#module-boat_torch.boat_opt">Core Problem Class</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="boat_torch.html#main-subpackages">Main Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="boat_torch.dynamic_ol.html">boat_torch.dynamic_ol</a></li>
@@ -90,7 +90,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="boat_torch.html">BOAT Structure</a></li>
+          <li class="breadcrumb-item"><a href="boat_torch.html">BOAT-Torch Structure</a></li>
       <li class="breadcrumb-item active">boat_torch.fogm</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/boat_torch.fogm.rst.txt" rel="nofollow"> View page source</a>
@@ -146,26 +146,20 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="boat_torch.fogm.mesm.MESM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/fogm/mesm.html#MESM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.fogm.mesm.MESM.optimize" title="Link to this definition"></a></dt>
-<dd><p>Execute the optimization procedure using the provided data and model configurations.</p>
-<p>:param :
-:type : param ll_feed_dict: Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the LL objective.
-:param :
-:type : type ll_feed_dict: Dict
-:param :
-:type : param ul_feed_dict: Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the UL objective.
-:param :
-:type : type ul_feed_dict: Dict
-:param :
-:type : param current_iter: The current iteration number of the optimization process.
-:param :
-:type : type current_iter: int</p>
+<dd><p>Executes the optimization procedure using the provided data and model configurations.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><em>return: The upper-level loss value for the current iteration.</em></p></li>
-<li><p><em>rtype: torch.Tensor</em></p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.</p></li>
+<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.</p></li>
 </ul>
-</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This method performs in-place optimization and does not return a value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -179,7 +173,7 @@
 <dt class="sig sig-object py" id="boat_torch.fogm.pgdm.PGDM">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_torch.fogm.pgdm.</span></span><span class="sig-name descname"><span class="pre">PGDM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_objective</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_loop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_objective</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/fogm/pgdm.html#PGDM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.fogm.pgdm.PGDM" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="boat_torch.dynamic_ol.html#boat_torch.dynamic_ol.dynamical_system.DynamicalSystem" title="boat_torch.dynamic_ol.dynamical_system.DynamicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicalSystem</span></code></a></p>
-<p>Implements the optimization procedure of Moreau Envelope based Single-loop Method (MESM) [1].</p>
+<p>Implements the optimization procedure of Penalty-based Gradient Descent Method (PGDM) [1].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -194,11 +188,11 @@
 <ul>
 <li><p>”lower_level_opt”: The optimizer for the lower-level model.</p></li>
 <li><dl class="simple">
-<dt>”MESM” (Dict): A dictionary containing the following keys:</dt><dd><ul>
-<li><p>”eta”: Learning rate for the MESM optimization procedure.</p></li>
-<li><p>”gamma_1”: Regularization parameter for the MESM algorithm.</p></li>
-<li><p>”c0”: Initial constant for the update steps.</p></li>
+<dt>”PGDM” (Dict): A dictionary containing the following keys:</dt><dd><ul>
 <li><p>”y_hat_lr”: Learning rate for optimizing the surrogate variable <cite>y_hat</cite>.</p></li>
+<li><p>”gamma_init”: Initial value of the hyperparameter <cite>gamma</cite>.</p></li>
+<li><p>”gamma_max”: Maximum value of the hyperparameter <cite>gamma</cite>.</p></li>
+<li><p>”gamma_argmax_step”: Step size of the hyperparameter <cite>gamma</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -209,45 +203,26 @@
 </dd>
 </dl>
 <p class="rubric">References</p>
-<p>[1] Liu R, Liu Z, Yao W, et al. “Moreau Envelope for Nonconvex Bi-Level Optimization: A Single-loop and Hessian-free Solution Strategy,” ICML, 2024.</p>
+<p>[1] Shen H, Chen T. “On penalty-based bilevel gradient descent method,” in ICML, 2023.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat_torch.fogm.pgdm.PGDM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/fogm/pgdm.html#PGDM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.fogm.pgdm.PGDM.optimize" title="Link to this definition"></a></dt>
-<dd><p>Implements the optimization procedure of Penalty-based Gradient Descent Method (PGDM) [1].</p>
-<p>:param :
-:type : param ll_objective: The lower-level objective of the BLO problem.
-:param :
-:type : type ll_objective: Callable
-:param :
-:type : param ul_objective: The upper-level objective of the BLO problem.
-:param :
-:type : type ul_objective: Callable
-:param :
-:type : param ll_model: The lower-level model of the BLO problem.
-:param :
-:type : type ll_model: torch.nn.Module
-:param :
-:type : param ul_model: The upper-level model of the BLO problem.
-:param :
-:type : type ul_model: torch.nn.Module
-:param :
-:type : param ll_var: The list of lower-level variables of the BLO problem.
-:param :
-:type : type ll_var: List[torch.Tensor]
-:param :
-:type : param ul_var: The list of upper-level variables of the BLO problem.
-:param :
-:type : type ul_var: List[torch.Tensor]
-:param :
-:type : param lower_loop: Number of iterations for lower-level optimization.
-:param :
-:type : type lower_loop: int
-:param :
-:type : param solver_config: Dictionary containing solver configurations.
-:param :
-:type : type solver_config: Dict[str, Any]</p>
-<p class="rubric">References</p>
-<p>[1] Shen H, Chen T. “On penalty-based bilevel gradient descent method,” in ICML, 2023.</p>
+<dd><p>Executes the optimization procedure using the provided data and model configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.</p></li>
+<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This method performs in-place optimization and does not return a value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -293,17 +268,20 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="boat_torch.fogm.vfm.VFM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/fogm/vfm.html#VFM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.fogm.vfm.VFM.optimize" title="Link to this definition"></a></dt>
-<dd><p>Execute the optimization procedure with the data from feed_dict.</p>
+<dd><p>Executes the optimization procedure using the provided data and model configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
-<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number of the optimization process.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.</p></li>
+<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p>This method performs in-place optimization and does not return a value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,19 +332,20 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="boat_torch.fogm.vsm.VSM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/fogm/vsm.html#VSM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.fogm.vsm.VSM.optimize" title="Link to this definition"></a></dt>
-<dd><p>Execute the optimization procedure with the data from feed_dict.</p>
+<dd><p>Executes the optimization procedure using the provided data and model configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
-<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number of the optimization process.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.</p></li>
+<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p>This method performs in-place optimization and does not return a value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

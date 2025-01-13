@@ -46,7 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../boat.html">BOAT Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boat_torch.html">BOAT-Torch Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -93,7 +93,7 @@
 <span class="nd">@register_class</span>
 <span class="k">class</span> <span class="nc">DI</span><span class="p">(</span><span class="n">DynamicalSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1] and Gradient Descent Aggregation (GDA) [2].</span>
+<span class="sd">    Implements the lower-level optimization procedure for Dynamic Initialization [1].</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -112,9 +112,7 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, &quot;Bilevel programming for hyperparameter optimization and meta-learning,&quot; ICML, 2018.</span>
-
-<span class="sd">    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, &quot;A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton,&quot; ICML, 2020.</span>
+<span class="sd">    [1] Liu R., Liu Y., Zeng S., et al. &quot;Towards gradient-based bilevel optimization with non-convex followers and beyond,&quot; in NeurIPS, 2021.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DI.optimize">

@@ -46,7 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../boat.html">BOAT Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boat_torch.html">BOAT-Torch Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -100,18 +100,18 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        :param ll_objective: The lower-level objective function of the BLO problem.</span>
-<span class="sd">        :type ll_objective: Callable</span>
-<span class="sd">        :param ul_objective: The upper-level objective function of the BLO problem.</span>
-<span class="sd">        :type ul_objective: Callable</span>
-<span class="sd">        :param ll_model: The lower-level model of the BLO problem.</span>
-<span class="sd">        :type ll_model: torch.nn.Module</span>
-<span class="sd">        :param ul_model: The upper-level model of the BLO problem.</span>
-<span class="sd">        :type ul_model: torch.nn.Module</span>
-<span class="sd">        :param lower_loop: The number of iterations for lower-level optimization.</span>
-<span class="sd">        :type lower_loop: int</span>
-<span class="sd">        :param solver_config: A dictionary containing solver configurations. It includes details about optimization algorithms, hyperparameter settings, and additional configurations required for solving the BLO problem.</span>
-<span class="sd">        :type solver_config: Dict[str, Any]</span>
+<span class="sd">        ll_objective : Callable</span>
+<span class="sd">            The lower-level objective function of the BLO problem.</span>
+<span class="sd">        ul_objective : Callable</span>
+<span class="sd">            The upper-level objective function of the BLO problem.</span>
+<span class="sd">        ll_model : torch.nn.Module</span>
+<span class="sd">            The lower-level model of the BLO problem.</span>
+<span class="sd">        ul_model : torch.nn.Module</span>
+<span class="sd">            The upper-level model of the BLO problem.</span>
+<span class="sd">        lower_loop : int</span>
+<span class="sd">            The number of iterations for lower-level optimization.</span>
+<span class="sd">        solver_config : Dict[str, Any]</span>
+<span class="sd">            A dictionary containing solver configurations. It includes details about optimization algorithms, hyperparameter settings, and additional configurations required for solving the BLO problem.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ll_objective</span> <span class="o">=</span> <span class="n">ll_objective</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ul_objective</span> <span class="o">=</span> <span class="n">ul_objective</span>

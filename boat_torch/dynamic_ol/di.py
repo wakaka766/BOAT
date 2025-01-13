@@ -9,7 +9,7 @@ from boat_torch.dynamic_ol.dynamical_system import DynamicalSystem
 @register_class
 class DI(DynamicalSystem):
     """
-    Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1] and Gradient Descent Aggregation (GDA) [2].
+    Implements the lower-level optimization procedure for Dynamic Initialization [1].
 
     Parameters
     ----------
@@ -28,9 +28,7 @@ class DI(DynamicalSystem):
 
     References
     ----------
-    [1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, "Bilevel programming for hyperparameter optimization and meta-learning," ICML, 2018.
-
-    [2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, "A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton," ICML, 2020.
+    [1] Liu R., Liu Y., Zeng S., et al. "Towards gradient-based bilevel optimization with non-convex followers and beyond," in NeurIPS, 2021.
     """
 
     def optimize(

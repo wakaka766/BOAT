@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="boat_torch.fogm" href="boat_torch.fogm.html" />
-    <link rel="prev" title="BOAT Structure" href="boat_torch.html" /> 
+    <link rel="prev" title="BOAT-Torch Structure" href="boat_torch.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,7 +49,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="description.html">BOAT Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="boat_torch.html">BOAT Structure</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="boat_torch.html">BOAT-Torch Structure</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="boat_torch.html#module-boat_torch.boat_opt">Core Problem Class</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="boat_torch.html#main-subpackages">Main Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">boat_torch.dynamic_ol</a><ul>
@@ -92,7 +92,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="boat_torch.html">BOAT Structure</a></li>
+          <li class="breadcrumb-item"><a href="boat_torch.html">BOAT-Torch Structure</a></li>
       <li class="breadcrumb-item active">boat_torch.dynamic_ol</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/boat_torch.dynamic_ol.rst.txt" rel="nofollow"> View page source</a>
@@ -114,7 +114,7 @@
 <dt class="sig sig-object py" id="boat_torch.dynamic_ol.di.DI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boat_torch.dynamic_ol.di.</span></span><span class="sig-name descname"><span class="pre">DI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/dynamic_ol/di.html#DI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.dynamic_ol.di.DI" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#boat_torch.dynamic_ol.dynamical_system.DynamicalSystem" title="boat_torch.dynamic_ol.dynamical_system.DynamicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicalSystem</span></code></a></p>
-<p>Implements the lower-level optimization procedure for Naive Gradient Descent (NGD) [1] and Gradient Descent Aggregation (GDA) [2].</p>
+<p>Implements the lower-level optimization procedure for Dynamic Initialization [1].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -128,8 +128,7 @@
 </dd>
 </dl>
 <p class="rubric">References</p>
-<p>[1] L. Franceschi, P. Frasconi, S. Salzo, R. Grazzi, and M. Pontil, “Bilevel programming for hyperparameter optimization and meta-learning,” ICML, 2018.</p>
-<p>[2] R. Liu, P. Mu, X. Yuan, S. Zeng, and J. Zhang, “A generic first-order algorithmic framework for bi-level programming beyond lower-level singleton,” ICML, 2020.</p>
+<p>[1] Liu R., Liu Y., Zeng S., et al. “Towards gradient-based bilevel optimization with non-convex followers and beyond,” in NeurIPS, 2021.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="boat_torch.dynamic_ol.di.DI.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxiliary_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_MonkeyPatchBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auxiliary_opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DifferentiableOptimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_torch/dynamic_ol/di.html#DI.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_torch.dynamic_ol.di.DI.optimize" title="Link to this definition"></a></dt>
@@ -558,7 +557,7 @@ Typically includes training data, targets, and other information required to com
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="boat_torch.html" class="btn btn-neutral float-left" title="BOAT Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boat_torch.html" class="btn btn-neutral float-left" title="BOAT-Torch Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="boat_torch.fogm.html" class="btn btn-neutral float-right" title="boat_torch.fogm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

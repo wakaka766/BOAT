@@ -76,23 +76,21 @@ class MESM(DynamicalSystem):
 
     def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
-        Execute the optimization procedure using the provided data and model configurations.
+        Executes the optimization procedure using the provided data and model configurations.
 
         Parameters
         ----------
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization. Typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
-
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization. Typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
-
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.
+        current_iter : int
+            The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.
 
         Returns
         -------
-        :return: The upper-level loss value for the current iteration.
-        :rtype: torch.Tensor
+        None
+            This method performs in-place optimization and does not return a value.
         """
 
         if current_iter == 0:

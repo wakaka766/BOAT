@@ -1,5 +1,5 @@
-BOAT Structure
-==============
+BOAT-Torch Structure
+====================
 
 
 Core Problem Class

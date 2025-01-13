@@ -73,20 +73,21 @@ class VSM(DynamicalSystem):
 
     def optimize(self, ll_feed_dict: Dict, ul_feed_dict: Dict, current_iter: int):
         """
-        Execute the optimization procedure with the data from feed_dict.
+        Executes the optimization procedure using the provided data and model configurations.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. Typically includes training data or parameters for the lower-level objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. Usually includes parameters or configurations for the upper-level objective.
+        current_iter : int
+            The current iteration count of the optimization process, used for tracking progress or adjusting optimization parameters.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
-
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
-
-        :returns: None
+        Returns
+        -------
+        None
+            This method performs in-place optimization and does not return a value.
         """
         reg_decay = self.reg_decay * current_iter + 1
         for z_idx in range(self.z_loop):
