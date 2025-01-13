@@ -89,8 +89,8 @@ class MESM(DynamicalSystem):
 
         Returns
         -------
-        None
-            This method performs in-place optimization and does not return a value.
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         if current_iter == 0:
@@ -141,5 +141,4 @@ class MESM(DynamicalSystem):
         )
         grad_x_parmaters = grad_unused_zero(upper_loss, self.ul_var)
         update_tensor_grads(self.ul_var, grad_x_parmaters)
-
-        return upper_loss.item()
+        return {"upper_loss": upper_loss.item()}

@@ -87,8 +87,8 @@ class VFM(DynamicalSystem):
 
         Returns
         -------
-        None
-            This method performs in-place optimization and does not return a value.
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
         y_hat = copy.deepcopy(self.ll_model)
         y_hat_opt = torch.optim.SGD(y_hat.parameters(), lr=self.y_hat_lr, momentum=0.9)
@@ -164,4 +164,4 @@ class VFM(DynamicalSystem):
         update_tensor_grads(self.ll_var, y_grad)
         update_tensor_grads(self.ul_var, x_grad)
         self.ll_opt.step()
-        return F_y.item()
+        return {"upper_loss": F_y.item()}

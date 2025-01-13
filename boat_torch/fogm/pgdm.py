@@ -88,8 +88,8 @@ class PGDM(DynamicalSystem):
 
         Returns
         -------
-        None
-            This method performs in-place optimization and does not return a value.
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         y_hat = copy.deepcopy(self.ll_model).to(self.device)
@@ -124,4 +124,4 @@ class PGDM(DynamicalSystem):
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
         self.ll_opt.step()
-        return F_y.item()
+        return {"upper_loss": F_y.item()}

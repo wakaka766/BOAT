@@ -86,8 +86,8 @@ class VSM(DynamicalSystem):
 
         Returns
         -------
-        None
-            This method performs in-place optimization and does not return a value.
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
         reg_decay = self.reg_decay * current_iter + 1
         for z_idx in range(self.z_loop):
@@ -138,4 +138,4 @@ class VSM(DynamicalSystem):
         loss_x = loss_x_ - loss_ln
         grads = torch.autograd.grad(loss_x, list(self.ul_model.parameters()))
         update_tensor_grads(self.ul_var, grads)
-        return loss_x_.item()
+        return {"upper_loss": loss_x_.item()}
