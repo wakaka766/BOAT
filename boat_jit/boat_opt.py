@@ -79,11 +79,14 @@ class Problem:
         self._ll_var = config["lower_level_var"]
         self._ul_var = config["upper_level_var"]
         self.boat_configs = config
-        self.boat_configs["gda_loss"] = (
-            _load_loss_function(loss_config["gda_loss"])
-            if "GDA" in config["dynamic_op"]
-            else None
-        )
+        if config["dynamic_op"] is not None:
+            if "GDA" in config["dynamic_op"]:
+                assert (
+                    loss_config.get("gda_loss", None) is not None
+                ), "Set the 'gda_loss' in loss_config properly."
+                self.boat_configs["gda_loss"] = _load_loss_function(
+                    loss_config["gda_loss"]
+                )
         self._lower_loop = config.get("lower_iters", 10)
         self._lower_opt = self.boat_configs["lower_level_opt"]
         self._upper_opt = self.boat_configs["upper_level_opt"]
@@ -93,7 +96,7 @@ class Problem:
         self._ul_solver = None
         self._lower_init_opt = None
         self._fo_gm_solver = None
-        self._log_results_dict = {}
+        self._log_results = []
 
     def build_ll_solver(self):
         """
@@ -230,7 +233,7 @@ class Problem:
         self._log_results_dict["upper_loss"] = []
         if self.boat_configs["fo_gm"] is not None:
             start_time = time.perf_counter()
-            self._log_results_dict["upper_loss"].append(
+            self._log_results.append(
                 self._fo_gm_solver.optimize(ll_feed_dict, ul_feed_dict, current_iter)
             )
             run_time = time.perf_counter() - start_time
@@ -251,10 +254,11 @@ class Problem:
                             auxiliary_opt=auxiliary_opt,
                             current_iter=current_iter,
                         )
+                        self._log_results.append(dynamic_results)
                         max_loss_iter = list(dynamic_results[-1].values())[-1]
                         forward_time = time.perf_counter() - forward_time
                         backward_time = time.perf_counter()
-                        self._log_results_dict["upper_loss"].append(
+                        self._log_results.append(
                             self._ul_solver.compute_gradients(
                                 ll_feed_dict=batch_ll_feed_dict,
                                 ul_feed_dict=batch_ll_feed_dict,
@@ -277,11 +281,12 @@ class Problem:
                         auxiliary_opt=auxiliary_opt,
                         current_iter=current_iter,
                     )
+                    self._log_results.append(dynamic_results)
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
                     backward_time = time.perf_counter()
                     if "DM" not in self._dynamic_op:
-                        self._log_results_dict["upper_loss"].append(
+                        self._log_results.append(
                             self._ul_solver.compute_gradients(
                                 ll_feed_dict=ll_feed_dict,
                                 ul_feed_dict=ul_feed_dict,
@@ -290,7 +295,7 @@ class Problem:
                             )
                         )
                     else:
-                        self._log_results_dict["upper_loss"].append(
+                        self._log_results.append(
                             self._ul_loss(ul_feed_dict, self._ul_model, auxiliary_model)
                         )
                     backward_time = time.perf_counter() - backward_time
@@ -314,7 +319,7 @@ class Problem:
         else:
             return [var._custom_grad for var in list(self._ul_var)], run_time
 
-        return self._log_results_dict["upper_loss"], run_time
+        return self._log_results, run_time
 
     def check_status(self):
         if "DM" in self.boat_configs["dynamic_op"]:

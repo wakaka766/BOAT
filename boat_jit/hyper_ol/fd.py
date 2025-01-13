@@ -158,7 +158,7 @@ class FD(HyperGradient):
 
         update_tensor_grads(self.ul_var, dalpha)
 
-        return {"upper_loss": loss, "hyper_gradient_finished": True}
+        return {"upper_loss": loss.item(), "hyper_gradient_finished": True}
 
     def _hessian_vector_product(self, vector, ll_feed_dict, ul_feed_dict):
         """

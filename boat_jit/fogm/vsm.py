@@ -96,7 +96,8 @@ class VSM(DynamicalSystem):
 
         Returns
         -------
-        The upper-level loss
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         reg_decay = self.reg_decay * current_iter + 1
@@ -145,4 +146,4 @@ class VSM(DynamicalSystem):
         loss_x = loss_x_ - loss_ln
         grads = jit.grad(loss_x, self.ul_model.parameters())
         update_tensor_grads(self.ul_var, grads)
-        return loss_x_
+        return {"upper_loss": loss_x_.item()}

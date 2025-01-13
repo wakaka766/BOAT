@@ -85,8 +85,8 @@ class IAD(HyperGradient):
 
         Returns
         -------
-        Any
-            The current upper-level objective.
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         if next_operation is not None:
@@ -113,4 +113,4 @@ class IAD(HyperGradient):
             )
             grads_upper = jit.grad(ul_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ul_var, grads_upper)
-            return {"upper_loss": ul_loss, "hyper_gradient_finished": True}
+            return {"upper_loss": ul_loss.item(), "hyper_gradient_finished": True}

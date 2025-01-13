@@ -90,12 +90,11 @@ class RAD(HyperGradient):
         **kwargs : dict
             Additional keyword arguments passed to the method.
 
+
         Returns
         -------
         Dict
-            A dictionary containing:
-            - `upper_loss`: The current upper-level objective.
-            - `hyper_gradient_finished`: Flag indicating if the hypergradient computation is finished.
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
         assert next_operation is None, "RAD does not support any further operations."
         lower_model_params = kwargs.get(
@@ -113,4 +112,4 @@ class RAD(HyperGradient):
             grads_lower = jit.grad(upper_loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ll_var, grads_lower)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

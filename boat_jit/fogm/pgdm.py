@@ -91,7 +91,8 @@ class PGDM(DynamicalSystem):
 
         Returns
         -------
-        The upper-level loss
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
         y_hat = copy.deepcopy(self.ll_model)
         y_hat_opt = jit.optim.SGD(list(y_hat.parameters()), lr=self.y_hat_lr)
@@ -126,4 +127,4 @@ class PGDM(DynamicalSystem):
         self.gam += step_gam
         self.gam = min(self.gamma_max, self.gam)
         manual_update(self.ll_opt, list(self.ll_var))
-        return F_y
+        return {"upper_loss": F_y.item()}

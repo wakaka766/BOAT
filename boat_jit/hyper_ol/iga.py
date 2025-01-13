@@ -127,10 +127,10 @@ class IGA(HyperGradient):
         - If `dynamic_initialization` is enabled, the gradients of the lower-level variables are updated with time-dependent parameters.
         - Updates are performed on both lower-level and upper-level variables using computed gradients.
 
-        Raises
-        ------
-        AssertionError
-            If `next_operation` is not None, as this implementation does not support additional operations.
+        Returns
+        -------
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
         assert next_operation is None, "FD does not support next_operation"
         lower_model_params = kwargs.get(
@@ -174,4 +174,4 @@ class IGA(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

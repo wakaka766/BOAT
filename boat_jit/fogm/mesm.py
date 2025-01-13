@@ -93,7 +93,8 @@ class MESM(DynamicalSystem):
 
         Returns
         -------
-        The upper-level loss
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         if current_iter == 0:
@@ -148,4 +149,4 @@ class MESM(DynamicalSystem):
         )
         update_tensor_grads(self.ul_var, grad_x_parmaters)
 
-        return upper_loss
+        return {"upper_loss": upper_loss.item()}

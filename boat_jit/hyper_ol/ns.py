@@ -161,4 +161,4 @@ class NS(HyperGradient):
 
         update_tensor_grads(self.ul_var, grads_upper)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}

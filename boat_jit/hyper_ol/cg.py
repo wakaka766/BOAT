@@ -135,10 +135,10 @@ class CG(HyperGradient):
             - "upper_loss": The current upper-level objective value.
             - "hyper_gradient_finished": A boolean indicating that the hyper-gradient computation is complete.
 
-        Raises
-        ------
-        AssertionError
-            If `hyper_gradient_finished` is True, as CG does not support multiple hyper-gradient computations.
+        Returns
+        -------
+        Dict
+            A dictionary containing the upper-level objective and the status of hypergradient computation.
         """
 
         assert (
@@ -189,4 +189,4 @@ class CG(HyperGradient):
 
         update_tensor_grads(self.ul_var, upper_grads)
 
-        return {"upper_loss": upper_loss, "hyper_gradient_finished": True}
+        return {"upper_loss": upper_loss.item(), "hyper_gradient_finished": True}
