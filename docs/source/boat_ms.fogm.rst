@@ -1,5 +1,8 @@
 boat\_ms.fogm
-=====================
+=============
+
+Submodules
+----------
 
 boat\_ms.fogm.mesm
 -------------------------
@@ -10,7 +13,7 @@ boat\_ms.fogm.mesm
    :show-inheritance:
 
 boat\_ms.fogm.pgdm
--------------------------
+-------------------
 
 .. automodule:: boat_ms.fogm.pgdm
    :members:
@@ -18,7 +21,7 @@ boat\_ms.fogm.pgdm
    :show-inheritance:
 
 boat\_ms.fogm.vfm
-------------------------
+-----------------
 
 .. automodule:: boat_ms.fogm.vfm
    :members:
@@ -26,9 +29,10 @@ boat\_ms.fogm.vfm
    :show-inheritance:
 
 boat\_ms.fogm.vsm
-------------------------
+------------------
 
 .. automodule:: boat_ms.fogm.vsm
    :members:
    :undoc-members:
    :show-inheritance:
+

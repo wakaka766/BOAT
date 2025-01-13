@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="boat_ms.utils" href="boat_ms.utils.html" />
-    <link rel="prev" title="boat_ms.dynamic_ol" href="boat_ms.dynamic_ol.html" /> 
+    <link rel="prev" title="boat_ms.dynamic_ol package" href="boat_ms.dynamic_ol.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,8 +52,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="boat_ms.html">BOAT-MS Structure</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="boat_ms.html#module-boat_ms.boat_opt">Core Problem Class</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="boat_ms.html#main-subpackages">Main Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="boat_ms.dynamic_ol.html">boat_ms.dynamic_ol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.dynamic_ol.html">boat_ms.dynamic_ol package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">boat_ms.fogm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat_ms.fogm.mesm">boat_ms.fogm.mesm</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat_ms.fogm.pgdm">boat_ms.fogm.pgdm</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat_ms.fogm.vfm">boat_ms.fogm.vfm</a></li>
@@ -99,6 +100,9 @@
              
   <section id="boat-ms-fogm">
 <h1>boat_ms.fogm<a class="headerlink" href="#boat-ms-fogm" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
 <section id="module-boat_ms.fogm.mesm">
 <span id="boat-ms-fogm-mesm"></span><h2>boat_ms.fogm.mesm<a class="headerlink" href="#module-boat_ms.fogm.mesm" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -143,25 +147,23 @@
 <dt class="sig sig-object py" id="boat_ms.fogm.mesm.MESM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/fogm/mesm.html#MESM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.fogm.mesm.MESM.optimize" title="Link to this definition"></a></dt>
 <dd><p>Execute the optimization procedure using the provided data and model configurations.</p>
-<p>:param : Typically includes training data, targets, and other information required to compute the LL objective.
-:type : param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-:param :
-:type : type ll_feed_dict: Dict
-:param : Typically includes validation data, targets, and other information required to compute the UL objective.
-:type : param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-:param :
-:type : type ul_feed_dict: Dict
-:param :
-:type : param current_iter: The current iteration number of the optimization process.
-:param :
-:type : type current_iter: int</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><em>return: The upper-level loss value for the current iteration.</em></p></li>
-<li><p><em>rtype: mindspore.Tensor</em></p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
+Typically includes training data, targets, and other information required
+to compute the lower-level (LL) objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
+Typically includes validation data, targets, and other information required
+to compute the upper-level (UL) objective.</p></li>
+<li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number of the optimization process.</p></li>
 </ul>
-</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The upper-level loss value for the current iteration.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mindspore.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,38 +215,20 @@
 <dt class="sig sig-object py" id="boat_ms.fogm.pgdm.PGDM.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ul_feed_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/fogm/pgdm.html#PGDM.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.fogm.pgdm.PGDM.optimize" title="Link to this definition"></a></dt>
 <dd><p>Implements the optimization procedure of Penalty-based Gradient Descent Method (PGDM) [1].</p>
-<p>:param :
-:type : param ll_objective: The lower-level objective of the BLO problem.
-:param :
-:type : type ll_objective: Callable
-:param :
-:type : param ul_objective: The upper-level objective of the BLO problem.
-:param :
-:type : type ul_objective: Callable
-:param :
-:type : param ll_model: The lower-level model of the BLO problem.
-:param :
-:type : type ll_model: mindspore.nn.Cell
-:param :
-:type : param ul_model: The upper-level model of the BLO problem.
-:param :
-:type : type ul_model: mindspore.nn.Cell
-:param :
-:type : param ll_var: The list of lower-level variables of the BLO problem.
-:param :
-:type : type ll_var: List[mindspore.Tensor]
-:param :
-:type : param ul_var: The list of upper-level variables of the BLO problem.
-:param :
-:type : type ul_var: List[mindspore.Tensor]
-:param :
-:type : param lower_loop: Number of iterations for lower-level optimization.
-:param :
-:type : type lower_loop: int
-:param :
-:type : param solver_config: Dictionary containing solver configurations.
-:param :
-:type : type solver_config: Dict[str, Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ll_objective</strong> (<em>Callable</em>) – The lower-level objective of the BLO problem.</p></li>
+<li><p><strong>ul_objective</strong> (<em>Callable</em>) – The upper-level objective of the BLO problem.</p></li>
+<li><p><strong>ll_model</strong> (<em>mindspore.nn.Cell</em>) – The lower-level model of the BLO problem.</p></li>
+<li><p><strong>ul_model</strong> (<em>mindspore.nn.Cell</em>) – The upper-level model of the BLO problem.</p></li>
+<li><p><strong>ll_var</strong> (<em>List</em><em>[</em><em>mindspore.Tensor</em><em>]</em>) – The list of lower-level variables of the BLO problem.</p></li>
+<li><p><strong>ul_var</strong> (<em>List</em><em>[</em><em>mindspore.Tensor</em><em>]</em>) – The list of upper-level variables of the BLO problem.</p></li>
+<li><p><strong>lower_loop</strong> (<em>int</em>) – Number of iterations for lower-level optimization.</p></li>
+<li><p><strong>solver_config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Dictionary containing solver configurations.</p></li>
+</ul>
+</dd>
+</dl>
 <p class="rubric">References</p>
 <p>[1] Shen H, Chen T. “On penalty-based bilevel gradient descent method,” in ICML, 2023.</p>
 </dd></dl>
@@ -299,14 +283,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. It typically includes
+training data, targets, and other information required to compute the LL objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. It typically includes
+validation data, targets, and other information required to compute the UL objective.</p></li>
 <li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number of the optimization process.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -365,14 +349,14 @@ It typically includes validation data, targets, and other information required t
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization.
-It typically includes training data, targets, and other information required to compute the LL objective.</p></li>
-<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization.
-It typically includes validation data, targets, and other information required to compute the UL objective.</p></li>
+<li><p><strong>ll_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the lower-level data used for optimization. Typically includes
+training data, targets, and other information required to compute the LL objective.</p></li>
+<li><p><strong>ul_feed_dict</strong> (<em>Dict</em>) – Dictionary containing the upper-level data used for optimization. Typically includes
+validation data, targets, and other information required to compute the UL objective.</p></li>
 <li><p><strong>current_iter</strong> (<em>int</em>) – The current iteration number of the optimization process.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -387,7 +371,7 @@ It typically includes validation data, targets, and other information required t
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="boat_ms.dynamic_ol.html" class="btn btn-neutral float-left" title="boat_ms.dynamic_ol" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boat_ms.dynamic_ol.html" class="btn btn-neutral float-left" title="boat_ms.dynamic_ol package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="boat_ms.utils.html" class="btn btn-neutral float-right" title="boat_ms.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

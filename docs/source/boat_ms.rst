@@ -2,9 +2,8 @@ BOAT-MS Structure
 =================
 
 
-
 Core Problem Class
--------------------------
+------------------
 
 .. automodule:: boat_ms.boat_opt
    :members:
@@ -22,6 +21,7 @@ Main Subpackages
    boat_ms.fogm
    boat_ms.utils
 
+
 Extension with Operation\_Registry
 -----------------------------------
 
@@ -29,3 +29,4 @@ Extension with Operation\_Registry
    :members:
    :undoc-members:
    :show-inheritance:
+

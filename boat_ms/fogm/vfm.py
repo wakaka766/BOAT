@@ -70,19 +70,22 @@ class VFM(DynamicalSystem):
         """
         Execute the optimization procedure with the data from feed_dict.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. It typically includes
+            training data, targets, and other information required to compute the LL objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. It typically includes
+            validation data, targets, and other information required to compute the UL objective.
+        current_iter : int
+            The current iteration number of the optimization process.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
-
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
-
-        :returns: None
+        Returns
+        -------
+        None
         """
+
         y_hat = copy.deepcopy(self.ll_model)
         y_hat_opt = nn.SGD(
             y_hat.trainable_params(), learning_rate=self.y_hat_lr, momentum=0.9

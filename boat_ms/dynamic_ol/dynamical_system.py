@@ -14,17 +14,18 @@ class DynamicalSystem(object):
 
         Parameters
         ----------
-            :param ll_objective: The lower-level objective of the BLO problem.
-            :type ll_objective: callable
-            :param ul_objective: The upper-level objective of the BLO problem.
-            :type ul_objective: callable
-            :param ll_model: The lower-level model of the BLO problem.
-            :type ll_model: mindspore.nn.Cell
-            :param ul_model: The upper-level model of the BLO problem.
-            :type ul_model: mindspore.nn.Cell
-            :param lower_loop: Number of iterations for lower-level optimization.
-            :type lower_loop: int
+        ll_objective : callable
+            The lower-level objective of the BLO problem.
+        ul_objective : callable
+            The upper-level objective of the BLO problem.
+        ll_model : mindspore.nn.Cell
+            The lower-level model of the BLO problem.
+        ul_model : mindspore.nn.Cell
+            The upper-level model of the BLO problem.
+        lower_loop : int
+            Number of iterations for lower-level optimization.
         """
+
         self.ll_objective = ll_objective
         self.ul_objective = ul_objective
         self.lower_loop = lower_loop

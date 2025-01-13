@@ -6,6 +6,7 @@
   <title>boat_ms.fogm.vfm &mdash; BOAT 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=751030aa" />
 
   
   <!--[if lt IE 9]>
@@ -45,7 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../boat_ms.html">boat_ms package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boat_ms.html">BOAT-MS Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -153,19 +154,22 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the optimization procedure with the data from feed_dict.</span>
 
-<span class="sd">        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.</span>
-<span class="sd">            It typically includes training data, targets, and other information required to compute the LL objective.</span>
-<span class="sd">        :type ll_feed_dict: Dict</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ll_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization. It typically includes</span>
+<span class="sd">            training data, targets, and other information required to compute the LL objective.</span>
+<span class="sd">        ul_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization. It typically includes</span>
+<span class="sd">            validation data, targets, and other information required to compute the UL objective.</span>
+<span class="sd">        current_iter : int</span>
+<span class="sd">            The current iteration number of the optimization process.</span>
 
-<span class="sd">        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            It typically includes validation data, targets, and other information required to compute the UL objective.</span>
-<span class="sd">        :type ul_feed_dict: Dict</span>
-
-<span class="sd">        :param current_iter: The current iteration number of the optimization process.</span>
-<span class="sd">        :type current_iter: int</span>
-
-<span class="sd">        :returns: None</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">y_hat</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ll_model</span><span class="p">)</span>
         <span class="n">y_hat_opt</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span>
             <span class="n">y_hat</span><span class="o">.</span><span class="n">trainable_params</span><span class="p">(),</span> <span class="n">learning_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_hat_lr</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span>

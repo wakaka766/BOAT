@@ -6,6 +6,7 @@
   <title>boat_ms.fogm.mesm &mdash; BOAT 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=751030aa" />
 
   
   <!--[if lt IE 9]>
@@ -45,7 +46,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../description.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install_guide.html">Installation and Usage Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../boat_ms.html">boat_ms package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boat_ms.html">BOAT-MS Structure</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example:</span></p>
 <ul>
@@ -162,21 +163,21 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.</span>
-<span class="sd">            Typically includes training data, targets, and other information required to compute the LL objective.</span>
-<span class="sd">        :type ll_feed_dict: Dict</span>
-
-<span class="sd">        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.</span>
-<span class="sd">            Typically includes validation data, targets, and other information required to compute the UL objective.</span>
-<span class="sd">        :type ul_feed_dict: Dict</span>
-
-<span class="sd">        :param current_iter: The current iteration number of the optimization process.</span>
-<span class="sd">        :type current_iter: int</span>
+<span class="sd">        ll_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the lower-level data used for optimization.</span>
+<span class="sd">            Typically includes training data, targets, and other information required</span>
+<span class="sd">            to compute the lower-level (LL) objective.</span>
+<span class="sd">        ul_feed_dict : Dict</span>
+<span class="sd">            Dictionary containing the upper-level data used for optimization.</span>
+<span class="sd">            Typically includes validation data, targets, and other information required</span>
+<span class="sd">            to compute the upper-level (UL) objective.</span>
+<span class="sd">        current_iter : int</span>
+<span class="sd">            The current iteration number of the optimization process.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :return: The upper-level loss value for the current iteration.</span>
-<span class="sd">        :rtype: mindspore.Tensor</span>
+<span class="sd">        mindspore.Tensor</span>
+<span class="sd">            The upper-level loss value for the current iteration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">current_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

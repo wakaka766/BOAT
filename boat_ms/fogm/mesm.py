@@ -79,21 +79,21 @@ class MESM(DynamicalSystem):
 
         Parameters
         ----------
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            Typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
-
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            Typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
-
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization.
+            Typically includes training data, targets, and other information required
+            to compute the lower-level (LL) objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization.
+            Typically includes validation data, targets, and other information required
+            to compute the upper-level (UL) objective.
+        current_iter : int
+            The current iteration number of the optimization process.
 
         Returns
         -------
-        :return: The upper-level loss value for the current iteration.
-        :rtype: mindspore.Tensor
+        mindspore.Tensor
+            The upper-level loss value for the current iteration.
         """
 
         if current_iter == 0:

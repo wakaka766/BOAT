@@ -52,9 +52,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="boat_ms.html">BOAT-MS Structure</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="boat_ms.html#module-boat_ms.boat_opt">Core Problem Class</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="boat_ms.html#main-subpackages">Main Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="boat_ms.dynamic_ol.html">boat_ms.dynamic_ol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boat_ms.dynamic_ol.html">boat_ms.dynamic_ol package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="boat_ms.fogm.html">boat_ms.fogm</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">boat_ms.utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-boat_ms.utils.op_utils">boat_ms.utils.op_utils</a></li>
 </ul>
 </li>
@@ -96,12 +97,24 @@
              
   <section id="boat-ms-utils">
 <h1>boat_ms.utils<a class="headerlink" href="#boat-ms-utils" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
 <section id="module-boat_ms.utils.op_utils">
 <span id="boat-ms-utils-op-utils"></span><h2>boat_ms.utils.op_utils<a class="headerlink" href="#module-boat_ms.utils.op_utils" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_ms.utils.op_utils.average_grad">
 <span class="sig-prename descclassname"><span class="pre">boat_ms.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">average_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/utils/op_utils.html#average_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.utils.op_utils.average_grad" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Average the gradients of all model parameters by the batch size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>mindspore.nn.Cell</em>) – The model whose gradients need to be averaged.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – The batch size to divide gradients by.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_ms.utils.op_utils.copy_parameter_from_list">
@@ -140,7 +153,10 @@
 <dd><p>Ensure all parameters of a MindSpore model require gradients.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>mindspore.nn.Cell</em>) – MindSpore model instance.</p>
+<dd class="field-odd"><p><strong>model</strong> (<em>mindspore.nn.Cell</em><em>, </em><em>optional</em>) – MindSpore model instance. Must not be None.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the model is None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -148,22 +164,61 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_ms.utils.op_utils.stop_grads">
 <span class="sig-prename descclassname"><span class="pre">boat_ms.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">stop_grads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grads</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/utils/op_utils.html#stop_grads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.utils.op_utils.stop_grads" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Detach and stop gradient computation for a list of gradients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>grads</strong> (<em>list</em><em> of </em><em>mindspore.Tensor</em>) – Gradients to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Detached gradients with requires_grad set to False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of mindspore.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_ms.utils.op_utils.stop_model_grad">
 <span class="sig-prename descclassname"><span class="pre">boat_ms.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">stop_model_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/utils/op_utils.html#stop_model_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.utils.op_utils.stop_model_grad" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Stop gradient computation for all parameters in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>mindspore.nn.Cell</em><em>, </em><em>optional</em>) – The model to stop gradients for. Must not be None.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the model is None.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_ms.utils.op_utils.update_grads">
 <span class="sig-prename descclassname"><span class="pre">boat_ms.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">update_grads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/utils/op_utils.html#update_grads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.utils.op_utils.update_grads" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update gradients for a model’s parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grads</strong> (<em>list</em>) – List of gradients to apply.</p></li>
+<li><p><strong>model</strong> (<em>mindspore.nn.Cell</em>) – The model whose gradients will be updated.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="boat_ms.utils.op_utils.update_tensor_grads">
 <span class="sig-prename descclassname"><span class="pre">boat_ms.utils.op_utils.</span></span><span class="sig-name descname"><span class="pre">update_tensor_grads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hparams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grads</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boat_ms/utils/op_utils.html#update_tensor_grads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boat_ms.utils.op_utils.update_tensor_grads" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update gradients for hyperparameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hparams</strong> (<em>list</em><em> of </em><em>mindspore.Tensor</em>) – Hyperparameters to update.</p></li>
+<li><p><strong>grads</strong> (<em>list</em><em> of </em><em>mindspore.Tensor</em>) – Gradients to apply to the hyperparameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>

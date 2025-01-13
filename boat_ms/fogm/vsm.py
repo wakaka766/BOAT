@@ -76,19 +76,22 @@ class VSM(DynamicalSystem):
         """
         Execute the optimization procedure with the data from feed_dict.
 
-        :param ll_feed_dict: Dictionary containing the lower-level data used for optimization.
-            It typically includes training data, targets, and other information required to compute the LL objective.
-        :type ll_feed_dict: Dict
+        Parameters
+        ----------
+        ll_feed_dict : Dict
+            Dictionary containing the lower-level data used for optimization. Typically includes
+            training data, targets, and other information required to compute the LL objective.
+        ul_feed_dict : Dict
+            Dictionary containing the upper-level data used for optimization. Typically includes
+            validation data, targets, and other information required to compute the UL objective.
+        current_iter : int
+            The current iteration number of the optimization process.
 
-        :param ul_feed_dict: Dictionary containing the upper-level data used for optimization.
-            It typically includes validation data, targets, and other information required to compute the UL objective.
-        :type ul_feed_dict: Dict
-
-        :param current_iter: The current iteration number of the optimization process.
-        :type current_iter: int
-
-        :returns: None
+        Returns
+        -------
+        None
         """
+
         reg_decay = self.reg_decay * current_iter + 1
 
         for z_idx in range(self.z_loop):
