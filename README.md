@@ -1,6 +1,6 @@
 
 <h1 align="center">
-  <img src="_static/logo.jpg" alt="BOAT" style="max-width: 50%; height: 50%;">
+  <img src="_static/logo.jpg" alt="BOAT" width="50%" align="top">
 </h1>
 <p align="center">
   Task-Agnostic Operation Toolbox for Gradient-based Bilevel Optimization<br>
