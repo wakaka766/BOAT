@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 
 html_logo = "_static/logo.jpg"
 
-project = "BOAT"
+project = "BOAT-Torch"
 copyright = "2024, Yaohua Liu"
 author = "Yaohua Liu"
 release = "0.0.1"
