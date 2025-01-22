@@ -82,23 +82,29 @@
    padding: 5px 10px;     
    height: auto;            
    font-weight: bold;
+   display: flex;            /* 使用 flex 布局 */
+   flex-direction: column;   /* 内容垂直排列 */
+   align-items: center;      /* 水平居中对齐 */
+   justify-content: center;  /* 垂直居中对齐 */
 }
 
 /* 设置项目名称的具体样式 */
 .wy-side-nav-search .icon-home {
-    color: #3b4252; /* 明确设置项目名称的字体颜色 */
-    font-weight: bold; /* 字体加粗 */
-    font-size: 1.2em; /* 调整字体大小 */
-    text-align: center; /* 居中对齐 */
-}
+    color: #3b4252;          /* 项目名称颜色 */
+    font-weight: bold;       /* 字体加粗 */
+    font-size: 1em;          /* 调整字体大小 */
+    margin-top: 5px;         /* 与 logo 之间的距离 */
+    margin-bottom: 0;        /* 去掉下方空白 */
+    line-height: 1;          /* 减小行高 */
+ }
 
 /* 调整左上角 logo 的样式 */
 .wy-side-nav-search .logo {
     display: block;
-    margin: 0 auto;
-    max-height: 120px; 
-    max-width: 90%; 
-    object-fit: contain; 
+    margin: 5px 0;           /* 上下间距，减少空白 */
+    max-height: 80px;        /* 限制 logo 的最大高度 */
+    max-width: 90%;          /* 限制 logo 的最大宽度 */
+    object-fit: contain;     /* 保持 logo 的比例 */
 }
 
 /* 隐藏 project 名称，只显示 logo */
