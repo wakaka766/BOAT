@@ -9,6 +9,11 @@
     z-index: 1000; /* 确保导航栏位于内容区域之上 */
 }
 
+.logo {
+    height: 50px; /* 设置 logo 高度 */
+    width: auto;  /* 宽度自适应 */
+}
+
 /*!* 可选：设置全局背景颜色或边框，方便调试 *!*/
 /*body {*/
 /*    background-color: #ffffff; !* 可选：设置背景为纯白 *!*/

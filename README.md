@@ -1,9 +1,12 @@
 
-<h1 align="center">BOAT</h1>
+<h1 align="center">
+  <img src="docs/source/_static/logo.jpg" alt="BOAT" style="max-width: 50%; height: auto;">
+</h1>
 <p align="center">
   Task-Agnostic Operation Toolbox for Gradient-based Bilevel Optimization<br>
+  <a href="https://boat.readthedocs.io/en/latest/index.html">Home</a> |
   <a href="https://boat.readthedocs.io/en/latest/install_guide.html#installation">Installation</a> |
-  <a href="https://boat.readthedocs.io/en/latest/boat.html">Docs</a> |
+  <a href="https://boat.readthedocs.io/en/latest/boat_torch.html">Docs</a> |
   <a href="https://boat.readthedocs.io/en/latest/install_guide.html#how-to-use-boat">Tutorials</a> |
   <a href="https://boat.readthedocs.io/en/latest/index.html#running-example">Examples</a> |
 </p>
