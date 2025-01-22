@@ -81,7 +81,7 @@ class FD(HyperGradient):
         self._r = solver_config["FD"]["r"]
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config["gda_loss"]
+        self.gda_loss = solver_config.get("gda_loss", None)
 
     def compute_gradients(
         self,
@@ -132,18 +132,37 @@ class FD(HyperGradient):
             If `next_operation` is not None, as FD does not support `next_operation`.
         """
         assert next_operation is None, "FD does not support next_operation"
+        import time
+        start_time = time.perf_counter()
         lower_model_params = kwargs.get(
             "lower_model_params", list(auxiliary_model.parameters())
         )
         loss = self.ul_objective(
             ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
-        dalpha = jit.grad(loss, list(self.ul_var), retain_graph=True)
+        # print(type(loss))
+        # print(type(self.ul_var))
+        # loss = loss.astype('float32')  # 强制转换为 float32
+        # self.ul_var = [v.astype('float32') for v in self.ul_var]
+        # for variable in self.ul_var:
+        #     print(type(variable))
+        # import time
+        print('step 1 time',time.perf_counter() - start_time)
+        start_time = time.perf_counter()
+        # dalpha = jit.grad(loss, self.ul_var)
+        dalpha = jit.jittor_core.grad(loss,self.ul_var,retain_graph=True)
+
         vector = jit.grad(
             loss,
-            list(auxiliary_model.parameters()),
+            lower_model_params,
             retain_graph=self.dynamic_initialization,
         )
+
+        # dalpha = jit.grad(loss, self.ul_var, retain_graph=True)
+
+        print('step 2 time',time.perf_counter() - start_time)
+        start_time = time.perf_counter()
+
 
         implicit_grads = self._hessian_vector_product(
             vector, ll_feed_dict, ul_feed_dict
@@ -155,6 +174,8 @@ class FD(HyperGradient):
         if self.dynamic_initialization:
             grads_lower = jit.grad(loss, list(auxiliary_model.parameters(time=0)))
             update_tensor_grads(self.ll_var, grads_lower)
+        print('step 3 time',time.perf_counter() - start_time)
+
 
         update_tensor_grads(self.ul_var, dalpha)
 
@@ -189,7 +210,7 @@ class FD(HyperGradient):
         eta = self._r / vector_flat.norm()
 
         # Update parameters: w+ = w + eta * vector
-        for p, v in zip(self.ll_model.parameters(), vector):
+        for p, v in zip(self.ll_var, vector):
             p.update(p + v * eta)
 
         # Compute loss and gradients for w+
@@ -200,10 +221,10 @@ class FD(HyperGradient):
             )
         else:
             loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-        grads_p = jit.grad(loss, self.ul_model.parameters())
+        grads_p = jit.grad(loss, self.ul_var)
 
         # Update parameters: w- = w - 2 * eta * vector
-        for p, v in zip(self.ll_model.parameters(), vector):
+        for p, v in zip(self.ll_var, vector):
             p.update(p - 2 * eta * v)
 
         # Compute loss and gradients for w-
@@ -213,10 +234,10 @@ class FD(HyperGradient):
             )
         else:
             loss = self.ll_objective(ll_feed_dict, self.ul_model, self.ll_model)
-        grads_n = jit.grad(loss, self.ul_model.parameters())
+        grads_n = jit.grad(loss, self.ul_var)
 
         # Restore parameters: w = w + eta * vector
-        for p, v in zip(self.ll_model.parameters(), vector):
+        for p, v in zip(self.ll_var, vector):
             p.update(p + eta * v)
 
         # Compute Hessian-vector product approximation

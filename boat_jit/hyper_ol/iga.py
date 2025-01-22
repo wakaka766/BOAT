@@ -73,7 +73,8 @@ class IGA(HyperGradient):
         )
         self.alpha = solver_config["GDA"]["alpha_init"]
         self.alpha_decay = solver_config["GDA"]["alpha_decay"]
-        self.gda_loss = solver_config["gda_loss"]
+        self.gda_loss = solver_config.get("gda_loss", None)
+
         self.dynamic_initialization = "DI" in solver_config["dynamic_op"]
 
     def compute_gradients(
@@ -149,12 +150,14 @@ class IGA(HyperGradient):
             lower_loss = self.ll_objective(
                 ll_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
             )
-        dfy = jit.grad(lower_loss, lower_model_params, retain_graph=True)
 
         upper_loss = self.ul_objective(
             ul_feed_dict, self.ul_model, auxiliary_model, params=lower_model_params
         )
         dFy = jit.grad(upper_loss, lower_model_params, retain_graph=True)
+        
+        dfy = jit.grad(lower_loss, lower_model_params, retain_graph=True)
+
 
         # calculate GN loss
         gFyfy = 0

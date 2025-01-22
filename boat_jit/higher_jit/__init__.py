@@ -81,6 +81,7 @@ def innerloop_ctx(
         ``higher_jit.optim``. And ``diffopt`` is an initialized
         ``DifferentiableOptimizer`` instance of the right subtype.
     """
+
     fmodel = monkeypatch(
         model,
         device,

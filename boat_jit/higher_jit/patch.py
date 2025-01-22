@@ -31,6 +31,7 @@ from . import utils as _utils
 # ==============================================================================
 
 _internal_attrs = {
+    
     "_backend",
     "_parameters",
     "_buffers",
@@ -41,6 +42,17 @@ _internal_attrs = {
     "_load_state_dict_pre_hooks",
     "_modules",
 }
+
+# _internal_attrs = {
+    
+#     "_backend",
+#     "_backward_hooks",
+#     "_forward_hooks",
+#     "_forward_pre_hooks",
+#     "_state_dict_hooks",
+#     "_load_state_dict_pre_hooks",
+# }
+
 
 _BufferType = _typing.Dict[str, _typing.Optional[jit.Var]]
 
@@ -159,15 +171,86 @@ def buffer_sync(
             fmodule._buffers[key] = value.clone().detach()
         else:
             fmodule._buffers[key] = value.clone().detach().to(device)
-
     for name, child in module._modules.items():
         if name in fmodule._modules:
             buffer_sync(child, fmodule._modules[name], device)
         else:
             raise KeyError(
-                "Did not find expected submodule "
-                "{} of monkey-patched module {}.".format(name, fmodule)
+                "Did not find expected submodule {} of monkey-patched module {}.".format(name, fmodule)
             )
+
+# from collections import deque
+
+# def buffer_sync(module, fmodule, device=None):
+#     """One-off sync (copy) of buffers in `fmodule` with those from `module`."""
+#     queue = deque([(module, fmodule)])
+    
+#     while queue:
+#         current_module, current_fmodule = queue.popleft()
+        
+#         # Sync buffers
+#         for key, value in getattr(current_module, "_buffers", {}).items():
+#             if not isinstance(value, jit.Var):
+#                 current_fmodule._buffers[key] = value
+#             elif device is None:
+#                 current_fmodule._buffers[key] = value.clone().detach()
+#             else:
+#                 current_fmodule._buffers[key] = value.clone().detach()  # Jittor 没有设备概念
+
+#         # Add child modules to the queue
+#         current_modules = getattr(current_module, "_modules", {})
+#         current_fmodules = getattr(current_fmodule, "_modules", {})
+        
+#         for name, child in current_modules.items():
+#             if name in current_fmodules:
+#                 queue.append((child, current_fmodules[name]))
+#             else:
+#                 print("fine")
+#                 # raise KeyError(
+#                 #     f"Did not find expected submodule {name} "
+#                 #     f"of monkey-patched module {current_fmodule}."
+#                 # )
+
+
+
+# def buffer_sync(
+#     module: jit.Module, fmodule: _MonkeyPatchBase, device: _typing.Optional[str] = None
+# ) -> None:
+#     """Synchronize buffers from `module` to `fmodule`."""
+#     # 获取 module 和 fmodule 的 buffer
+#     module_buffers = getattr(module, "_buffers", None)
+#     fmodule_buffers = getattr(fmodule, "_buffers", None)
+
+#     if module_buffers is None or fmodule_buffers is None:
+#         raise ValueError("Failed to access _buffers for module or fmodule.")
+
+#     # 同步 buffer
+#     for key, value in module_buffers.items():
+#         if not isinstance(value, jit.Var):
+#             fmodule_buffers[key] = value
+#         elif device is None:
+#             fmodule.register_buffer(key, value.clone().detach())
+#         else:
+#             fmodule.register_buffer(key, value.clone().detach().to(device))
+
+#     # 递归同步子模块
+#     module_modules = getattr(module, "_modules", None)
+#     fmodule_modules = getattr(fmodule, "_modules", None)
+
+#     if module_modules is None or fmodule_modules is None:
+#         raise ValueError("Failed to access _modules for module or fmodule.")
+
+#     for name, child in module_modules.items():
+#         if name in fmodule_modules:
+#             buffer_sync(child, fmodule_modules[name], device)
+#         else:
+#             raise KeyError(
+#                 f"Did not find expected submodule {name} "
+#                 f"of monkey-patched module {fmodule}."
+#             )
+
+
+
 
 
 # ==============================================================================
@@ -205,12 +288,18 @@ def _make_functional(
             "contact the developers of this library."
         )
 
+    # param_names = list(
+    #     name
+    #     for name in module._parameters.keys()
+    #     if module._parameters[name] is not None
+    # )
     param_names = list(
         name
-        for name in module._parameters.keys()
-        if module._parameters[name] is not None
+        for name, param in module.named_parameters(False)
+        if param is not None
     )
-
+    
+    # print('params_name',param_names)
     _ModuleType: _typing.Type[jit.Module] = module.__class__
 
     # type checking of next line disabled as mypy is iffy with dynamic types
@@ -218,6 +307,31 @@ def _make_functional(
         _wrapped_name = type(module).__name__
 
         def __init__(self, original_params, root) -> None:
+            # init_params = {
+            # "C": module.__dict__.get("_C", None),
+            # "num_classes": module.__dict__.get("_num_classes", None),
+            # "layers": module.__dict__.get("_layers", None),
+            # "criterion": module.__dict__.get("_criterion", None),
+            # }
+
+            # init_params = {
+            # "C": module.__dict__.get("_C", None),
+            # "num_classes": module.__dict__.get("_num_classes", None),
+            # "layers": module.__dict__.get("_layers", None),
+            # "criterion": module.__dict__.get("_criterion", None),
+            # }
+
+            # # 确保所有必要的参数都存在
+            # if None in init_params.values():
+            #     missing = [k for k, v in init_params.items() if v is None]
+            #     raise ValueError(f"Missing initialization parameters: {missing}")
+            # 手动初始化 Jittor Module 的关键属性
+            # self._buffers = {}
+            # self._modules = {}
+            # self._parameters = {}
+
+            # 初始化 jit.Module
+            # jit.Module.__init__(self, **init_params)
             jit.Module.__init__(self)
             _MonkeyPatchBase.__init__(self)
             self._root_ref = _weakref.ref(root) if root else None
@@ -228,13 +342,20 @@ def _make_functional(
             self._original_params = original_params
             # print("_original_params", self._original_params)
             # for pretty printing
-            # self._parameters = _OrderedDict(
+            # self._parameters_not_recur = _OrderedDict(
             #     (name, _ParameterPlaceholder(name))
             #     for name in self._param_names
             # )
-            for name in self._param_names:
-                placeholder = _ParameterPlaceholder(name)
-                setattr(self, name, placeholder)
+            # print(self._param_names)
+            # self.load_parameters(_OrderedDict(
+            #     (name, _ParameterPlaceholder(name))
+            #     for name in self._param_names
+            # ))
+            #     for name in self._param_names)
+            # for name in self._param_names:
+            #     placeholder = _ParameterPlaceholder(name)
+            #     # setattr(self, name, placeholder)
+            #     self.safe_setattr(name, placeholder)
 
         @property
         def direct_submodule_call(self):
@@ -251,70 +372,166 @@ def _make_functional(
             else:
                 return self._root_ref()
 
-        def __setattr__(self, name, value):
-            def remove_from(*dicts):
-                for d in dicts:
-                    if name in d:
-                        del d[name]
+        def safe_setattr(self, name, value):
+                """
+                Safely set attributes for a Jittor Module, handling Jittor's dynamic properties
+                like _modules, _parameters, and _buffers without causing recursion issues.
+                """
+                def remove_from(*dicts):
+                    for d in dicts:
+                        if name in d:
+                            del d[name]
 
-            params = self.__dict__.get("_parameters")
-            if params is not None and name in params:
-                if not isinstance(value, jit.Var):
-                    raise TypeError(
-                        "Require Tensor as fast weights. "
-                        "Got {}".format(type(value).__name__)
-                    )
-
-                if not self._being_modified_internally:
-                    # Additional behaviour for when fast weights are being
-                    # directly modified goes here:
-                    old_value = self._parameters[name]
-                    fast_params = self.root.fast_params[:]
-                    if not fast_params:
-                        raise Exception(
-                            "Cannot assign parameters to patched module which "
-                            "does not have implicit fast parameters."
-                        )
-                    replacement_index = _utils._find_param_in_list(
-                        old_value, fast_params
-                    )
-                    fast_params[replacement_index] = value
-                    self.update_params(fast_params)
-
-                # Change parameters in place, usually during boxed_forward pass
-                self._parameters[name] = value
-            else:
-                modules = self.__dict__.get("_modules")
-                if isinstance(value, jit.Module):
-                    if modules is None:
-                        raise AttributeError(
-                            "cannot assign module before Module.__init__() " "call"
-                        )
-                    remove_from(self.__dict__, self._parameters, self._buffers)
-                    modules[name] = value
-                elif modules is not None and name in modules:
-                    if value is not None:
+                # Special handling for _parameters
+                # params = getattr(self, "_parameters", None)
+                params = self.named_parameters(False)
+                # print('params',params)
+                if params is not None and name in params:
+                    if not isinstance(value, jit.Var):
                         raise TypeError(
-                            (
-                                "cannot assign '{}' "
-                                "as child module '{}'"
-                                "(torch.nn.Module or None expected)"
-                            ).format(type(value).__name__, name)
+                            "Require Tensor as fast weights. "
+                            "Got {}".format(type(value).__name__)
                         )
-                    modules[name] = value
-                else:
-                    buffers = self.__dict__.get("_buffers")
-                    if buffers is not None and name in buffers:
-                        if value is not None and not isinstance(value, jit.Var):
-                            raise TypeError(
-                                "cannot assign '{}' as buffer '{}' "
-                                "(torch.Tensor or None expected)".format(
-                                    type(value).__name__, name
-                                )
+
+                    if not self._being_modified_internally:
+                        # Additional behaviour for when fast weights are being directly modified
+                        old_value = self._parameters[name]
+                        fast_params = self.root.fast_params[:]
+                        if not fast_params:
+                            raise Exception(
+                                "Cannot assign parameters to patched module which "
+                                "does not have implicit fast parameters."
                             )
-                        buffers[name] = value
+                        replacement_index = _utils._find_param_in_list(old_value, fast_params)
+                        fast_params[replacement_index] = value
+                        self.update_params(fast_params)
+
+                    # Change parameters in place, usually during boxed_forward pass
+                    # self._parameters[name] = value
+                    # setattr(self,name,value)
+                    object.__setattr__(self, name, value)
+                else:
+                    # Special handling for _modules
+                    modules = getattr(self, "_modules", None)
+                    if isinstance(value, jit.Module):
+                        if modules is None:
+                            raise AttributeError(
+                                "cannot assign module before Module.__init__() call"
+                            )
+                        remove_from(self.__dict__, self._parameters, self._buffers)
+                        # modules[name] = valu
+                        self.add_module(name,value)
+                    elif modules is not None and name in modules:
+                        if value is not None:
+                            raise TypeError(
+                                (
+                                    "cannot assign '{}' as child module '{}'"
+                                    "(jit.Module or None expected)"
+                                ).format(type(value).__name__, name)
+                            )
+                        self.add_module(name,value)
                     else:
-                        object.__setattr__(self, name, value)
+                        # Special handling for _buffers
+                        buffers = getattr(self, "_buffers", None)
+                        if buffers is not None and name in buffers:
+                            if value is not None and not isinstance(value, jit.Var):
+                                raise TypeError(
+                                    "cannot assign '{}' as buffer '{}' "
+                                    "(jit.Var or None expected)".format(type(value).__name__, name)
+                                )
+                            # buffers[name] = value
+                            self.register_buffer(name, value)
+                        else:
+                            # Default behavior
+                            object.__setattr__(self, name, value)
+
+
+        # def __setattr__(self, name, value):
+        #     def remove_from(*dicts):
+        #         for d in dicts:
+        #             if name in d:
+        #                 del d[name]
+
+        #     # print(f"Attempting to set attribute: {name}, value: {value}")
+        #     # if hasattr(self, name):
+        #     #     existing_value = getattr(self, name, None)
+        #     #     print(f"Existing attribute '{name}': {existing_value}")
+        #     # else:
+        #     #     print(f"Attribute '{name}' does not exist yet.")
+            
+        #     # 特殊处理 Jittor 的内部属性
+        #     # if name in {"_modules", "_parameters", "_buffers"}:
+        #     #     try:
+        #     #         object.__setattr__(self, name, value)
+        #     #         print(f"Attribute '{name}' set successfully.")
+        #     #     except Exception as e:
+        #     #         print(f"Failed to set attribute '{name}': {e}")
+        #     #     return
+
+        #     params = self.__dict__.get("_parameters")
+        #     print('params',params)
+        #     if params is not None and name in params:
+        #         if not isinstance(value, jit.Var):
+        #             raise TypeError(
+        #                 "Require Tensor as fast weights. "
+        #                 "Got {}".format(type(value).__name__)
+        #             )
+
+        #         if not self._being_modified_internally:
+        #             # Additional behaviour for when fast weights are being
+        #             # directly modified goes here:
+        #             old_value = self._parameters[name]
+        #             fast_params = self.root.fast_params[:]
+        #             if not fast_params:
+        #                 raise Exception(
+        #                     "Cannot assign parameters to patched module which "
+        #                     "does not have implicit fast parameters."
+        #                 )
+        #             replacement_index = _utils._find_param_in_list(
+        #                 old_value, fast_params
+        #             )
+        #             fast_params[replacement_index] = value
+        #             self.update_params(fast_params)
+
+        #         # Change parameters in place, usually during boxed_forward pass
+        #         self._parameters[name] = value
+        #     else:
+        #         # modules = self.__dict__.get("_modules")
+        #         modules = getattr(self, "_modules", None)
+        #         print("modules", modules)
+        #         if isinstance(value, jit.Module):
+        #             # print(value)
+        #             if modules is None:
+        #                 raise AttributeError(
+        #                     "cannot assign module before Module.__init__() " "call"
+        #                 )
+        #             remove_from(self.__dict__, self._parameters, self._buffers)
+        #             modules[name] = value
+        #             # self.add_module(name, value)
+        #         elif modules is not None and name in modules:
+        #             if value is not None:
+        #                 raise TypeError(
+        #                     (
+        #                         "cannot assign '{}' "
+        #                         "as child module '{}'"
+        #                         "(torch.nn.Module or None expected)"
+        #                     ).format(type(value).__name__, name)
+        #                 )
+        #             modules[name] = value
+        #         else:
+        #             buffers = self.__dict__.get("_buffers")
+        #             if buffers is not None and name in buffers:
+        #                 if value is not None and not isinstance(value, jit.Var):
+        #                     raise TypeError(
+        #                         "cannot assign '{}' as buffer '{}' "
+        #                         "(torch.Tensor or None expected)".format(
+        #                             type(value).__name__, name
+        #                         )
+        #                     )
+        #                 buffers[name] = value
+        #             else:
+        #                 object.__setattr__(self, name, value)
+
 
     MonkeyPatched.__name__ = "InnerFunctional" + type(module).__name__
     MonkeyPatched.__qualname__ = MonkeyPatched.__name__
@@ -326,30 +543,69 @@ def _make_functional(
         root_patched = fmodule
 
     # use 1 as dummy list item since we are only counting
-    num_params = len([1 for p in module._parameters.values() if p is not None])
-
-    # Copy over all attributes
+    # num_params = len([1 for p in module._parameters.values() if p is not None])
+    num_params = len([1 for p,_ in module.named_parameters(False) if _ is not None])
+    # print('num_params',num_params)
+    # # Copy over all attributes
+    # print(fmodule.__dict__.keys())
+    # print(fmodule._modules.items())
     for name, attr in module.__dict__.items():
+        # print('set_module',name)
         if name in _internal_attrs:
             continue
-        setattr(fmodule, name, attr)
+        # setattr(fmodule, name, attr)
+        fmodule.safe_setattr(name, attr)
+    # k=0
+    # # print(module['_param_mapping'])
+    # for name, attr in module.__dict__.items():
+    #     k+=1
+    #     if name in _internal_attrs:
+    #         continue
+
+    #     # setattr(fmodule, name, attr)
+    #     fmodule.safe_setattr(name, attr)
+    # print(len(module._parameters.keys()))
+    # print('new!!!!!!!!!!!!')
+    # for k,b  in enumerate(module.parameters()):
+    #     print('items ',k ,b.shape)
 
     # Deal with "None"-style params
+    
     with _modify_internally(fmodule):
         # for name, attr in module.__dict__['_parameters'].items():
-        for name, attr in module._parameters.items():
+        for name, attr in module.named_parameters(False):
             if isinstance(attr, jit.Var) and not attr.stop_grad:
                 continue
             else:
-                setattr(fmodule, name, attr)
+                # setattr(fmodule, name, attr)
+                fmodule.safe_setattr(name, attr)
 
     child_params_offset = params_offset + num_params
+    # print(child_params_offset)
+    # k=1
+    # for name, child in module._modules.items():
+    # for name, child in enumerate(module.modules()):
+    #     print(child)
     for name, child in module._modules.items():
+        # k+=1
+        # print('_make_functional',name)
+        # print(type(child).__name__)
+        # print('old!!!!!!!!!!!!',k)
+        # if name =='classifier':
+        #     print(child.__dict__)
+        #     print(child.weight.shape)
+        # if 'cell' in name:
+        #     print('cells test')
+        #     print(child._modules.keys())
+        # if hasattr(child,'shape'):
+        #     print("name",name,child.shape)
+
         child_params_offset, fchild, _ = _make_functional(
             child, params_box, child_params_offset, root_patched
         )
-        fmodule._modules[name] = fchild
-        setattr(fmodule, name, fchild)
+        # fmodule._modules[name] = fchild
+        # setattr(fmodule, name, fchild)
+        fmodule.safe_setattr(name, fchild)
 
     true_forward = getattr(type(module), "execute", None) or getattr(
         type(module), "forward", None
@@ -391,6 +647,7 @@ def _make_functional(
 
     # setattr(MonkeyPatched, "forward", patched_forward)
     setattr(MonkeyPatched, "execute", patched_forward)
+    # MonkeyPatched.safe_setattr("execute", patched_forward)
 
     def flatten_parameters(self):
         return  # no-op
@@ -398,7 +655,7 @@ def _make_functional(
     # This (hopefully) avoids trouble on GPU with torch.nn.{RNN,GRU,LSTM}
     if hasattr(module, "flatten_parameters"):
         setattr(MonkeyPatched, "flatten_parameters", flatten_parameters)
-
+        # MonkeyPatched.safe_setattr("flatten_parameters", flatten_parameters)
     return child_params_offset, fmodule, type(fmodule)
 
 
@@ -407,7 +664,8 @@ def _update_patched_params(
     params_box: _typing.Sequence[_typing.List[jit.Var]],
     params_offset: int,
 ) -> int:
-    num_params = len([1 for p in fmodule._parameters.values() if p is not None])
+    # num_params = len([1 for p in fmodule._parameters.values() if p is not None])
+    num_params = len([1 for p,_ in fmodule.named_parameters(False) if _ is not None])
     child_params_offset = params_offset + num_params
     for name, child in fmodule._modules.items():
         child_params_offset = _update_patched_params(
@@ -437,6 +695,7 @@ def make_functional(
     r"""Returns a stateless version of an ``nn.Module`` instance."""
     params_box = [None]
     _, fmodule, MonkeyPatched = _make_functional(module, params_box, 0)
+
     top_name = "Functional" + MonkeyPatched._wrapped_name
     MonkeyPatched.__name__ = MonkeyPatched.__qualname__ = top_name
     ###################
@@ -470,7 +729,17 @@ def make_functional(
 
     def _update_params(self, params):
         self.fast_params = params
+        # print(params)
+        # print('lang')
+        # print('right',params[-1].shape)
+        # print('right',params[-2].shape)
+        # print(params[-3].shape)
+        # print(params[-4].shape)
+        # print(len(params))
         params = self._expand_params(params)
+        # print(len(params))
+        # print('not right',params[-1].shape)
+        # print('not right',params[-2].shape)
         _update_patched_params(self, [params], 0)
 
     ##############
@@ -480,10 +749,9 @@ def make_functional(
     setattr(MonkeyPatched, "parameters", _patched_parameters)
     setattr(MonkeyPatched, "update_params", _update_params)
     setattr(MonkeyPatched, "_refill_params_box", _refill_params_box)
-
+    
     if encapsulator is not None:
         encapsulator(fmodule, module)
-
     return fmodule
 
 
@@ -536,15 +804,41 @@ def monkeypatch(
     def encapsulator(fmodule: _MonkeyPatchBase, module: jit.Module) -> None:
         if copy_initial_weights:
             params = _utils.get_func_params(module, device=device)
-        else:
+        else:   
             params = [
                 p.clone() if device is None else p.clone().to(device)
                 for p in module.parameters()
             ]
+        # params = [
+        #     p.clone() if device is None else p.clone().to(device)
+        #     for p in module.parameters()
+        # ]
+        # print('now')
+        # print(len(params))
+        # print(params[-2].shape)
+        # print(params[-1].shape)
+        # print('test',fmodule.classifier.weight.shape)
+        # print('test',module.classifier.weight.shape)
+        # print('test',len(fmodule.cells))
+        # print('test',len(module.cells))
         buffer_sync(module, fmodule, device)
+        # print('test',len(fmodule.cells))
+        # print('test',len(module.cells))
+        # print('test',fmodule.classifier.weight.shape)
+        # print('test',module.classifier.weight.shape)
         fmodule.update_params(params)
+        # new_params= [
+        #         p.clone() if device is None else p.clone().to(device)
+        #         for p in fmodule.parameters()
+        #     ]
+        # print(new_params[-2].shape)
+        # print(new_params[-1].shape)
+        # print(len(new_params))
+        # print('test',fmodule.classifier.weight.shape)
+        # print('test',module.classifier.weight.shape)
 
     fmodule = make_functional(module, encapsulator=encapsulator)
+    # print('final_test',module.classifier.weight.shape)
     fmodule.track_higher_grads = track_higher_grads
 
     return fmodule

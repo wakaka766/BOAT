@@ -257,6 +257,7 @@ def update_grads(grads, model):
             x._custom_grad += p
 
 
+
 def manual_update(optimizer, variables):
     """
     Manually update variables using gradients stored in _custom_grad.
@@ -273,11 +274,12 @@ def manual_update(optimizer, variables):
     AttributeError
         If a variable does not have the '_custom_grad' attribute.
     """
+    variable_ids = {id(var) for var in variables} 
     for group in optimizer.param_groups:
         lr = group.get("lr", optimizer.lr)
 
         for param in group["params"]:
-            if param in variables:
+            if id(param) in variable_ids: 
                 if not hasattr(param, "_custom_grad"):
                     raise AttributeError(
                         f"Variable '{param.name}' does not have '_custom_grad'. "
@@ -285,8 +287,54 @@ def manual_update(optimizer, variables):
                     )
 
                 grad = param._custom_grad
+                if grad.shape != param.shape:
+                    raise ValueError(
+                        f"Gradient shape {grad.shape} does not match parameter shape {param.shape} "
+                        f"for variable '{param.name}'"
+                    )
+
                 param -= lr * grad
+
                 param._custom_grad *= 0
+
+
+# def manual_update(optimizer, variables):
+#     """
+#     Manually update variables using gradients stored in _custom_grad.
+
+#     Parameters
+#     ----------
+#     optimizer : jittor.optim.Optimizer
+#         The Jittor optimizer instance.
+#     variables : List[jittor.Var]
+#         A list of Jittor variables to be updated.
+
+#     Raises
+#     ------
+#     AttributeError
+#         If a variable does not have the '_custom_grad' attribute.
+#     """
+#     print(len(variables))
+#     print(len(optimizer.param_groups))
+#     for group in optimizer.param_groups:
+#         lr = group.get("lr", optimizer.lr)
+
+#         for param in group["params"]:
+#             # print(variables)
+#             print(param.shape)
+#             print(param._custom_grad.shape)
+#             if param in variables:
+#                 if not hasattr(param, "_custom_grad"):
+#                     raise AttributeError(
+#                         f"Variable '{param.name}' does not have '_custom_grad'. "
+#                         f"Ensure gradients are precomputed and stored before updating."
+#                     )
+
+#                 grad = param._custom_grad
+#                 param -= lr * grad
+#                 param._custom_grad *= 0
+
+
 
 
 def update_tensor_grads(hparams, grads):

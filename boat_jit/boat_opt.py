@@ -97,6 +97,7 @@ class Problem:
         self._lower_init_opt = None
         self._fo_gm_solver = None
         self._log_results = []
+        self._track_opt_traj = False
 
     def build_ll_solver(self):
         """
@@ -230,7 +231,6 @@ class Problem:
 
         :rtype: tuple
         """
-        self._log_results_dict["upper_loss"] = []
         if self.boat_configs["fo_gm"] is not None:
             start_time = time.perf_counter()
             self._log_results.append(
@@ -244,7 +244,7 @@ class Problem:
                     ll_feed_dict, ul_feed_dict
                 ):
                     with higher.innerloop_ctx(
-                        self._ll_model, self._lower_opt, copy_initial_weights=False
+                        self._ll_model, self._lower_opt, copy_initial_weights=False, track_higher_grads=self._track_opt_traj
                     ) as (auxiliary_model, auxiliary_opt):
                         forward_time = time.perf_counter()
                         dynamic_results = self._ll_solver.optimize(
@@ -271,7 +271,7 @@ class Problem:
                 average_grad(self._ul_model, len(ll_feed_dict))
             else:
                 with higher.innerloop_ctx(
-                    self._ll_model, self._lower_opt, copy_initial_weights=True
+                    self._ll_model, self._lower_opt, copy_initial_weights=False, track_higher_grads=self._track_opt_traj
                 ) as (auxiliary_model, auxiliary_opt):
                     forward_time = time.perf_counter()
                     dynamic_results = self._ll_solver.optimize(
@@ -284,6 +284,7 @@ class Problem:
                     self._log_results.append(dynamic_results)
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
+                    print('forward_time',forward_time)
                     backward_time = time.perf_counter()
                     if "DM" not in self._dynamic_op:
                         self._log_results.append(
@@ -299,14 +300,11 @@ class Problem:
                             self._ul_loss(ul_feed_dict, self._ul_model, auxiliary_model)
                         )
                     backward_time = time.perf_counter() - backward_time
-                    if (
-                        ("DM" not in self._dynamic_op)
-                        and ("DI" not in self._dynamic_op)
-                        and ("IAD" not in self._hyper_op)
-                    ):
+                    print('backward_time', backward_time)
+                    if self.boat_configs["copy_last_param"]:
                         copy_parameter_from_list(
                             self._ll_model,
-                            list(auxiliary_model.parameters(time=max_loss_iter)),
+                            list(auxiliary_model.parameters(time=-1)),
                         )
                 # update the dynamic initialization of lower-level variables
                 if "DI" in self.boat_configs["dynamic_op"]:
@@ -321,7 +319,12 @@ class Problem:
 
         return self._log_results, run_time
 
+    def set_track_trajectory(self, track_traj=True):
+        self._track_opt_traj = track_traj
+
     def check_status(self):
+        if any(item in self._hyper_op for item in ["PTT", "IAD", "RAD"]):
+            self.set_track_trajectory(True)
         if "DM" in self.boat_configs["dynamic_op"]:
             assert (self.boat_configs["hyper_op"] == ["RAD"]) or (
                 self.boat_configs["hyper_op"] == ["CG"]

@@ -252,8 +252,9 @@ class DifferentiableOptimizer(_abc.ABC):
                 if self._track_higher_grads:
                     new_params[index] = p
                 else:
-                    new_params[index] = p.detach().requires_grad_()
-
+                    # new_params[index] = p.detach().requires_grad_()
+                    new_params[index] = p.detach()
+                    new_params[index].start_grad()
         if self._fmodel is not None:
             self._fmodel.update_params(new_params)
 
