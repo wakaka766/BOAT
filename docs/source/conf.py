@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 
 autodoc_typehints = "none"
 
-html_logo = "_static/logo.png"
+html_logo = "_static/logo.jpg"
 
 
 project = "BOAT-Jittor"
