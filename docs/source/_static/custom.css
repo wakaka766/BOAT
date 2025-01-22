@@ -74,12 +74,13 @@
 /*    color: #bf616a; !* 柔和的红色 *!*/
 /*}*/
 
-/*#3b4252
+/*#eceff4
 /*!* 顶部标题栏 *!*/
 .wy-side-nav-search {
    background-color: #ffffff;
-   color: #ffffff;
-   padding: 10px;
+   color: #3b4252;
+   padding: 5px 10px;     
+   height: auto;            
    font-weight: bold;
 }
 
