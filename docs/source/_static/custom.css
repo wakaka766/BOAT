@@ -101,9 +101,9 @@
 /* 调整左上角 logo 的样式 */
 .wy-side-nav-search .logo {
     display: block;
-    margin: 5px 0;           /* 上下间距，减少空白 */
-    max-height: 80px;        /* 限制 logo 的最大高度 */
-    max-width: 90%;          /* 限制 logo 的最大宽度 */
+    margin: 2px 0;           /* 上下间距，减少空白 */
+    max-height: 120px;        /* 限制 logo 的最大高度 */
+    max-width: 95%;          /* 限制 logo 的最大宽度 */
     object-fit: contain;     /* 保持 logo 的比例 */
 }
 
