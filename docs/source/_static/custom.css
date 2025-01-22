@@ -84,6 +84,14 @@
    font-weight: bold;
 }
 
+/* 设置项目名称的具体样式 */
+.wy-side-nav-search .icon-home {
+    color: #3b4252; /* 明确设置项目名称的字体颜色 */
+    font-weight: bold; /* 字体加粗 */
+    font-size: 1.2em; /* 调整字体大小 */
+    text-align: center; /* 居中对齐 */
+}
+
 /* 调整左上角 logo 的样式 */
 .wy-side-nav-search .logo {
     display: block;
