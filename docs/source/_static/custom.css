@@ -14,34 +14,31 @@
     width: auto;  /* 宽度自适应 */
 }
 
-/* 调整分支选择菜单的字体颜色 */
-.wy-side-nav-search .rst-other-versions, /* 针对下拉分支区域 */
-.wy-menu { /* 或针对其他导航菜单区域 */
-    color: #3b4252;       /* 设置字体颜色 */
-    font-size: 0.9em;     /* 调整字体大小 */
-    font-weight: bold;    /* 加粗字体 */
-}
-
-/* 设置下拉菜单的背景颜色 */
-.wy-side-nav-search .rst-other-versions ul, /* 下拉菜单列表背景 */
-.wy-menu ul {
-    background-color: #f5f5f5; /* 设置背景颜色 */
-    border: 1px solid #d1d5db; /* 添加边框 */
-}
-
-/* 设置下拉菜单的悬停效果 */
-.wy-side-nav-search .rst-other-versions ul li:hover, /* 悬停列表项 */
-.wy-menu ul li:hover {
-    background-color: #d3d3d3; /* 悬停背景颜色 */
-    color: #1f2937;            /* 悬停字体颜色 */
-    cursor: pointer;           /* 鼠标指针 */
-}
-
-/* 保证链接可读性 */
+/* 设置未点击状态下的字体颜色 */
 .wy-side-nav-search .rst-other-versions a,
 .wy-menu a {
+    color: #3b4252; /* 字体颜色 */
     text-decoration: none; /* 去掉下划线 */
-    color: #3b4252;        /* 链接颜色 */
+}
+
+/* 设置已访问链接的颜色 */
+.wy-side-nav-search .rst-other-versions a:visited,
+.wy-menu a:visited {
+    color: #3b4252; /* 确保已访问链接颜色一致 */
+}
+
+/* 设置悬停时的效果 */
+.wy-side-nav-search .rst-other-versions a:hover,
+.wy-menu a:hover {
+    color: #1f2937; /* 悬停字体颜色 */
+    background-color: #d3d3d3; /* 悬停背景颜色 */
+}
+
+/* 设置菜单展开状态的字体颜色 */
+.wy-side-nav-search .rst-other-versions ul li a,
+.wy-menu ul li a {
+    color: #3b4252; /* 默认字体颜色 */
+    font-weight: bold; /* 可选：加粗字体 */
 }
 
 /*!* 可选：设置全局背景颜色或边框，方便调试 *!*/
