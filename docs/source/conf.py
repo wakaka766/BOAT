@@ -11,8 +11,9 @@ import sys
 # 将项目的根目录添加到 sys.path
 sys.path.insert(0, os.path.abspath("../../"))
 
+html_logo = "_static/logo.jpg"
 
-project = "BOAT"
+project = "BOAT-MS"
 copyright = "2024, Yaohua Liu"
 author = "Yaohua Liu"
 release = "0.0.1"
