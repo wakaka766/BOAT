@@ -13,6 +13,9 @@ sys.path.insert(0, os.path.abspath("../../"))
 
 autodoc_typehints = "none"
 
+html_logo = "_static/logo.png"
+
+
 project = "BOAT-Jittor"
 copyright = "2024, Yaohua Liu"
 author = "Yaohua Liu"
