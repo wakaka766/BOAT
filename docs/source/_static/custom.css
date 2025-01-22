@@ -84,18 +84,18 @@
 }
 
 /* 调整左上角 logo 的样式 */
-/* .wy-side-nav-search .logo { */
-    /* display: block; */
-    /* margin: 0 auto; */
-    /* max-height: 40px; 限制 logo 的高度 */
-    /* max-width: 80%; 限制 logo 的宽度 */
-    /* object-fit: contain; 保持比例 */
-/* } */
+.wy-side-nav-search .logo {
+    display: block;
+    margin: 0 auto;
+    max-height: 40px; 
+    max-width: 80%; 
+    object-fit: contain; 
+}
 
 /* 隐藏 project 名称，只显示 logo */
-.wy-side-nav-search .icon.icon-home {
-    display: none;
-}
+/* .wy-side-nav-search .icon.icon-home { */
+    /* display: none; */
+/* } */
 
 
 /*!* 页脚样式 *!*/
