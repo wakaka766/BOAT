@@ -11,11 +11,7 @@ import sys
 # 将项目的根目录添加到 sys.path
 sys.path.insert(0, os.path.abspath("../../"))
 
-html_theme_options = {
-    "logo_only": True,  # 如果只想显示 logo 而不显示项目名称
-    "logo": "_static/logo.jpg",  # 一些主题可能用这个字段
-}
-
+html_logo = "_static/logo.jpg"
 
 project = "BOAT"
 copyright = "2024, Yaohua Liu"
