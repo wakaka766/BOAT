@@ -1,6 +1,6 @@
 
 <h1 align="center">
-  <img src="docs/source/_static/logo.jpg" alt="BOAT" style="max-width: 50%; height: auto;">
+  <img src="_static/logo.jpg" alt="BOAT" style="max-width: 50%; height: 50%;">
 </h1>
 <p align="center">
   Task-Agnostic Operation Toolbox for Gradient-based Bilevel Optimization<br>
@@ -32,7 +32,7 @@ To enhance flexibility and efficiency, BOAT incorporates the **Dynamic Operation
 
 <p align="center">
   <a href="https://github.com/callous-youth/BOAT">
-    <img src="docs/source/_static/BOAT.png" alt="BOAT Structure" width="90%" align="top">
+    <img src="_static/BOAT.png" alt="BOAT Structure" width="90%" align="top">
   </a>
 </p>
 
