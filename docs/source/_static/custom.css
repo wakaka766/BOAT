@@ -14,7 +14,6 @@
     width: auto;  /* 宽度自适应 */
 }
 
-
 /*!* 可选：设置全局背景颜色或边框，方便调试 *!*/
 /*body {*/
 /*    background-color: #ffffff; !* 可选：设置背景为纯白 *!*/
@@ -268,9 +267,9 @@
     background-color: #2c3e50; /* 更深的导航栏背景色 */
     /* color: #ecf0f1; 浅色文字 */
 /* } */ 
-/*#ecf0f1*/
+
 .wy-menu-vertical a {
-    color: #3b4252; /* 链接文字颜色 */
+    color: #ecf0f1; /* 链接文字颜色 */
 }
 
 .wy-menu-vertical a:hover {
@@ -292,11 +291,10 @@
     font-family: "Fira Code", monospace; /* 更好的代码字体 */
 }
 
-/*#ecf0f1*/
 
 footer {
     background-color: #2c3e50;
-    color: #3b4252 ;
+    color: #ecf0f1;
     text-align: center;
     padding: 10px 0;
     font-size: 12px;
