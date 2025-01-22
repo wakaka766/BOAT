@@ -14,32 +14,6 @@
     width: auto;  /* 宽度自适应 */
 }
 
-/* 设置未点击状态下的字体颜色 */
-.wy-side-nav-search .rst-other-versions a,
-.wy-menu a {
-    color: #3b4252; /* 字体颜色 */
-    text-decoration: none; /* 去掉下划线 */
-}
-
-/* 设置已访问链接的颜色 */
-.wy-side-nav-search .rst-other-versions a:visited,
-.wy-menu a:visited {
-    color: #3b4252; /* 确保已访问链接颜色一致 */
-}
-
-/* 设置悬停时的效果 */
-.wy-side-nav-search .rst-other-versions a:hover,
-.wy-menu a:hover {
-    color: #1f2937; /* 悬停字体颜色 */
-    background-color: #d3d3d3; /* 悬停背景颜色 */
-}
-
-/* 设置菜单展开状态的字体颜色 */
-.wy-side-nav-search .rst-other-versions ul li a,
-.wy-menu ul li a {
-    color: #3b4252; /* 默认字体颜色 */
-    font-weight: bold; /* 可选：加粗字体 */
-}
 
 /*!* 可选：设置全局背景颜色或边框，方便调试 *!*/
 /*body {*/
