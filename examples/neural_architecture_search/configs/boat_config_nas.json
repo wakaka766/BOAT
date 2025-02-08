@@ -1,7 +1,7 @@
 {
     "fo_gm": null,
-    "dynamic_op": ["GDA","NGD"],
-    "hyper_op":  ["FD"],
+    "dynamic_op": ["NGD"],
+    "hyper_op":  ["RAD"],
     "return_grad": false,
     "lower_iters": 1,
     "cuda": true,

@@ -282,6 +282,7 @@ class Problem:
                     )
                     max_loss_iter = list(dynamic_results[-1].values())[-1]
                     forward_time = time.perf_counter() - forward_time
+                    print("forward_time", forward_time)
                     backward_time = time.perf_counter()
                     if self._ul_solver is not None:
                         self._log_results.append(
@@ -293,6 +294,7 @@ class Problem:
                             )
                         )
                     backward_time = time.perf_counter() - backward_time
+                    print("backward_time", backward_time)
                     if self.boat_configs["copy_last_param"]:
                         copy_parameter_from_list(
                             self._ll_model,
@@ -314,7 +316,7 @@ class Problem:
         self._track_opt_traj = track_traj
 
     def check_status(self):
-        if any(item in self._hyper_op for item in ["PTT", "IAD"]):
+        if any(item in self._hyper_op for item in ["PTT", "IAD", "RAD"]):
             self.set_track_trajectory(True)
         if "DM" in self.boat_configs["dynamic_op"]:
             assert (self.boat_configs["hyper_op"] == ["RAD"]) or (
