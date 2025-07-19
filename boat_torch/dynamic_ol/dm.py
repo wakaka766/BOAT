@@ -293,4 +293,4 @@ class DM(DynamicalSystem):
             ]
             update_tensor_grads(list(self.ul_model.parameters()), grads)
 
-        return -1
+        return loss_full
